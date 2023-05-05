@@ -34,8 +34,17 @@ dengue_deaths = read_excel(file.choose(),sheet = 3)
 ```
 
 ```{r}
-which.max(cambodia_t2m_daymax[,5:19])
+cambodia_tp_df = as.data.frame(cambodia_tp)
 ```
+
+
+```{r}
+max_value = which.max(apply(cambodia_tp_df, 1, function(x) {
+ max(x[5:19])
+}))
+cambodia_tp_df[max_value, 2]
+```
+
 
 
 
