@@ -45,3 +45,14 @@ cambodia_t2m_daymax[which.max(max_t),2]
 ```
 
 
+
+```{r}
+#max tp of cambodia data
+cambodia_tp = as.data.frame(cambodia_tp)
+
+max_value = which.max(apply(cambodia_tp, 1, function(x) {
+ max(x[5:19])
+}))
+cambodia_tp[max_value, 2]
+```
+
