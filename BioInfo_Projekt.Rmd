@@ -93,3 +93,7 @@ max_value = which.max(apply(cambodia_tp, 1, function(x) {
 cambodia_tp[max_value, 2]
 ```
 
+```{r}
+plot(dengue)
+```
+
