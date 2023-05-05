@@ -34,6 +34,7 @@ dengue_deaths = read_excel(file.choose(),sheet = 3)
 ```
 
 ```{r}
+#Highest temp of cambodia data
 cambodia_t2m_daymax = as.data.frame(cambodia_t2m_daymax)
 
 max_t = apply(cambodia_t2m_daymax,1,function(x){
@@ -41,10 +42,6 @@ max_t = apply(cambodia_t2m_daymax,1,function(x){
   })
 
 cambodia_t2m_daymax[which.max(max_t),2]
-cambodia_t2m_daymax
 ```
 
-ich will testen ob git funktioniert so wie ich will
- 
-jetzt teste ich was anderes
 
