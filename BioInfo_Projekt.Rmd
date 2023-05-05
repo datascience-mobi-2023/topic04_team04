@@ -34,7 +34,14 @@ dengue_deaths = read_excel(file.choose(),sheet = 3)
 ```
 
 ```{r}
-which.max(cambodia_t2m_daymax[,5:19])
+cambodia_t2m_daymax = as.data.frame(cambodia_t2m_daymax)
+
+max_t = apply(cambodia_t2m_daymax,1,function(x){
+  max(x[5:19])
+  })
+
+cambodia_t2m_daymax[which.max(max_t),2]
+cambodia_t2m_daymax
 ```
 
 ich will testen ob git funktioniert so wie ich will
