@@ -34,6 +34,18 @@ dengue_deaths = read_excel(file.choose(),sheet = 3)
 ```
 
 ```{r}
+#max function
+f_max = function(x){
+  max(x[5:19])
+}
+
+#min function 
+f_min = function(x){
+  min(x[5:19])
+  }
+```
+
+```{r}
 #Highest temp of cambodia data
 cambodia_t2m_daymax = as.data.frame(cambodia_t2m_daymax)
 
@@ -42,6 +54,33 @@ max_t = apply(cambodia_t2m_daymax,1,function(x){
   })
 
 cambodia_t2m_daymax[which.max(max_t),2]
+```
+```{r}
+#Highest temp of cambodia data
+cambodia_t2m_daymax = as.data.frame(cambodia_t2m_daymax)
+
+max_t = apply(cambodia_t2m_daymax,1,f_max)
+
+cambodia_t2m_daymax[which.max(max_t),2]
+```
+
+```{r}
+#Lowest temp of cambodia data
+cambodia_t2m_daymin = as.data.frame(cambodia_t2m_daymin)
+
+min_t = apply(cambodia_t2m_daymin,1,function(x){
+  min(x[5:19])
+  })
+
+cambodia_t2m_daymin[which.min(min_t),2]
+```
+```{r}
+#Lowest temp of cambodia data
+cambodia_t2m_daymin = as.data.frame(cambodia_t2m_daymin)
+
+min_t = apply(cambodia_t2m_daymin,1,f_min)
+
+cambodia_t2m_daymin[which.min(min_t),2]
 ```
 
 
