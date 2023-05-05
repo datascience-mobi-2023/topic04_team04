@@ -56,3 +56,26 @@ max_value = which.max(apply(cambodia_tp, 1, function(x) {
 cambodia_tp[max_value, 2]
 ```
 
+
+```{r}
+# Sind die districts im norden oder im Süden? - Cambodia - klappt noch nicht ganz
+median_long_cam = median(cambodia_tp$Longitude) 
+ 
+apply(cambodia_tp, 1, function(x) {
+  if (x[3] > median_long_cam) {
+    print(x[[2]])
+    print("North") 
+    
+  }
+  else 
+    print(x[[2]])
+    print("South")
+    
+    
+  
+})
+
+
+```
+
+
