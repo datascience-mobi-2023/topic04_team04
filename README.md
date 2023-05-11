@@ -4,3 +4,19 @@
  
  link to project proposal plan: https://docs.google.com/document/d/18y_QWei9tp1_qe_96xoGde8k74mzPxeufXT5sxqHUHQ/edit?usp=sharing
  
+PLAN:
+- Literaturrecherche:
+     - Methoden
+     - Klima
+     - Thailand-Dengue
+- Allg. Fragen
+     - Hypothese
+     - Ziele
+- Zeitplan
+- Layout
+- Daten laden
+
+Struktur Project Proposal:
+- Dengue - Thailand - Klima
+- Datensets
+- 
