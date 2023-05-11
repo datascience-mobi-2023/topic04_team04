@@ -19,4 +19,5 @@ PLAN:
 Struktur Project Proposal:
 - Dengue - Thailand - Klima
 - Datensets
-- 
+- Forschungsfrage - Hypothesen
+- Zeitplan (Methoden)
