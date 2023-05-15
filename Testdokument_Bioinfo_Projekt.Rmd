@@ -1,0 +1,41 @@
+---
+title: "Testdokument BioInfo Projekt"
+author: "Me"
+date: "2023-05-15"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+install.packages("readxl")
+library(readxl)
+```
+
+#Daten einlesen
+```{r}
+#climate Thailand
+t2m = read_excel(file.choose(), sheet= 3)
+t2m = as.data.frame(t2m)
+head(t2m)
+summary(t2m)
+class(t2m$"2006.01.")
+```
+
+#Plot für die Durchschnittstemperatur in Thailand für 2006 - 2020
+```{r}
+t2m_mean_thailand = apply(t2m[,c(5:184)],2,function(x){
+  mean(x)
+})
+
+dates <- seq(as.Date("2006-01-01"), as.Date("2020-12-01"), by = "month", format = "%m")
+
+model = lm(t2m_mean_thailand ~ dates)
+summary(model)
+
+plot(x = dates, y = t2m_mean_thailand, 
+     type = "l", ylab = "temperature in °C", xlab = "years", main = "Durchschnittstemperatur in Thailand für 2006 - 2020", col = "red");abline(model, col = "blue")
+```
+
