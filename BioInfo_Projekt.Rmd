@@ -14,12 +14,12 @@ install.packages("readxl")
 library(readxl)
 ```
 
-#Daten einlesen
+  #Daten einlesen
 ```{r}
-#Cambodia
-cambodia_t2m_daymax = read_excel(file.choose())
-cambodia_t2m_daymin = read_excel(file.choose(),sheet = 2)
-cambodia_tp = read_excel(file.choose(),sheet = 3)
+  #Cambodia
+  cambodia_t2m_daymax = read_excel(file.choose())
+  cambodia_t2m_daymin = read_excel(file.choose(),sheet = 2)
+  cambodia_tp = read_excel(file.choose(),sheet = 3)
 
 #Laos
 laos_t2m_daymax = read_excel(file.choose())
