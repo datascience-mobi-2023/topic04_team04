@@ -12,23 +12,27 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 install.packages("readxl")
 library(readxl)
+
+install.packages("sf")
+library(sf)
+
+install.packages("sp")
+library(sp)
+
+install.packages("terra")
+library(terra)
 ```
 
   #Daten einlesen
 ```{r}
-  #Cambodia
-  cambodia_t2m_daymax = read_excel(file.choose())
-  cambodia_t2m_daymin = read_excel(file.choose(),sheet = 2)
-  cambodia_tp = read_excel(file.choose(),sheet = 3)
+  #temperature 
+  thailand_t2m = read_excel(file.choose("era5_data_2006_2020_thailand_monmean.xlsx"),sheet = 3)
 
-#Laos
-laos_t2m_daymax = read_excel(file.choose())
-laos_t2m_daymin = read_excel(file.choose(),sheet = 2)
-laos_tp = read_excel(file.choose(),sheet = 3)
+
 
 #dengue
-dengue_cases = read_excel(file.choose(),sheet = 2)
-dengue_deaths = read_excel(file.choose(),sheet = 3)
+dengue_cases_thailand = read_excel(file.choose())
+
 
 
 ```
@@ -47,17 +51,6 @@ f_min = function(x){
 
 
 ```{r}
-#Highest temp of cambodia data
-cambodia_t2m_daymax = as.data.frame(cambodia_t2m_daymax)
-
-max_t = apply(cambodia_t2m_daymax,1,function(x){
-  max(x[5:19])
-  })
-
-cambodia_t2m_daymax[which.max(max_t),2]
-```
-
-```{r}
 #Lowest temp of cambodia data
 cambodia_t2m_daymin = as.data.frame(cambodia_t2m_daymin)
 min_t = apply(cambodia_t2m_daymin,1,function(x){
@@ -68,21 +61,11 @@ cambodia_t2m_daymin[which.min(min_t),2]
 
 
 ```{r}
-#max tp of cambodia data
-cambodia_tp = as.data.frame(cambodia_tp)
-
-max_value = which.max(apply(cambodia_tp, 1, function(x) {
- max(x[5:19])
-}))
-cambodia_tp[max_value, 2]
-```
-
-```{r}
-# Sind die districts im norden oder im Süden? - Cambodia - klappt noch nicht ganz
-median_long_cam = median(cambodia_tp$Longitude) 
+# Sind die districts im norden oder im Süden? - Thailand - klappt noch nicht ganz
+median_long_thai = median($Longitude) 
  
-apply(cambodia_tp, 1, function(x) {
-  if (x[3] > median_long_cam) {
+apply(_tp, 1, function(x) {
+  if (x[3] > median_long_thai) {
     print(x[[2]])
     print("North") 
   }
