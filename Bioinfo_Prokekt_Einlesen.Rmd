@@ -26,12 +26,13 @@ for (i in 2006:2020) {
   Name_df <- paste0(Anfang, i)
   assign(Name_df, read_excel(Name))
   as.data.frame(Name_df)
-  
+  Name_df$A <- paste0(Name_df$A, i)
 }
 
 
-
 ```
+
+
 
 ```{r}
 Dengue_2006$Districtnumber <- seq(from=1, to=77) #nummerieren der Distrikte
