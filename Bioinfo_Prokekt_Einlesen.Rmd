@@ -1,0 +1,32 @@
+---
+title: "Bioinfo_Projekt_Einlesen"
+author: "Frederik Racky"
+date: "2023-05-31"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readxl)
+library(dplyr)
+```
+##Einlesen der Tabellen und umwandeln der Tabellen in data frames
+```{r}
+Dengue_2006 = read_excel("2006_dengue_extracted.xlsx")
+as.data.frame(Dengue_2006)
+
+Dengue_2007 = read_excel("2007_dengue_extracted.xlsx")
+as.data.frame(Dengue_2007)
+
+```
+
+```{r}
+Dengue_2006$Districtnumber <- seq(from=1, to=77)
+
+
+Dengue_2006_Di = cbind(Dengue_2006[,ncol()], Dengue_2006[,-ncol(dataframe)])
+
+```
