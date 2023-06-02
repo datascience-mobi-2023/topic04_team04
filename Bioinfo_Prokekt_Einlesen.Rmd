@@ -22,11 +22,12 @@ Endung <- "_dengue_extracted.xlsx"
 Anfang <- "Dengue"
 
 for (i in 2006:2020) {
-  Name <- paste0(i, Endung)
-  Name_df <- paste0(Anfang, i)
-  assign(Name_df, read_excel(Name))
-  as.data.frame(Name_df)
-  Name_df$A <- paste0(Name_df$A, i)
+  Name <- paste0(i, Endung) #erstellen das Dateinamens
+  Name_df <- paste0(Anfang, i) 
+  assign(Name_df, read_excel(Name)) #erstellen der Variable und zuweisen der Excel-Tabelle 
+  as.data.frame(Name_df) #umwandeln der Tabelle in ein Data-Frame
+  
+  Name_df$A <- paste0(Name_df$A, i) 
 }
 
 
