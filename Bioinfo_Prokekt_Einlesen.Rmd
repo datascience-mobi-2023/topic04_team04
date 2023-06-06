@@ -91,5 +91,13 @@ Dengue_2006_Di = Dengue_2006[, c(ncol(Dengue_2006), 1:(ncol(Dengue_2006)-1))] #v
 
 ```
 
-
+#Summary statistics
+```{r}
+detect_na <- function(x) {
+  is_na <- x %in% c("N/A", "na", "NA", "n/a")
+  replace(x, is_na, NA)
+}
+missing_data_total <-  apply(data_total, 2, detect_na)
+rmv.rows = apply(missing_data_total,1,function(x){sum(is.na(x))})
+```
 
