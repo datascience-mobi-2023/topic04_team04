@@ -10,50 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
+install.packages("readxl")
 library(readxl)
-library(dplyr)
-```
-
-
-##Einlesen der Tabellen und umwandeln der Tabellen in data frames
-```{r}
-
-Endung <- "_dengue_extracted.xlsx"
-Anfang <- "Dengue"
-
-for (i in 2006:2020) {
-  Name <- paste0(i, Endung) #erstellen das Dateinamens
-  Name_df <- paste0(Anfang, i) 
-  assign(Name_df, read_excel(Name)) #erstellen der Variable und zuweisen der Excel-Tabelle 
-  as.data.frame(Name_df) #umwandeln der Tabelle in ein Data-Frame
-  
-  Name_df$A <- paste0(Name_df$A, i) 
-}
-
-
-```
-
-```{r}
-
-Endung <- "_dengue_extracted.xlsx"
-Anfang <- "Dengue"
-
-for (i in 2006:2020) {
-  a = i
-  Dateiname <- paste0(i, Endung) #erstellen das Dateinamens
-  Name_df <- paste0(Anfang, i) 
-  assign(Name_df, read_excel(Dateiname)) #erstellen der Variable und zuweisen der Excel-Tabelle
-  
-  df_dengue <- get(Name_df)
-  vec_data_names <- vector("character")
-  
-  vec_data_names <- sapply(df_dengue$`Reporting areas`, function(g) {
-    paste(g[1], a)
-  })
-  data_names <- matrix(vec_data_names,nrow = 77, ncol = 1)
-  df_dengue <- cbind(data_names, df_dengue)
-  assign(Name_df,df_dengue)
-}
 ```
 
 ##Einlesen der Tabellen und umwandeln der Tabellen in data frames
@@ -106,6 +64,7 @@ for (k in 1:1155){
   }
 }
 ```
+
 
 ```{r}
 Dengue_2006$Districtnumber <- seq(from=1, to=77) #nummerieren der Distrikte
