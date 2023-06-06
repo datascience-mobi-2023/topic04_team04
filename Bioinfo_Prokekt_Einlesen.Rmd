@@ -48,8 +48,8 @@ for (i in 2006:2020){
 #Rows als Zeitachse mit Monaten
 ```{r}
 m = 1
-data_total = data.frame(col1 = character(0), col2 = character(0), col3 = numeric(0), month = character(0))
-colnames(data_total) = c("data_names", "Reporting_areas", "dengue_cases", "month")
+data_total_dengue = data.frame(col1 = character(0), col2 = character(0), col3 = numeric(0), month = character(0))
+colnames(data_total_dengue) = c("data_names", "Reporting_areas", "dengue_cases", "month")
 sorted_total_years = total_years[order(total_years$"Reporting_areas"),]
 for (k in 1:1155){
   for (j in 3:14){
@@ -57,13 +57,32 @@ for (k in 1:1155){
     month = colnames(square[3])
     square <- cbind(square,month)
     colnames(square) = c("data_names", "Reporting_areas", "dengue_cases", "month")
-    data_total <- rbind(data_total, square)
-    colnames(data_total) = c("data_names", "Reporting_areas", "dengue_cases", "month")
-    data_total[m,1] = paste(data_total[m,1], month[1])
+    data_total_dengue <- rbind(data_total_dengue, square)
+    colnames(data_total_dengue) = c("data_names", "Reporting_areas", "dengue_cases", "month")
+    data_total_dengue[m,1] = paste(data_total_dengue[m,1], month[1])
     m = m + 1
   }
 }
 ```
+
+
+#adding temperature column
+```{r}
+m = 1
+temp_data = read_excel("era5_data_2006_2020_thailand_monmean.xlsx")
+temp_data = as.data.frame(temp_data)
+temp_data_sorted = data.frame( col1 = numeric(0))
+for (i in 1:77) {
+  for (j in 5:184) {
+    temp_data_sorted[m,1] = temp_data[i,j]
+    m = m + 1
+  }
+}
+data_total = cbind(data_total_dengue, temp_data_sorted) 
+colnames(data_total)[5] = "temperature"
+```
+
+
 
 
 ```{r}
