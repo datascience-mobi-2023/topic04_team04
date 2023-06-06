@@ -23,7 +23,7 @@ Endung <- "_dengue_extracted.xlsx"
 Anfang <- "Dengue"
 
 for (i in 2006:2020) {
-  a = i
+  
   Dateiname <- paste0(i, Endung) #erstellen das Dateinamens
   Name_df <- paste0(Anfang, i) 
   assign(Name_df, read_excel(Dateiname)) #erstellen der Variable und zuweisen der Excel-Tabelle
@@ -32,7 +32,7 @@ for (i in 2006:2020) {
   vec_data_names <- vector("character")
   
   vec_data_names <- sapply(df_dengue$`Reporting areas`, function(g) {
-    paste(g[1], a)
+    paste(g[1], i)
   })
   data_names <- matrix(vec_data_names,nrow = 77, ncol = 1)
   df_dengue <- cbind(data_names, df_dengue)
@@ -71,9 +71,6 @@ Dengue_2006$Districtnumber <- seq(from=1, to=77) #nummerieren der Distrikte
 Dengue_2006_Di = Dengue_2006[, c(ncol(Dengue_2006), 1:(ncol(Dengue_2006)-1))] #verschieben der distriktnummer in die erste Zeile
 
 ```
-
-
-
 
 
 
