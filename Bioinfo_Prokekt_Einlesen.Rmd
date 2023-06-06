@@ -25,7 +25,7 @@ Anfang <- "Dengue"
 for (i in 2006:2020) {
   
   Dateiname <- paste0(i, Endung) #erstellen das Dateinamens
-  Name_df <- paste0(Anfang, i) 
+  Name_df <- paste0(Anfang, i) #Name des Dataframe 
   assign(Name_df, read_excel(Dateiname)) #erstellen der Variable und zuweisen der Excel-Tabelle
   
   df_dengue <- get(Name_df)
@@ -33,12 +33,12 @@ for (i in 2006:2020) {
   
   vec_data_names <- sapply(df_dengue$Reporting_areas, function(g) {
     paste(g[1], i)
-  })
-  data_names <- matrix(vec_data_names,nrow = 77, ncol = 1)
-  df_dengue <- cbind(data_names, df_dengue)
-  assign(Name_df,df_dengue)
+  }) #Vektor mit Distriktnamen füllen
+  data_names <- matrix(vec_data_names,nrow = 77, ncol = 1)#Distriktnamen in Matrix (da Vektor horizontal)
+  df_dengue <- cbind(data_names, df_dengue) #Namenspalte an Datensatz anfügen
+  assign(Name_df,df_dengue) #Namen der dataframes den Daten zuordnen
 }
-total_years = data.frame()
+total_years = data.frame() 
 for (i in 2006:2020){
   a = get(paste0("Dengue",i))
   total_years = rbind(total_years, a)
