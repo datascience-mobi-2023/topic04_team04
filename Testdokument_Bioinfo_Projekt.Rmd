@@ -36,6 +36,18 @@ model = lm(t2m_mean_thailand ~ dates)
 summary(model)
 
 plot(x = dates, y = t2m_mean_thailand, 
-     type = "l", ylab = "temperature in °C", xlab = "years", main = "Durchschnittstemperatur in Thailand für 2006 - 2020", col = "red");abline(model, col = "blue")
+     type = "l", ylab = "temperature in °C", xlab = "years", main = "mean temperature in Thailand 2006 - 2020", col = "red");abline(model, col = "blue")
+
+summary(t2m_mean_thailand)
+
+which.min(t2m_mean_thailand)
+which.max(t2m_mean_thailand)
+
+head(t2m_mean_thailand)
+
+t2m_mean_thailand_2015 = t2m_mean_thailand[c(109:120)]
+
+plot(x = dates[c(109:120)], y = t2m_mean_thailand_2015 , type = "l", ylab = "temperature in °C", xlab = "months",main = "monthly mean temperature in Thailand for 2015", col = "red")
+
 ```
 
