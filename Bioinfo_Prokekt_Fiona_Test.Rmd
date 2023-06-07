@@ -25,7 +25,7 @@ Anfang <- "Dengue"
 for (i in 2006:2020) {
   
   Dateiname <- paste0(i, Endung) #erstellen das Dateinamens
-  Name_df <- paste0(Anfang, i) 
+  Name_df <- paste0(Anfang, i) #Name des Dataframe 
   assign(Name_df, read_excel(Dateiname)) #erstellen der Variable und zuweisen der Excel-Tabelle
   
   df_dengue <- get(Name_df)
@@ -33,12 +33,12 @@ for (i in 2006:2020) {
   
   vec_data_names <- sapply(df_dengue$Reporting_areas, function(g) {
     paste(g[1], i)
-  })
-  data_names <- matrix(vec_data_names,nrow = 77, ncol = 1)
-  df_dengue <- cbind(data_names, df_dengue)
-  assign(Name_df,df_dengue)
+  }) #Vektor mit Distriktnamen füllen
+  data_names <- matrix(vec_data_names,nrow = 77, ncol = 1)#Distriktnamen in Matrix (da Vektor horizontal)
+  df_dengue <- cbind(data_names, df_dengue) #Namenspalte an Datensatz anfügen
+  assign(Name_df,df_dengue) #Namen der dataframes den Daten zuordnen
 }
-total_years = data.frame()
+total_years = data.frame() 
 for (i in 2006:2020){
   a = get(paste0("Dengue",i))
   total_years = rbind(total_years, a)
@@ -66,6 +66,7 @@ for (k in 1:1155){
 ```
 
 
+#adding temperature column
 ```{r}
 m = 1
 temp_data = read_excel("era5_data_2006_2020_thailand_monmean.xlsx")
@@ -81,21 +82,13 @@ data_total = cbind(data_total_dengue, temp_data_sorted)
 colnames(data_total)[5] = "temperature"
 ```
 
-
-
-
-
-
-
-
-
-
-
+#Summary statistics
 ```{r}
-Dengue_2006$Districtnumber <- seq(from=1, to=77) #nummerieren der Distrikte
-Dengue_2006_Di = Dengue_2006[, c(ncol(Dengue_2006), 1:(ncol(Dengue_2006)-1))] #verschieben der distriktnummer in die erste Zeile
-
+detect_na <- function(x) {
+  is_na <- x %in% c("N/A", "na", "NA", "n/a")
+  replace(x, is_na, NA)
+}
+missing_data_total <-  apply(data_total, 2, detect_na)
+rmv.rows = apply(missing_data_total,1,function(x){sum(is.na(x))})
 ```
-
-
 
