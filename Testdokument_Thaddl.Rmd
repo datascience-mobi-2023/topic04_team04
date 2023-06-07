@@ -70,34 +70,64 @@ for (k in 1:1155){
 library(readxl)
 
 Endung <- "_population.xlsx"
+#empty dataframe for the data
 total_population = data.frame(Reporting_areas = character(), population_count = numeric())
 
+# stack years of 2006-2011 below each other
 for (i in 2006:2011) {
   population_df  = data.frame()
   Dateiname <- paste0(i, Endung) #erstellen das Dateinamens
   population_df = read_excel(Dateiname) #erstellen der Variable und zuweisen der Excel-Tabelle
   names(population_df) = c("Reporting_areas", "population_count")
-  for (j in 1:77) {
-    # Anzahl der Wiederholungen pro Zeile
-    repeat_count <- 12
-
-    # Jede Zeile verzwölffachen
-    population_df_replicated <- population_df[rep(row.names(population_df), each = repeat_count), ]
-
-    # Zeilennummern zurücksetzen
-    row.names(population_df_replicated) <- NULL
-  }
+  # multiply every row 12 times for each month
+  repeat_count <- 12
+  population_df_replicated <- population_df[rep(row.names(population_df), each = repeat_count), ]
+  row.names(population_df_replicated) <- NULL
+  
+  #put all the years together
   total_population = rbind(total_population, population_df_replicated)
   
+}
+
+# stack years of 2006 
+population_df = read_excel("2012-2020_population.xlsx")
+colnames(population_df) = c("Reporting_areas", "population_count", "population_count", "population_count", "population_count", "population_count","population_count","population_count","population_count","population_count")
+pop_placeholder = data.frame(Reporting_areas = character(), population_count = numeric())
+for (i in 2:10) {
+  pop_placeholder = rbind(pop_placeholder, population_df[,c(1,i)])
   
 }
+# Anzahl der Wiederholungen pro Zeile
+repeat_count <- 12
+
+# Jede Zeile verzwölffachen
+population_df_replicated <- pop_placeholder[rep(row.names(pop_placeholder), each = repeat_count), ]
+
+# Zeilennummern zurücksetzen
+row.names(population_df_replicated) <- NULL
+
+
+total_population = rbind(total_population, population_df_replicated)
+
+data_total = cbind(data_total, total_population[,2])
 
 ```
 
 
+#adding temperature column
 ```{r}
-Dengue_2006$Districtnumber <- seq(from=1, to=77) #nummerieren der Distrikte
-Dengue_2006_Di = Dengue_2006[, c(ncol(Dengue_2006), 1:(ncol(Dengue_2006)-1))] #verschieben der distriktnummer in die erste Zeile
+m = 1
+temp_data = read_excel("era5_data_2006_2020_thailand_monmean.xlsx")
+temp_data = as.data.frame(temp_data)
+temp_data_sorted = data.frame( col1 = numeric(0))
+for (i in 1:77) {
+  for (j in 5:184) {
+    temp_data_sorted[m,1] = temp_data[i,j]
+    m = m + 1
+  }
+}
+data_total = cbind(data_total_dengue, temp_data_sorted) 
+colnames(data_total)[5] = "temperature"
 ```
 
 #Summary statistics
