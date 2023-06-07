@@ -89,24 +89,20 @@ for (i in 2006:2011) {
   
 }
 
-# stack years of 2006 
+# stack years of 2012-2020 below each other and add to data_total
 population_df = read_excel("2012-2020_population.xlsx")
 colnames(population_df) = c("Reporting_areas", "population_count", "population_count", "population_count", "population_count", "population_count","population_count","population_count","population_count","population_count")
 pop_placeholder = data.frame(Reporting_areas = character(), population_count = numeric())
 for (i in 2:10) {
   pop_placeholder = rbind(pop_placeholder, population_df[,c(1,i)])
-  
 }
-# Anzahl der Wiederholungen pro Zeile
+
+# multiply every row 12 times for each month
 repeat_count <- 12
-
-# Jede Zeile verzwölffachen
 population_df_replicated <- pop_placeholder[rep(row.names(pop_placeholder), each = repeat_count), ]
-
-# Zeilennummern zurücksetzen
 row.names(population_df_replicated) <- NULL
 
-
+# combine all population data in each 
 total_population = rbind(total_population, population_df_replicated)
 
 data_total = cbind(data_total, total_population[,2])
@@ -130,13 +126,13 @@ data_total = cbind(data_total_dengue, temp_data_sorted)
 colnames(data_total)[5] = "temperature"
 ```
 
-#Summary statistics
+#Detect missing values
 ```{r}
 detect_na <- function(x) {
   is_na <- x %in% c("N/A", "na", "NA", "n/a")
   replace(x, is_na, NA)
 }
-missing_data_total <-  apply(data_total, 2, detect_na)
+missing_data_total <- apply(data_total, 2, detect_na)
 rmv.rows = apply(missing_data_total,1,function(x){sum(is.na(x))})
 ```
 
