@@ -126,14 +126,21 @@ data_total = cbind(data_total_dengue, temp_data_sorted)
 colnames(data_total)[5] = "temperature"
 ```
 
+#rownames erneuern
+```{r}
+new_row_names <- 1:nrow(data_total)
+row.names(data_total) <- new_row_names
+```
+
+
 #Detect missing values
 ```{r}
 detect_na <- function(x) {
   is_na <- x %in% c("N/A", "na", "NA", "n/a")
   replace(x, is_na, NA)
 }
-missing_data_total <- apply(data_total, 2, detect_na)
-rmv.rows = apply(missing_data_total,1,function(x){sum(is.na(x))})
+data_total <- apply(data_total, 2, detect_na)
+rmv.rows = apply(data_total,1,function(x){sum(is.na(x))})
 ```
 
 
