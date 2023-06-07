@@ -67,13 +67,27 @@ for (k in 1:1155){
 
 #Einlesen Population data
 ```{r}
+library(readxl)
+
 Endung <- "_population.xlsx"
+total_population = data.frame(Reporting_areas = character(), population_count = numeric())
 
 for (i in 2006:2011) {
   population_df  = data.frame()
   Dateiname <- paste0(i, Endung) #erstellen das Dateinamens
   population_df = read_excel(Dateiname) #erstellen der Variable und zuweisen der Excel-Tabelle
-  
+  names(population_df) = c("Reporting_areas", "population_count")
+  for (j in 1:77) {
+    # Anzahl der Wiederholungen pro Zeile
+    repeat_count <- 12
+
+    # Jede Zeile verzwölffachen
+    population_df_replicated <- population_df[rep(row.names(population_df), each = repeat_count), ]
+
+    # Zeilennummern zurücksetzen
+    row.names(population_df_replicated) <- NULL
+  }
+  total_population = rbind(total_population, population_df_replicated)
   
   
 }
