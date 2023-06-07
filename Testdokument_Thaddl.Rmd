@@ -65,6 +65,21 @@ for (k in 1:1155){
 }
 ```
 
+#Einlesen Population data
+```{r}
+Endung <- "_population.xlsx"
+
+for (i in 2006:2011) {
+  population_df  = data.frame()
+  Dateiname <- paste0(i, Endung) #erstellen das Dateinamens
+  population_df = read_excel(Dateiname) #erstellen der Variable und zuweisen der Excel-Tabelle
+  
+  
+  
+}
+
+```
+
 
 ```{r}
 Dengue_2006$Districtnumber <- seq(from=1, to=77) #nummerieren der Distrikte
