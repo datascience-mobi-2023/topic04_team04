@@ -126,6 +126,14 @@ data_total = cbind(data_total_dengue, temp_data_sorted)
 colnames(data_total)[5] = "temperature"
 ```
 
+
+#rownames erneuern
+```{r}
+new_row_names <- 1:nrow(data_total)
+row.names(data_total) <- new_row_names
+
+```
+
 #Summary statistics
 ```{r}
 detect_na <- function(x) {
