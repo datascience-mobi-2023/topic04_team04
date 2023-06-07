@@ -131,7 +131,6 @@ colnames(data_total)[5] = "temperature"
 ```{r}
 new_row_names <- 1:nrow(data_total)
 row.names(data_total) <- new_row_names
-
 ```
 
 #Summary statistics
