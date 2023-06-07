@@ -82,6 +82,71 @@ data_total = cbind(data_total_dengue, temp_data_sorted)
 colnames(data_total)[5] = "temperature"
 ```
 
+
+#Einlesen Population data
+```{r}
+library(readxl)
+
+Endung <- "_population.xlsx"
+#empty dataframe for the data
+total_population = data.frame(Reporting_areas = character(), population_count = numeric())
+
+# stack years of 2006-2011 below each other
+for (i in 2006:2011) {
+  population_df  = data.frame()
+  Dateiname <- paste0(i, Endung) #erstellen das Dateinamens
+  population_df = read_excel(Dateiname) #erstellen der Variable und zuweisen der Excel-Tabelle
+  names(population_df) = c("Reporting_areas", "population_count")
+  # multiply every row 12 times for each month
+  repeat_count <- 12
+  population_df_replicated <- population_df[rep(row.names(population_df), each = repeat_count), ]
+  row.names(population_df_replicated) <- NULL
+  
+  #put all the years together
+  total_population = rbind(total_population, population_df_replicated)
+  
+}
+
+# stack years of 2006 
+population_df = read_excel("2012-2020_population.xlsx")
+colnames(population_df) = c("Reporting_areas", "population_count", "population_count", "population_count", "population_count", "population_count","population_count","population_count","population_count","population_count")
+pop_placeholder = data.frame(Reporting_areas = character(), population_count = numeric())
+for (i in 2:10) {
+  pop_placeholder = rbind(pop_placeholder, population_df[,c(1,i)])
+  
+}
+# Anzahl der Wiederholungen pro Zeile
+repeat_count <- 12
+
+# Jede Zeile verzwölffachen
+population_df_replicated <- pop_placeholder[rep(row.names(pop_placeholder), each = repeat_count), ]
+
+# Zeilennummern zurücksetzen
+row.names(population_df_replicated) <- NULL
+
+
+total_population = rbind(total_population, population_df_replicated)
+
+data_total = cbind(data_total, total_population[,2])
+
+```
+
+
+# adding time column 
+
+```{r}
+first_date = as.Date("2006-01-01")
+last_date = as.Date("2020-12-31")
+
+time_column_short = seq(first_date, last_date, by = "month")
+time_column_short = format(time_column_short, "%Y-%m")
+time_column = rep(time_column_short, times = 77)
+
+data_total = cbind(data_total, time_column) 
+```
+
+
+
 #Summary statistics
 ```{r}
 detect_na <- function(x) {
