@@ -25,6 +25,39 @@ Vektor <- c(Dengue2006[,1])
 
 Vektor
           
-            
+#Mapping von Thailand
+
+library(sf)
+library(ggplot2)
+
+
+
+
+district_sf <- sf::st_read("/Users/frederik/Documents/GitHub/Projekt/gadm36_THA_shp")
+class(district_sf) # [1] "sf"         "data.frame"
+
+
+ggplot+
+  geom_sf(data = district_sf, aes(fill = pop_cnt)) + # state your data source and which column information you want to plot
+  coord_sf()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   
