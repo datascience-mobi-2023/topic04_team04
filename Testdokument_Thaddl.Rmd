@@ -65,6 +65,24 @@ for (k in 1:1155){
 }
 ```
 
+#adding temperature column
+```{r}
+m = 1
+temp_data = read_excel("era5_data_2006_2020_thailand_monmean.xlsx")
+temp_data = as.data.frame(temp_data)
+temp_data_sorted = data.frame( col1 = numeric(0), Longitude = numeric(0), Latitude = numeric(0))
+for (i in 1:77) {
+  for (j in 5:184) {
+    temp_data_sorted[m,1] = temp_data[i,j]
+    temp_data_sorted[m,2] = temp_data[i,3]
+    temp_data_sorted[m,3] = temp_data[i,4]
+    m = m + 1
+  }
+}
+data_total = cbind(data_total_dengue, temp_data_sorted) 
+colnames(data_total)[5] = "temperature"
+```
+
 #Einlesen Population data
 ```{r}
 library(readxl)
@@ -106,24 +124,6 @@ row.names(population_df_replicated) <- NULL
 total_population = rbind(total_population, population_df_replicated)
 
 data_total = cbind(data_total, total_population[,2])
-
-```
-
-
-#adding temperature column
-```{r}
-m = 1
-temp_data = read_excel("era5_data_2006_2020_thailand_monmean.xlsx")
-temp_data = as.data.frame(temp_data)
-temp_data_sorted = data.frame( col1 = numeric(0))
-for (i in 1:77) {
-  for (j in 5:184) {
-    temp_data_sorted[m,1] = temp_data[i,j]
-    m = m + 1
-  }
-}
-data_total = cbind(data_total_dengue, temp_data_sorted) 
-colnames(data_total)[5] = "temperature"
 ```
 
 # adding time column 
