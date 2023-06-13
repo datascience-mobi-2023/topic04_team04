@@ -147,7 +147,6 @@ time_column = rep(time_column_short, times = 77)
 data_total = cbind(data_total, time_column) 
 ```
 
-
 #Detect missing values
 ```{r}
 detect_na <- function(x) {
@@ -159,4 +158,13 @@ rmv.rows = apply(data_total,1,function(x){sum(is.na(x))})
 ```
 
 
+#struture data frame and convert into right datatypes
+```{r}
+data_total = as.data.frame(data_total)
+num_col = c("temperature", "Longitude", "Latitude")
+int_col = c("dengue_cases","population_count","year")
+data_total[int_col] = lapply(data_total[int_col], as.integer)
+data_total[num_col] = lapply(data_total[num_col], as.numeric)
+data_total = subset(data_total, select = c("data_names", "Reporting_areas", "year", "month", "time_column", "dengue_cases", "population_count", "temperature", "Longitude", "Latitude"))
+```
 
