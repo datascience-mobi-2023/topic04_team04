@@ -130,13 +130,8 @@ row.names(population_df_replicated) <- NULL
 total_population = rbind(total_population, population_df_replicated)
 sorted_total_population = total_population[order(total_population$"Reporting_areas"),]
 
-data_total = subset(data_total, select = -population_count)
 data_total = cbind(data_total,sorted_total_population[,c(2,3)])
 row.names(data_total) = NULL
-```
-
-```{r}
-plot(data_total$population_count[1:180])
 ```
 
 
@@ -150,12 +145,6 @@ time_column_short = format(time_column_short, "%Y-%m")
 time_column = rep(time_column_short, times = 77)
 
 data_total = cbind(data_total, time_column) 
-```
-
-#rownames erneuern
-```{r}
-new_row_names <- 1:nrow(data_total)
-row.names(data_total) <- new_row_names
 ```
 
 
