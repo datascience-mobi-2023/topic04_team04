@@ -96,7 +96,9 @@ for (i in 2006:2011) {
   population_df  = data.frame()
   Dateiname <- paste0(i, Endung) #erstellen das Dateinamens
   population_df = read_excel(Dateiname) #erstellen der Variable und zuweisen der Excel-Tabelle
-  names(population_df) = c("Reporting_areas", "population_count")
+  vec_years = rep(i, times = 77)
+  population_df = cbind(population_df,vec_years)
+  names(population_df) = c("Reporting_areas", "population_count", "year")
   # multiply every row 12 times for each month
   repeat_count <- 12
   population_df_replicated <- population_df[rep(row.names(population_df), each = repeat_count), ]
@@ -110,9 +112,13 @@ for (i in 2006:2011) {
 # stack years of 2012-2020 below each other and add to data_total
 population_df = read_excel("2012-2020_population.xlsx")
 colnames(population_df) = c("Reporting_areas", "population_count", "population_count", "population_count", "population_count", "population_count","population_count","population_count","population_count","population_count")
-pop_placeholder = data.frame(Reporting_areas = character(), population_count = numeric())
-for (i in 2:10) {
-  pop_placeholder = rbind(pop_placeholder, population_df[,c(1,i)])
+pop_placeholder = data.frame(Reporting_areas = character(), population_count = numeric(), year = numeric())
+col_num = 2
+for (i in 2012:2020) {
+  year = rep(i, times = 77)
+  pop_placeholder = rbind(pop_placeholder, cbind(population_df[,c(1,col_num)],year))
+  names(pop_placeholder) = c("Reporting_areas", "population_count", "year")
+  col_num = col_num + 1
 }
 
 # multiply every row 12 times for each month
@@ -122,9 +128,17 @@ row.names(population_df_replicated) <- NULL
 
 # combine all population data in each 
 total_population = rbind(total_population, population_df_replicated)
+sorted_total_population = total_population[order(total_population$"Reporting_areas"),]
 
-data_total = cbind(data_total, total_population[,2])
+data_total = subset(data_total, select = -population_count)
+data_total = cbind(data_total,sorted_total_population[,c(2,3)])
+row.names(data_total) = NULL
 ```
+
+```{r}
+plot(data_total$population_count[1:180])
+```
+
 
 # adding time column 
 ```{r}
