@@ -212,8 +212,13 @@ dengue_plot_time = c()
 dengue_plot_cases <- data_total$dengue_cases[data_total$Reporting_areas == "Bangkok"]
 dengue_plot_time <- data_total$time_column[data_total$Reporting_areas == "Bangkok"]
 
-plot(dengue_plot_time,dengue_plot_cases)
+plot(dengue_plot_time,dengue_plot_cases, type = "o")
 ```
+
+```{r}
+myTs <- ts(data_total$cases, frequency = 12, start = c(2006, 1))
+```
+
 
 
 
