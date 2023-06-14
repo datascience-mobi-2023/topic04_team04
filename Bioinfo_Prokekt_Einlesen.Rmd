@@ -79,7 +79,7 @@ for (i in 1:77) {
     m = m + 1
   }
 }
-data_total = cbind(data_total_dengue, temp_data_sorted) 
+data_total = cbind(data_total, temp_data_sorted) 
 colnames(data_total)[5] = "temperature"
 ```
 
