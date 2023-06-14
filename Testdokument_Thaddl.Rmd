@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r}
 install.packages("readxl")
+install.packages("ggplot2")
 library(readxl)
 ```
 
@@ -141,10 +142,11 @@ first_date = as.Date("2006-01-01")
 last_date = as.Date("2020-12-31")
 
 time_column_short = seq(first_date, last_date, by = "month")
-time_column_short = format(time_column_short, "%Y-%m")
+time_column_short = as.Date(time_column_short, format = "%Y-%m")
 time_column = rep(time_column_short, times = 77)
 
-data_total = cbind(data_total, time_column) 
+data_total = cbind(data_total, time_column)
+#data_total = subset(data_total, select = -time_column)
 ```
 
 #Detect missing values
@@ -157,7 +159,6 @@ data_total <- apply(data_total, 2, detect_na)
 rmv.rows = apply(data_total,1,function(x){sum(is.na(x))})
 ```
 
-
 #struture data frame and convert into right datatypes
 ```{r}
 data_total = as.data.frame(data_total)
@@ -166,5 +167,56 @@ int_col = c("dengue_cases","population_count","year")
 data_total[int_col] = lapply(data_total[int_col], as.integer)
 data_total[num_col] = lapply(data_total[num_col], as.numeric)
 data_total = subset(data_total, select = c("data_names", "Reporting_areas", "year", "month", "time_column", "dengue_cases", "population_count", "temperature", "Longitude", "Latitude"))
+
+save(data_total, file = "data_total.RData")
+summary(data_total)
 ```
+
+#mean
+```{r}
+current_name <- data_total$Reporting_areas[1]
+sum_value = data_total$dengue_cases[1]
+data_total$mean_values = 0
+m = 0
+a = 1
+  for(i in 2:length(data_total$Reporting_areas)){
+    if (data_total$Reporting_areas[i] == current_name) {
+    m = m + 1
+  } else {
+    sum_value = mean(data_total$dengue_cases[i-a-m:i-a])
+    data_total$mean_values[i-1] = sum_value
+    current_name <- data_total$Reporting_areas[i]
+    sum_value <- data_total$dengue_cases[i]
+  }
+  }
+
+  mean_values <- sapply(data_total, function(x) {
+    if (is.integer(x) || is.numeric(x)) {
+      
+        
+      
+      return(mean(x, na.rm = TRUE))
+    } else {
+      return(NA)
+    }
+  }, simplify = FALSE)
+
+mean_values
+```
+
+#Plot
+```{r}
+dengue_plot_cases = c()
+dengue_plot_time = c()
+
+dengue_plot_cases <- data_total$dengue_cases[data_total$Reporting_areas == "Bangkok"]
+dengue_plot_time <- data_total$time_column[data_total$Reporting_areas == "Bangkok"]
+
+plot(dengue_plot_time,dengue_plot_cases)
+```
+
+
+
+
+
 
