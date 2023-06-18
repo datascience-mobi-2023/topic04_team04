@@ -33,19 +33,34 @@ library(ggplot2)
 
 
 
-district_sf <- sf::st_read("/Users/frederik/Documents/GitHub/Projekt/gadm36_THA_shp")
+district_sf <- st_read("/Users/frederik/Documents/GitHub/Projekt/gadm36_THA_shp/gadm36_THA_1.shp")
 class(district_sf) # [1] "sf"         "data.frame"
+
+plot(district_sf)
 
 
 ggplot+
-  geom_sf(data = district_sf, aes(fill = pop_cnt)) + # state your data source and which column information you want to plot
-  coord_sf()
+  geom_sf(data = district_sf$geometry,) +   # state your data source and which column information you want to plot
+  labs(title = "Thailand")
+  
+ 
 
 
+#calculating incidence
 
+dimensions= dim(data_total)
+R= dimensions[1]
 
+data_total_test <- data_total
 
-
+for(Zeile in 1:R){
+  
+  Population <- data_total_test$population_count[Zeile]
+  Infection <- data_total_test$dengue_cases[Zeile]
+  Incidence = (Infection/Population)*100000
+  data_total_test$incidence[Zeile] <- Incidence
+}
+ggplot(data = data_total_test, mapping= aes(data_total_test$time_column))
 
 
 
