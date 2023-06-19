@@ -173,6 +173,7 @@ data_total = subset(data_total, select = c("data_names", "Reporting_areas", "yea
 
 
 
+# creating a dataframe for the total dengue cases in thailand over the months
 ```{r}
 month_vec = c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec" ) 
 total_thailand = data.frame(data_names = character(), dengue_cases = numeric())
@@ -192,9 +193,30 @@ for (i in 2006:2020) {
     placeholder_df = data.frame(data_names = name_column, dengue_cases = total_cases)   
     total_thailand = rbind(total_thailand, placeholder_df)
     
-    
   }
 }
+
+total_thailand = cbind(total_thailand, time_column_short)
+
+```
+
+
+#ARIMA
+```{r}
+Ts_thailand <- ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
+TSstudio::ts_plot(Ts_thailand)
+
+decomposed_thailand <- decompose(Ts_thailand, type="additive") # use type = "additive" for additive components
+plot(decomposed_thailand)
+grid(lty = 2, col = "gray")
+
+library(tseries)
+adf.test(Ts_thailand) # p-value (0.01) < 0.05 indicates the TS is stationary --> suggests it is stationary
+
+
+acf_thailand <- acf(total_thailand$dengue_cases)
+
+pacf_thailand <- pacf(total_thailand$dengue_cases)
 
 ```
 
