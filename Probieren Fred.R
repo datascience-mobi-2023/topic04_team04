@@ -60,7 +60,34 @@ for(Zeile in 1:R){
   Incidence = (Infection/Population)*100000
   data_total_test$incidence[Zeile] <- Incidence
 }
-ggplot(data = data_total_test, mapping= aes(data_total_test$time_column))
+
+
+#plotting incidence
+
+
+plot_inzidenz <- c()
+
+district <- "Amnat Charoe"  
+plot_zeit <- c()
+
+
+
+zeit_nehmen <- function(data, district, plot_zeit){
+  if(data$Reporting_areas==district)
+  plot_zeit <- plot_zeit + data$time_column[]
+}
+
+while (data_total_test$Reporting_areas=="Amnat Charoe") {
+  i
+  
+}
+
+
+result <- apply(data_total_test, district, plot_zeit)
+
+
+plot_zeit <- data_total_test$time_column[data_total_test$Reporting_areas=="Amnat Charoe"]
+plot(plot_zeit, plot_inzidenz)
 
 
 
