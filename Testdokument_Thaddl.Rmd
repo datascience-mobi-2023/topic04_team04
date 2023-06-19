@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 install.packages("readxl")
 install.packages("ggplot2")
+install.packages("scales")
 library(readxl)
 ```
 
@@ -142,7 +143,7 @@ first_date = as.Date("2006-01-01")
 last_date = as.Date("2020-12-31")
 
 time_column_short = seq(first_date, last_date, by = "month")
-time_column_short = as.Date(time_column_short, format = "%Y-%m")
+time_column_short = as.Date(time_column_short)
 time_column = rep(time_column_short, times = 77)
 
 data_total = cbind(data_total, time_column)
@@ -172,37 +173,36 @@ save(data_total, file = "data_total.RData")
 summary(data_total)
 ```
 
-#mean
+#mean of dengue_cases of whole thailand
 ```{r}
-current_name <- data_total$Reporting_areas[1]
-sum_value = data_total$dengue_cases[1]
-data_total$mean_values = 0
-m = 0
-a = 1
-  for(i in 2:length(data_total$Reporting_areas)){
-    if (data_total$Reporting_areas[i] == current_name) {
-    m = m + 1
-  } else {
-    sum_value = mean(data_total$dengue_cases[i-a-m:i-a])
-    data_total$mean_values[i-1] = sum_value
-    current_name <- data_total$Reporting_areas[i]
-    sum_value <- data_total$dengue_cases[i]
-  }
-  }
+library(ggplot2)
+library(scales)
+mean_dengue <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
+months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
+for (i in months) {
+  month = data_total[data_total$time_column == i,]
+  m_month = data.frame(dengue_cases = mean(month$dengue_case, na.rm = TRUE), time_column = month$time_column[1])
+  mean_dengue = rbind(mean_dengue, m_month)
+}
 
-  mean_values <- sapply(data_total, function(x) {
-    if (is.integer(x) || is.numeric(x)) {
-      
-        
-      
-      return(mean(x, na.rm = TRUE))
-    } else {
-      return(NA)
-    }
-  }, simplify = FALSE)
+mean_temp <- data.frame(temperature = numeric(), time_column = as.Date(character()))
+for (i in months) {
+  month = data_total[data_total$time_column == i,]
+  m_month = data.frame(temperature = mean(month$temperature, na.rm = TRUE), time_column = month$time_column[1])
+  mean_temp = rbind(mean_temp, m_month)
+}
 
-mean_values
+
+p = ggplot() +
+      geom_line(data = mean_dengue, aes(x = time_column, y = dengue_cases)) +
+      labs(x = "Zeit", y = "Dengue-Fälle")
+
+p = p + geom_line(data = mean_temp, aes(x = time_column, y = temperature), color = "red") + 
+  scale_y_continuous(sec.axis = sec_axis(~ rescale(., to = range(mean_temp$temperature)), name = "Temperature"))
+print(p)
 ```
+
+
 
 #Plot
 ```{r}
@@ -215,8 +215,11 @@ dengue_plot_time <- data_total$time_column[data_total$Reporting_areas == "Bangko
 plot(dengue_plot_time,dengue_plot_cases, type = "o")
 ```
 
+#probieren mit time series Objekten
 ```{r}
-myTs <- ts(data_total$cases, frequency = 12, start = c(2006, 1))
+my_ts <- ts(data_total$dengue_cases, start = c(data_total$time_column[1]), frequency = 12)
+head(my_ts)
+TSstudio::ts_plot(my_ts)
 ```
 
 
