@@ -169,4 +169,31 @@ data_total[num_col] = lapply(data_total[num_col], as.numeric)
 data_total = subset(data_total, select = c("data_names", "Reporting_areas", "year", "month", "time_column", "dengue_cases", "population_count", "temperature", "Longitude", "Latitude"))
 ```
 
+# creating a dataframe for the total dengue cases in thailand over the months
+```{r}
+month_vec = c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec" ) 
+total_thailand = data.frame(data_names = character(), dengue_cases = numeric())
+
+for (i in 2006:2020) {
+  name_years = paste0("rows_", i)
+  assign(name_years, data_total[data_total$year == i, ]) 
+  
+  for (month in month_vec) {
+    name_months = paste0(name_years, month)
+    a = get(name_years)
+    assign(name_months, a[a$month == month, ])
+    
+    b = get(name_months)
+    total_cases = sum(b$dengue_cases, na.rm = T)
+    name_column = paste0(i,"_", month)
+    placeholder_df = data.frame(data_names = name_column, dengue_cases = total_cases)   
+    total_thailand = rbind(total_thailand, placeholder_df)
+    
+  }
+}
+
+total_thailand = cbind(total_thailand, time_column_short)
+
+```
+
 
