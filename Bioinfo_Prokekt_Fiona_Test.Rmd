@@ -14,6 +14,8 @@ install.packages("readxl")
 library(readxl)
 ```
 
+
+
 ##Einlesen der Tabellen und umwandeln der Tabellen in data frames
 ```{r}
 library(readxl)
@@ -25,7 +27,7 @@ Anfang <- "Dengue"
 for (i in 2006:2020) {
   
   Dateiname <- paste0(i, Endung) #erstellen das Dateinamens
-  Name_df <- paste0(Anfang, i) #Name des Dataframe 
+  Name_df <- paste0(Anfang, i) 
   assign(Name_df, read_excel(Dateiname)) #erstellen der Variable und zuweisen der Excel-Tabelle
   
   df_dengue <- get(Name_df)
@@ -33,12 +35,12 @@ for (i in 2006:2020) {
   
   vec_data_names <- sapply(df_dengue$Reporting_areas, function(g) {
     paste(g[1], i)
-  }) #Vektor mit Distriktnamen füllen
-  data_names <- matrix(vec_data_names,nrow = 77, ncol = 1)#Distriktnamen in Matrix (da Vektor horizontal)
-  df_dengue <- cbind(data_names, df_dengue) #Namenspalte an Datensatz anfügen
-  assign(Name_df,df_dengue) #Namen der dataframes den Daten zuordnen
+  })
+  data_names <- matrix(vec_data_names,nrow = 77, ncol = 1)
+  df_dengue <- cbind(data_names, df_dengue)
+  assign(Name_df,df_dengue)
 }
-total_years = data.frame() 
+total_years = data.frame()
 for (i in 2006:2020){
   a = get(paste0("Dengue",i))
   total_years = rbind(total_years, a)
@@ -48,8 +50,8 @@ for (i in 2006:2020){
 #Rows als Zeitachse mit Monaten
 ```{r}
 m = 1
-data_total_dengue = data.frame(col1 = character(0), col2 = character(0), col3 = numeric(0), month = character(0))
-colnames(data_total_dengue) = c("data_names", "Reporting_areas", "dengue_cases", "month")
+data_total = data.frame(col1 = character(0), col2 = character(0), col3 = numeric(0), month = character(0))
+colnames(data_total) = c("data_names", "Reporting_areas", "dengue_cases", "month")
 sorted_total_years = total_years[order(total_years$"Reporting_areas"),]
 for (k in 1:1155){
   for (j in 3:14){
@@ -57,31 +59,31 @@ for (k in 1:1155){
     month = colnames(square[3])
     square <- cbind(square,month)
     colnames(square) = c("data_names", "Reporting_areas", "dengue_cases", "month")
-    data_total_dengue <- rbind(data_total_dengue, square)
-    colnames(data_total_dengue) = c("data_names", "Reporting_areas", "dengue_cases", "month")
-    data_total_dengue[m,1] = paste(data_total_dengue[m,1], month[1])
+    data_total <- rbind(data_total, square)
+    colnames(data_total) = c("data_names", "Reporting_areas", "dengue_cases", "month")
+    data_total[m,1] = paste(data_total[m,1], month[1])
     m = m + 1
   }
 }
 ```
-
 
 #adding temperature column
 ```{r}
 m = 1
 temp_data = read_excel("era5_data_2006_2020_thailand_monmean.xlsx")
 temp_data = as.data.frame(temp_data)
-temp_data_sorted = data.frame( col1 = numeric(0))
+temp_data_sorted = data.frame( col1 = numeric(0), Longitude = numeric(0), Latitude = numeric(0))
 for (i in 1:77) {
   for (j in 5:184) {
     temp_data_sorted[m,1] = temp_data[i,j]
+    temp_data_sorted[m,2] = temp_data[i,3]
+    temp_data_sorted[m,3] = temp_data[i,4]
     m = m + 1
   }
 }
-data_total = cbind(data_total_dengue, temp_data_sorted) 
+data_total = cbind(data_total, temp_data_sorted) 
 colnames(data_total)[5] = "temperature"
 ```
-
 
 #Einlesen Population data
 ```{r}
@@ -96,7 +98,9 @@ for (i in 2006:2011) {
   population_df  = data.frame()
   Dateiname <- paste0(i, Endung) #erstellen das Dateinamens
   population_df = read_excel(Dateiname) #erstellen der Variable und zuweisen der Excel-Tabelle
-  names(population_df) = c("Reporting_areas", "population_count")
+  vec_years = rep(i, times = 77)
+  population_df = cbind(population_df,vec_years)
+  names(population_df) = c("Reporting_areas", "population_count", "year")
   # multiply every row 12 times for each month
   repeat_count <- 12
   population_df_replicated <- population_df[rep(row.names(population_df), each = repeat_count), ]
@@ -107,53 +111,90 @@ for (i in 2006:2011) {
   
 }
 
-# stack years of 2006 
+# stack years of 2012-2020 below each other and add to data_total
 population_df = read_excel("2012-2020_population.xlsx")
 colnames(population_df) = c("Reporting_areas", "population_count", "population_count", "population_count", "population_count", "population_count","population_count","population_count","population_count","population_count")
-pop_placeholder = data.frame(Reporting_areas = character(), population_count = numeric())
-for (i in 2:10) {
-  pop_placeholder = rbind(pop_placeholder, population_df[,c(1,i)])
-  
+pop_placeholder = data.frame(Reporting_areas = character(), population_count = numeric(), year = numeric())
+col_num = 2
+for (i in 2012:2020) {
+  year = rep(i, times = 77)
+  pop_placeholder = rbind(pop_placeholder, cbind(population_df[,c(1,col_num)],year))
+  names(pop_placeholder) = c("Reporting_areas", "population_count", "year")
+  col_num = col_num + 1
 }
-# Anzahl der Wiederholungen pro Zeile
+
+# multiply every row 12 times for each month
 repeat_count <- 12
-
-# Jede Zeile verzwölffachen
 population_df_replicated <- pop_placeholder[rep(row.names(pop_placeholder), each = repeat_count), ]
-
-# Zeilennummern zurücksetzen
 row.names(population_df_replicated) <- NULL
 
-
+# combine all population data in each 
 total_population = rbind(total_population, population_df_replicated)
+sorted_total_population = total_population[order(total_population$"Reporting_areas"),]
 
-data_total = cbind(data_total, total_population[,2])
-
+data_total = cbind(data_total,sorted_total_population[,c(2,3)])
+row.names(data_total) = NULL
 ```
 
 
 # adding time column 
-
 ```{r}
 first_date = as.Date("2006-01-01")
 last_date = as.Date("2020-12-31")
 
 time_column_short = seq(first_date, last_date, by = "month")
-time_column_short = format(time_column_short, "%Y-%m")
+time_column_short = as.Date(time_column_short, format = "%Y-%m")
 time_column = rep(time_column_short, times = 77)
 
-data_total = cbind(data_total, time_column) 
+data_total = cbind(data_total, time_column)
+#data_total = subset(data_total, select = -time_column) 
 ```
 
 
-
-#Summary statistics
+#Detect missing values
 ```{r}
 detect_na <- function(x) {
   is_na <- x %in% c("N/A", "na", "NA", "n/a")
   replace(x, is_na, NA)
 }
-missing_data_total <-  apply(data_total, 2, detect_na)
-rmv.rows = apply(missing_data_total,1,function(x){sum(is.na(x))})
+data_total <- apply(data_total, 2, detect_na)
+rmv.rows = apply(data_total,1,function(x){sum(is.na(x))})
+```
+
+#struture data frame and convert into right datatypes
+```{r}
+data_total = as.data.frame(data_total)
+num_col = c("temperature", "Longitude", "Latitude")
+int_col = c("dengue_cases","population_count","year")
+data_total[int_col] = lapply(data_total[int_col], as.integer)
+data_total[num_col] = lapply(data_total[num_col], as.numeric)
+data_total = subset(data_total, select = c("data_names", "Reporting_areas", "year", "month", "time_column", "dengue_cases", "population_count", "temperature", "Longitude", "Latitude"))
+```
+
+
+
+```{r}
+month_vec = c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec" ) 
+total_thailand = data.frame(data_names = character(), dengue_cases = numeric())
+
+for (i in 2006:2020) {
+  name_years = paste0("rows_", i)
+  assign(name_years, data_total[data_total$year == i, ]) 
+  
+  for (month in month_vec) {
+    name_months = paste0(name_years, month)
+    a = get(name_years)
+    assign(name_months, a[a$month == month, ])
+    
+    b = get(name_months)
+    total_cases = sum(b$dengue_cases, na.rm = T)
+    name_column = paste0(i,"_", month)
+    placeholder_df = data.frame(data_names = name_column, dengue_cases = total_cases)   
+    total_thailand = rbind(total_thailand, placeholder_df)
+    
+    
+  }
+}
+
 ```
 
