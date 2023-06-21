@@ -55,8 +55,8 @@ auto_thailand
 
 
 ```{r}
-auto_thailand_2  <- auto.arima(Ts_thailand, stepwise = F, approximation = F)
-auto_thailand_2
+#auto_thailand_2  <- auto.arima(Ts_thailand, stepwise = F, approximation = F)
+#auto_thailand_2
 ```
 
 
