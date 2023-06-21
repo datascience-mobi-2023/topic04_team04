@@ -20,8 +20,8 @@ data_total
 library(ggplot2)
 
 # create data
-xValue <-
-yValue <- 
+xValue <- month_dates
+yValue <- mean_tempvec
 data <- data.frame(xValue,yValue)
 
 # Plot
@@ -40,6 +40,8 @@ axis(4, seq(20,32))
 
 
 ```
+*linear (or other) regression of temperature*
+
 #algorithm test for 01/2006
 ```{r}
 
@@ -51,21 +53,6 @@ axis(4, seq(20,32))
   }
 tempvec 
 ```
-
----
-title: "Dana_Testdokument_Tempplots"
-output: html_document
-date: "2023-06-13"
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r}
-data_total
-```
-#general plot of temperature over the years 
 
 ```{r}
 #ggplot template
