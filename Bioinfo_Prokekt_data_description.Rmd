@@ -26,3 +26,80 @@ for(Zeile in 1:R){
 ```
 
 
+#ARIMA
+```{r}
+Ts_thailand <- ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
+TSstudio::ts_plot(Ts_thailand)
+
+decomposed_thailand <- decompose(Ts_thailand, type="additive") # use type = "additive" for additive components
+plot(decomposed_thailand)
+grid(lty = 2, col = "gray")
+
+library(tseries)
+adf.test(Ts_thailand) # p-value (0.01) < 0.05 indicates the TS is stationary --> suggests it is stationary
+
+
+acf_thailand <- acf(total_thailand$dengue_cases)
+
+pacf_thailand <- pacf(total_thailand$dengue_cases)
+
+```
+
+
+```{r}
+library(forecast)
+auto_thailand  <- auto.arima(Ts_thailand)
+auto_thailand
+```
+
+
+
+```{r}
+auto_thailand_2  <- auto.arima(Ts_thailand, stepwise = F, approximation = F)
+auto_thailand_2
+```
+
+
+```{r}
+residuals_thailand <- residuals(auto_thailand)
+plot(residuals_thailand)
+
+acf(residuals_thailand)
+
+portmanteau_thailand <- Box.test(residuals_thailand, lag = 12, type = "Ljung-Box")
+portmanteau_thailand 
+# --> p value (0.52) > 0.05 --> no evidence for autocorrelation --> ARIMA model works well
+```
+
+
+```{r}
+library(forecast)
+horizon_thailand <- 12 
+forecasted_thailand <- forecast(auto_thailand, h = horizon_thailand)
+
+forecastedTs_thailand <- forecasted_thailand$mean
+forecastedTs_thailand  <- ts(forecastedTs_thailand, frequency = 12, start = c(2021, 1) )
+plot(forecastedTs_thailand)
+```
+
+
+
+```{r}
+forecastDf_thailand <- as.data.frame(forecasted_thailand)
+forecastDf_thailand$time <- time(forecastedTs_thailand)
+names(forecastDf_thailand) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+```
+
+
+```{r}
+ggplot() +
+  geom_line(data = Ts_thailand, aes(x = time(Ts_thailand), y = Ts_thailand), color = "black") +
+  geom_ribbon(data = forecastDf_thailand, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
+  geom_line(data = forecastDf_thailand, aes(x = time, y = point), color = "blue") +
+  labs(title = "Time Series Forecast") +
+  xlab("Year") +
+  ylab("Dengue Cases") +
+  theme_minimal()
+```
+
+
