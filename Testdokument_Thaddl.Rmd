@@ -173,6 +173,20 @@ save(data_total, file = "data_total.RData")
 summary(data_total)
 ```
 
+#Inzindenz
+```{r}
+dimensions= dim(data_total)
+R= dimensions[1]
+
+for(Zeile in 1:R){
+  Population <- data_total$population_count[Zeile]
+  Infection <- data_total$dengue_cases[Zeile]
+  Incidence = (Infection/Population)*100000
+  data_total$incidence[Zeile] <- Incidence
+}
+```
+
+
 #mean of dengue_cases of whole thailand
 ```{r}
 library(ggplot2)
@@ -193,13 +207,12 @@ for (i in months) {
 }
 
 
-p = ggplot() +
-      geom_line(data = mean_dengue, aes(x = time_column, y = dengue_cases)) +
-      labs(x = "Zeit", y = "Dengue-Fälle")
+ggplot2::ggplot() +
+  geom_line(data = mean_dengue, aes(x = time_column, y = dengue_cases)) +
+  labs(x = "Zeit", y = "Dengue-Fälle") +
+  geom_line(data = mean_temp, aes(x = time_column, y = temperature), color = "red") + 
+  scale_y_continuous(sec.axis = sec_axis(trans = ~ rescale(., to = range(mean_temp$temperature)), name = "Temperatur"), name = "Dengue-Fälle")
 
-p = p + geom_line(data = mean_temp, aes(x = time_column, y = temperature), color = "red") + 
-  scale_y_continuous(sec.axis = sec_axis(~ rescale(., to = range(mean_temp$temperature)), name = "Temperature"))
-print(p)
 ```
 
 
@@ -222,7 +235,42 @@ head(my_ts)
 TSstudio::ts_plot(my_ts)
 ```
 
+#GAM
+```{r}
+install.packages("readxl")
+install.packages("nlme")
+install.packages("gam")
+install.packages("sdm")
+install.packages("raster")
+install.packages("ncdf4")
+install.packages("mgcv")
 
+library(readxl)
+library(nlme)
+library(gam)
+library(sdm)
+library(raster)
+library(ncdf4)
+library(mgcv)
+
+data <- read_excel("C:/Users/thadl/OneDrive/Dokumente/Bioinfo/Klimaprojekt/Daten/Data for modeling.xlsx")
+View(data)
+newdata = data.frame(data)
+attach(newdata)
+model1 <- gam(Abun1~s(Maxtemp, k=4), family="quasipoisson")
+plot.gam(model1)
+summary(model1)
+model2 <- gam(Abun2~s(Maxtemp, k=4), family="quasipoisson")
+plot.gam(model2)
+summary(model2)
+k.check(model1)
+gam.check(model1)
+
+linear_model <- gam(Abun1~Maxtemp)
+smooth_model <- gam(Abun1~s(Maxtemp))
+
+AIC(linear_model, smooth_model)
+```
 
 
 
