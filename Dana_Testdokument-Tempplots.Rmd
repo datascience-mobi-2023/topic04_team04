@@ -11,7 +11,6 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r}
 data_total
 ```
-#general plot of temperature over the years 
 
 ```{r}
 #ggplot template
@@ -20,8 +19,7 @@ data_total
 library(ggplot2)
 
 # create data
-xValue <- month_dates
-yValue <- mean_tempvec
+yValue <- 
 data <- data.frame(xValue,yValue)
 
 # Plot
@@ -29,6 +27,8 @@ ggplot(data, aes(x=xValue, y=yValue)) +
   geom_line()
 
 ```
+
+
 
 #temperature of amnat charoen over the years
 ```{r}
@@ -40,7 +40,7 @@ axis(4, seq(20,32))
 
 
 ```
-*linear (or other) regression of temperature*
+
 
 #algorithm test for 01/2006
 ```{r}
@@ -54,27 +54,11 @@ axis(4, seq(20,32))
 tempvec 
 ```
 
-```{r}
-#ggplot template
-
-# Libraries
-library(ggplot2)
-
-# create data
-xValue <-
-yValue <- 
-data <- data.frame(xValue,yValue)
-
-# Plot
-ggplot(data, aes(x=xValue, y=yValue)) +
-  geom_line()
-
-```
 
 #temperature of amnat charoen over the years
 ```{r}
 month_dates <- seq(as.Date("2006-01-01"), as.Date("2020-12-01"), by = "month", format = "%m")
-plot(x = month_dates[c(1:180)], y = data_total$temperature[c(1:180)], type = "l",xlab="Time", ylab="Temperature", col="red")
+plot(x = month_dates[c(1:180)], y = data_total$temperature[c(1:180)], type = "l",xlab="Time", ylab="Temperature", col="red", main="Temperature in Amnat Charoen")
 lmodel=lm(data_total$temperature[c(1:180)] ~ month_dates[c(1:180)])
 abline(lmodel,col="blue")
 axis(4, seq(20,32))
@@ -96,20 +80,37 @@ for (month in c(1:180)) {
  }
 mean_tempvec
 ```
+*linear (or other) regression of temperature*
+```{r}
+lmodel_thailand_temp = lm(mean_tempvec ~ month_dates[c(1:180)])
 
+```
 ```{r}
 
 plot(x = data_total$time_column, y = data_total$temperature, type = "p", xlab = "time", ylab = "temperature", col = "blue")
 ```
 
-
-
 #plot of temperature in thailand from 2006 to 2022
 ```{r}
 month_dates <- seq(as.Date("2006-01-01"), as.Date("2020-12-01"), by = "month", format = "%m")
 plot(x = month_dates[c(1:180)], y = mean_tempvec, type = "l",xlab="Time", ylab="Temperature", col="red")
-lmodel=lm(mean_tempvec ~ month_dates[c(1:180)])
-abline(lmodel,col="blue")
+
+abline(lmodel_thailand_temp,col="blue")
 axis(4, seq(20,32))
 ```
+ggplot
+```{r}
 
+# Libraries
+library(ggplot2)
+
+# create data
+xValue <- month_dates
+yValue <- mean_tempvec
+data <- data.frame(xValue,yValue)
+
+# Plot
+ggplot(data, aes(x=xValue, y=yValue)) +
+  geom_line()
+
+```
