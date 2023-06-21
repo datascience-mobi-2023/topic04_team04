@@ -67,7 +67,7 @@ for(Zeile in 1:R){
 
 plot_inzidenz <- c()
 
-district <- "Amnat Charoe"  
+district <- "Amnat Charoen"  
 plot_zeit <- c()
 
 
@@ -77,7 +77,7 @@ zeit_nehmen <- function(data, district, plot_zeit){
   plot_zeit <- plot_zeit + data$time_column[]
 }
 
-while (data_total_test$Reporting_areas=="Amnat Charoe") {
+while (data_total_test$Reporting_areas=="Amnat Charoen") {
   i
   
 }
@@ -86,7 +86,10 @@ while (data_total_test$Reporting_areas=="Amnat Charoe") {
 result <- apply(data_total_test, district, plot_zeit)
 
 
-plot_zeit <- data_total_test$time_column[data_total_test$Reporting_areas=="Amnat Charoe"]
+plot_zeit <- data_total_test$time_column[data_total_test$Reporting_areas=="Amnat Charoen"| data_total_test$year==2008]
+plot_inzidenz <- data_total_test$Incidence[data_total_test$Reporting_areas=="Amnat Charoen" || data_total_test$year==2008]
+
+
 plot(plot_zeit, plot_inzidenz)
 
 
