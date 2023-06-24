@@ -25,6 +25,13 @@ for(Zeile in 1:R){
 }
 ```
 
+# Correlation
+```{r}
+cor = cor(total_thailand$dengue_cases, total_thailand$temperature, method = "spearman")
+cor
+plot(total_thailand$dengue_cases, total_thailand$temperature, main = "scatterplot", xlab = "cases", ylab = "temperature")
+```
+
 
 #ARIMA
 ```{r}
