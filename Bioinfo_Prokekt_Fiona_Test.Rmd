@@ -278,3 +278,14 @@ ggplot() +
   theme_minimal()
 ```
 
+
+
+
+# Correlation
+```{r}
+cor = cor(total_thailand$dengue_cases, total_thailand$temperature, method = "spearman")
+cor
+
+```
+
+
