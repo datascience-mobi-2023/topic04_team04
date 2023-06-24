@@ -225,14 +225,14 @@ pacf_thailand <- pacf(total_thailand$dengue_cases)
 library(forecast)
 auto_thailand  <- auto.arima(Ts_thailand)
 auto_thailand
-```
 
-
-
-```{r}
 auto_thailand_2  <- auto.arima(Ts_thailand, stepwise = F, approximation = F)
 auto_thailand_2
 ```
+```{r}
+auto_thailand
+```
+
 
 
 ```{r}
@@ -267,6 +267,7 @@ names(forecastDf_thailand) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "t
 
 
 ```{r}
+library(ggplot2)
 ggplot() +
   geom_line(data = Ts_thailand, aes(x = time(Ts_thailand), y = Ts_thailand), color = "black") +
   geom_ribbon(data = forecastDf_thailand, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
