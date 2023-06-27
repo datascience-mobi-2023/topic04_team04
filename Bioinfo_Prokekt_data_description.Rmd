@@ -25,4 +25,230 @@ for(Zeile in 1:R){
 }
 ```
 
+# Correlation
+```{r}
+cor = cor(total_thailand$dengue_cases, total_thailand$temperature, method = "spearman")
+cor
+plot(total_thailand$dengue_cases, total_thailand$temperature, main = "scatterplot", xlab = "cases", ylab = "temperature")
+```
 
+
+#ARIMA
+```{r}
+Ts_thailand <- ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
+TSstudio::ts_plot(Ts_thailand)
+
+decomposed_thailand <- decompose(Ts_thailand, type="additive") # use type = "additive" for additive components
+plot(decomposed_thailand)
+grid(lty = 2, col = "gray")
+
+library(tseries)
+adf.test(Ts_thailand) # p-value (0.01) < 0.05 indicates the TS is stationary --> suggests it is stationary
+
+
+acf_thailand <- acf(total_thailand$dengue_cases)
+
+pacf_thailand <- pacf(total_thailand$dengue_cases)
+
+```
+
+
+```{r}
+library(forecast)
+auto_thailand  <- auto.arima(Ts_thailand)
+auto_thailand
+```
+
+
+
+```{r}
+#auto_thailand_2  <- auto.arima(Ts_thailand, stepwise = F, approximation = F)
+#auto_thailand_2
+```
+
+
+```{r}
+residuals_thailand <- residuals(auto_thailand)
+plot(residuals_thailand)
+
+acf(residuals_thailand)
+
+portmanteau_thailand <- Box.test(residuals_thailand, lag = 12, type = "Ljung-Box")
+portmanteau_thailand 
+# --> p value (0.52) > 0.05 --> no evidence for autocorrelation --> ARIMA model works well
+```
+
+
+```{r}
+library(forecast)
+horizon_thailand <- 12 
+forecasted_thailand <- forecast(auto_thailand, h = horizon_thailand)
+
+forecastedTs_thailand <- forecasted_thailand$mean
+forecastedTs_thailand  <- ts(forecastedTs_thailand, frequency = 12, start = c(2021, 1) )
+plot(forecastedTs_thailand)
+```
+
+
+
+```{r}
+forecastDf_thailand <- as.data.frame(forecasted_thailand)
+forecastDf_thailand$time <- time(forecastedTs_thailand)
+names(forecastDf_thailand) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+```
+
+
+```{r}
+ggplot() +
+  geom_line(data = Ts_thailand, aes(x = time(Ts_thailand), y = Ts_thailand), color = "black") +
+  geom_ribbon(data = forecastDf_thailand, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
+  geom_line(data = forecastDf_thailand, aes(x = time, y = point), color = "blue") +
+  labs(title = "Time Series Forecast") +
+  xlab("Year") +
+  ylab("Dengue Cases") +
+  theme_minimal()
+```
+
+#mean of dengue_cases of whole thailand
+```{r}
+library(ggplot2)
+library(scales)
+
+
+f_mean_dengue = function(){
+  mean_dengue <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
+  months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
+  for (i in months) {
+    month = data_total[data_total$time_column == i,]
+    m_month = data.frame(dengue_cases = mean(month$dengue_case, na.rm = TRUE), time_column = month$time_column[1])
+    mean_dengue = rbind(mean_dengue, m_month)
+  }
+  return(mean_dengue)
+}
+  
+f_mean_temp = function(){
+  mean_temp <- data.frame(temperature = numeric(), time_column = as.Date(character()))
+  months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
+  for (i in months) {
+    month = data_total[data_total$time_column == i,]
+    m_month = data.frame(temperature = mean(month$temperature, na.rm = TRUE), time_column = month$time_column[1])
+    mean_temp = rbind(mean_temp, m_month)
+  }
+  return(mean_temp)
+}
+
+plot1 = ggplot2::ggplot() +
+  geom_line(data = mean_dengue, aes(x = time_column, y = dengue_cases)) +
+  labs(x = "time", y = "dengue-cases") +
+  scale_x_continuous(breaks = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "2 year"))
+
+plot2 = ggplot2::ggplot() +
+  geom_line(data = mean_temp, aes(x = time_column, y = temperature), color = "red") +
+  labs(x = "time", y = "temperature") +
+  scale_x_continuous(breaks = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "2 year"))
+
+gridExtra::grid.arrange(plot1, plot2, nrow = 2)
+```
+
+#mean and median comparison
+```{r}
+f_median_dengue = function(){
+  median_dengue <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
+  months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
+  for (i in months) {
+    month = data_total[data_total$time_column == i,]
+    m_month = data.frame(dengue_cases = median(month$dengue_case, na.rm = TRUE), time_column = month$time_column[1])
+    median_dengue = rbind(median_dengue, m_month)
+  }
+  return(median_dengue)
+}
+
+f_median_temp = function(){
+  median_temp <- data.frame(temperature = numeric(), time_column = as.Date(character()))
+  months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
+  for (i in months) {
+    month = data_total[data_total$time_column == i,]
+    m_month = data.frame(temperature = median(month$temperature, na.rm = TRUE), time_column = month$time_column[1])
+    median_temp = rbind(median_temp, m_month)
+  }
+  return(median_temp)
+}
+
+
+plot_mean_temp = ggplot2::ggplot() +
+  geom_line(data = f_mean_temp(), aes(x = time_column, y = temperature)) +
+  labs(x = "time", y = "temperature", title = "Mean temperature")
+
+plot_mean_dengue = ggplot2::ggplot() +
+  geom_line(data = f_mean_dengue(), aes(x = time_column, y = dengue_cases)) +
+  labs(x = "time", y = "dengue-cases", title = "Mean dengue cases")
+
+plot_median_temp = ggplot2::ggplot() +
+  geom_line(data = f_median_temp(), aes(x = time_column, y = temperature)) +
+  labs(x = "time", y = "temperature", title = "Median temperature")
+
+plot_median_dengue = ggplot2::ggplot() +
+  geom_line(data = f_median_dengue(), aes(x = time_column, y = dengue_cases)) +
+  labs(x = "time", y = "dengue-cases", title = "Median dengue cases")
+
+gridExtra::grid.arrange(plot_mean_dengue, plot_mean_temp, plot_median_dengue, plot_median_temp, nrow = 2)
+```
+
+
+
+#Plot für Bangkok
+```{r}
+dengue_plot_cases = c()
+dengue_plot_time = c()
+
+dengue_plot_cases <- data_total$dengue_cases[data_total$Reporting_areas == "Bangkok"]
+dengue_plot_time <- data_total$time_column[data_total$Reporting_areas == "Bangkok"]
+
+plot(dengue_plot_time,dengue_plot_cases, type = "o")
+```
+
+#correlation between temperature and dengue cases
+```{r}
+i.missing = which(rmv.rows > 0)
+
+
+plot(data_total$temperature, data_total$incidence, pch = 20,
+     ylab = "incidence",
+     xlab = "mean temperature",
+     lines(data_total$temperature, data_total$incidence, col = "red")
+     )
+
+```
+
+
+
+#probieren mit time series Objekten
+```{r}
+my_ts <- ts(data_total$dengue_cases, start = c(data_total$time_column[1]), frequency = 12)
+head(my_ts)
+TSstudio::ts_plot(my_ts)
+```
+
+#GAM
+```{r}
+
+library(readxl)
+library(nlme)
+library(gam)
+library(sdm)
+library(raster)
+library(ncdf4)
+library(mgcv)
+
+attach(data_total)
+model1 <- gam(dengue_cases~s(temperature, k=6), family="quasipoisson")
+plot.gam(model1)
+summary(model1)
+k.check(model1)
+gam.check(model1)
+
+linear_model <- gam(dengue_cases~temperature)
+smooth_model <- gam(dengue_cases~s(temperature))
+
+AIC(linear_model, smooth_model)
+```

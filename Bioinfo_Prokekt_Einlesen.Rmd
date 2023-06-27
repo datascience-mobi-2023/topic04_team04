@@ -193,6 +193,8 @@ for (i in 2006:2020) {
 }
 
 total_thailand = cbind(total_thailand, time_column_short)
+total_thailand = cbind( total_thailand, temp_data_sorted)
+colnames(total_thailand)[4] = "temperature"
 
 ```
 
