@@ -163,11 +163,11 @@ rmv.rows = apply(data_total,1,function(x){sum(is.na(x))})
 #struture data frame and convert into right datatypes
 ```{r}
 data_total = as.data.frame(data_total)
-num_col = c("temperature", "Longitude", "Latitude")
+num_col = c("temperature", "Longitude", "Latitude", "incidence")
 int_col = c("dengue_cases","population_count","year")
 data_total[int_col] = lapply(data_total[int_col], as.integer)
 data_total[num_col] = lapply(data_total[num_col], as.numeric)
-data_total = subset(data_total, select = c("data_names", "Reporting_areas", "year", "month", "time_column", "dengue_cases", "population_count", "temperature", "Longitude", "Latitude"))
+data_total = subset(data_total, select = c("data_names", "Reporting_areas", "year", "month", "time_column", "dengue_cases", "population_count", "temperature", "Longitude", "Latitude", "incidence"))
 
 save(data_total, file = "data_total.RData")
 summary(data_total)
@@ -191,33 +191,90 @@ for(Zeile in 1:R){
 ```{r}
 library(ggplot2)
 library(scales)
-mean_dengue <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
-months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
-for (i in months) {
-  month = data_total[data_total$time_column == i,]
-  m_month = data.frame(dengue_cases = mean(month$dengue_case, na.rm = TRUE), time_column = month$time_column[1])
-  mean_dengue = rbind(mean_dengue, m_month)
+
+
+f_mean_dengue = function(){
+  mean_dengue <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
+  months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
+  for (i in months) {
+    month = data_total[data_total$time_column == i,]
+    m_month = data.frame(dengue_cases = mean(month$dengue_case, na.rm = TRUE), time_column = month$time_column[1])
+    mean_dengue = rbind(mean_dengue, m_month)
+  }
+  return(mean_dengue)
+}
+  
+f_mean_temp = function(){
+  mean_temp <- data.frame(temperature = numeric(), time_column = as.Date(character()))
+  months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
+  for (i in months) {
+    month = data_total[data_total$time_column == i,]
+    m_month = data.frame(temperature = mean(month$temperature, na.rm = TRUE), time_column = month$time_column[1])
+    mean_temp = rbind(mean_temp, m_month)
+  }
+  return(mean_temp)
 }
 
-mean_temp <- data.frame(temperature = numeric(), time_column = as.Date(character()))
-for (i in months) {
-  month = data_total[data_total$time_column == i,]
-  m_month = data.frame(temperature = mean(month$temperature, na.rm = TRUE), time_column = month$time_column[1])
-  mean_temp = rbind(mean_temp, m_month)
-}
-
-
-ggplot2::ggplot() +
+plot1 = ggplot2::ggplot() +
   geom_line(data = mean_dengue, aes(x = time_column, y = dengue_cases)) +
-  labs(x = "Zeit", y = "Dengue-Fälle") +
-  geom_line(data = mean_temp, aes(x = time_column, y = temperature), color = "red") + 
-  scale_y_continuous(sec.axis = sec_axis(trans = ~ rescale(., to = range(mean_temp$temperature)), name = "Temperatur"), name = "Dengue-Fälle")
+  labs(x = "time", y = "dengue-cases") +
+  scale_x_continuous(breaks = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "2 year"))
 
+plot2 = ggplot2::ggplot() +
+  geom_line(data = mean_temp, aes(x = time_column, y = temperature), color = "red") +
+  labs(x = "time", y = "temperature") +
+  scale_x_continuous(breaks = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "2 year"))
+
+gridExtra::grid.arrange(plot1, plot2, nrow = 2)
+```
+
+#mean and median comparison
+```{r}
+f_median_dengue = function(){
+  median_dengue <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
+  months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
+  for (i in months) {
+    month = data_total[data_total$time_column == i,]
+    m_month = data.frame(dengue_cases = median(month$dengue_case, na.rm = TRUE), time_column = month$time_column[1])
+    median_dengue = rbind(median_dengue, m_month)
+  }
+  return(median_dengue)
+}
+
+f_median_temp = function(){
+  median_temp <- data.frame(temperature = numeric(), time_column = as.Date(character()))
+  months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
+  for (i in months) {
+    month = data_total[data_total$time_column == i,]
+    m_month = data.frame(temperature = median(month$temperature, na.rm = TRUE), time_column = month$time_column[1])
+    median_temp = rbind(median_temp, m_month)
+  }
+  return(median_temp)
+}
+
+
+plot_mean_temp = ggplot2::ggplot() +
+  geom_line(data = f_mean_temp(), aes(x = time_column, y = temperature)) +
+  labs(x = "time", y = "temperature", title = "Mean temperature")
+
+plot_mean_dengue = ggplot2::ggplot() +
+  geom_line(data = f_mean_dengue(), aes(x = time_column, y = dengue_cases)) +
+  labs(x = "time", y = "dengue-cases", title = "Mean dengue cases")
+
+plot_median_temp = ggplot2::ggplot() +
+  geom_line(data = f_median_temp(), aes(x = time_column, y = temperature)) +
+  labs(x = "time", y = "temperature", title = "Median temperature")
+
+plot_median_dengue = ggplot2::ggplot() +
+  geom_line(data = f_median_dengue(), aes(x = time_column, y = dengue_cases)) +
+  labs(x = "time", y = "dengue-cases", title = "Median dengue cases")
+
+gridExtra::grid.arrange(plot_mean_dengue, plot_mean_temp, plot_median_dengue, plot_median_temp, nrow = 2)
 ```
 
 
 
-#Plot
+#Plot für Bangkok
 ```{r}
 dengue_plot_cases = c()
 dengue_plot_time = c()
@@ -228,6 +285,21 @@ dengue_plot_time <- data_total$time_column[data_total$Reporting_areas == "Bangko
 plot(dengue_plot_time,dengue_plot_cases, type = "o")
 ```
 
+#correlation between temperature and dengue cases
+```{r}
+i.missing = which(rmv.rows > 0)
+
+
+plot(data_total$temperature, data_total$incidence, pch = 20,
+     ylab = "incidence",
+     xlab = "mean temperature",
+     lines(data_total$temperature, data_total$incidence, col = "red")
+     )
+
+```
+
+
+
 #probieren mit time series Objekten
 ```{r}
 my_ts <- ts(data_total$dengue_cases, start = c(data_total$time_column[1]), frequency = 12)
@@ -237,13 +309,6 @@ TSstudio::ts_plot(my_ts)
 
 #GAM
 ```{r}
-install.packages("readxl")
-install.packages("nlme")
-install.packages("gam")
-install.packages("sdm")
-install.packages("raster")
-install.packages("ncdf4")
-install.packages("mgcv")
 
 library(readxl)
 library(nlme)
@@ -253,21 +318,15 @@ library(raster)
 library(ncdf4)
 library(mgcv)
 
-data <- read_excel("C:/Users/thadl/OneDrive/Dokumente/Bioinfo/Klimaprojekt/Daten/Data for modeling.xlsx")
-View(data)
-newdata = data.frame(data)
-attach(newdata)
-model1 <- gam(Abun1~s(Maxtemp, k=4), family="quasipoisson")
+attach(data_total)
+model1 <- gam(dengue_cases~s(temperature, k=6), family="quasipoisson")
 plot.gam(model1)
 summary(model1)
-model2 <- gam(Abun2~s(Maxtemp, k=4), family="quasipoisson")
-plot.gam(model2)
-summary(model2)
 k.check(model1)
 gam.check(model1)
 
-linear_model <- gam(Abun1~Maxtemp)
-smooth_model <- gam(Abun1~s(Maxtemp))
+linear_model <- gam(dengue_cases~temperature)
+smooth_model <- gam(dengue_cases~s(temperature))
 
 AIC(linear_model, smooth_model)
 ```
