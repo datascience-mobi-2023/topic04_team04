@@ -19,6 +19,7 @@ data_total
 library(ggplot2)
 
 # create data
+xValue <-
 yValue <- 
 data <- data.frame(xValue,yValue)
 
@@ -28,9 +29,8 @@ ggplot(data, aes(x=xValue, y=yValue)) +
 
 ```
 
+Temperature of amnat charoen over the years
 
-
-#temperature of amnat charoen over the years
 ```{r}
 month_dates <- seq(as.Date("2006-01-01"), as.Date("2020-12-01"), by = "month", format = "%m")
 plot(x = month_dates[c(1:180)], y = data_total$temperature[c(1:180)], type = "l",xlab="Time", ylab="Temperature", col="red")
@@ -41,8 +41,8 @@ axis(4, seq(20,32))
 
 ```
 
+algorithm test for 01/2006
 
-#algorithm test for 01/2006
 ```{r}
 
   tempvec_01_2006 <- c()
@@ -54,8 +54,8 @@ axis(4, seq(20,32))
 tempvec 
 ```
 
+temperature of amnat charoen over the years
 
-#temperature of amnat charoen over the years
 ```{r}
 month_dates <- seq(as.Date("2006-01-01"), as.Date("2020-12-01"), by = "month", format = "%m")
 plot(x = month_dates[c(1:180)], y = data_total$temperature[c(1:180)], type = "l",xlab="Time", ylab="Temperature", col="red", main="Temperature in Amnat Charoen")
@@ -66,7 +66,8 @@ axis(4, seq(20,32))
 
 ```
 
-#creating vector of mean temp for thailand for every month 
+creating vector of mean temp for thailand for every month
+
 ```{r}
 
  mean_tempvec <- c()
@@ -80,17 +81,23 @@ for (month in c(1:180)) {
  }
 mean_tempvec
 ```
+
 *linear (or other) regression of temperature*
+
 ```{r}
 lmodel_thailand_temp = lm(mean_tempvec ~ month_dates[c(1:180)])
 
 ```
+
+divide Thailand into North, South, ... region to plot individual Temperature plots and compare regions
+
 ```{r}
 
-plot(x = data_total$time_column, y = data_total$temperature, type = "p", xlab = "time", ylab = "temperature", col = "blue")
+
 ```
 
 #plot of temperature in thailand from 2006 to 2022
+
 ```{r}
 month_dates <- seq(as.Date("2006-01-01"), as.Date("2020-12-01"), by = "month", format = "%m")
 plot(x = month_dates[c(1:180)], y = mean_tempvec, type = "l",xlab="Time", ylab="Temperature", col="red")
@@ -98,7 +105,9 @@ plot(x = month_dates[c(1:180)], y = mean_tempvec, type = "l",xlab="Time", ylab="
 abline(lmodel_thailand_temp,col="blue")
 axis(4, seq(20,32))
 ```
+
 ggplot
+
 ```{r}
 
 # Libraries
@@ -112,5 +121,24 @@ data <- data.frame(xValue,yValue)
 # Plot
 ggplot(data, aes(x=xValue, y=yValue)) +
   geom_line()
+ggplot(lmodel_thailand_temp, aes(x=xValue, y=yValue)) +
+  geom_line()
 
+
+```
+
+```{r}
+install.packages("readxl")
+install.packages("nlme")
+install.packages("gam")
+install.packages("sdm")
+install.packages("raster")
+install.packages("ncdf4")
+
+library (readxl)
+library(nlme)
+library(gam)
+library(sdm)
+library(raster)
+library(ncdf4)
 ```
