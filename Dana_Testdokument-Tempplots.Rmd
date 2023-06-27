@@ -119,10 +119,13 @@ yValue <- mean_tempvec
 data <- data.frame(xValue,yValue)
 
 # Plot
-ggplot(data, aes(x=xValue, y=yValue)) +
-  geom_line()
-ggplot(lmodel_thailand_temp, aes(x=xValue, y=yValue)) +
-  geom_line()
+
+
+ggplot() +
+  geom_line(data, mapping=aes(x=xValue, y=yValue)) +
+   stat_smooth(method = "lm", col = "red", mapping=aes(x=xValue, y=yValue)) +
+  xlab("Years") +
+  ylab("Temperature [°C]")
 
 
 ```

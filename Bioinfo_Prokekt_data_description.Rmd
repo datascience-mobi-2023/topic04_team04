@@ -25,15 +25,54 @@ for(Zeile in 1:R){
 }
 ```
 
+# Temperature development in Thailand 2006 - 2022
+
+Creating vector of mean temperature in Thailand over the years
+
+```{r}
+ mean_tempvec <- c()
+for (month in c(1:180)) {
+   tempvec <- c()
+  for (district in c(1:77)) {
+   temp <- data_total$temperature[month + 180*(district-1)]
+   tempvec <- c(tempvec,temp)
+  }
+ mean_tempvec <- c(mean_tempvec,mean(tempvec))
+ }
+mean_tempvec
+```
+
+Plot of yearly mean temperature in Thailand over the years + linear regression of temperature
+
+```{r}
+
+# Libraries
+library(ggplot2)
+
+# create data
+xValue <- month_dates
+yValue <- mean_tempvec
+data <- data.frame(xValue,yValue)
+
+# Plot
+
+ggplot() +
+  geom_line(data, mapping=aes(x=xValue, y=yValue)) +
+   stat_smooth(method = "lm", col = "red", mapping=aes(x=xValue, y=yValue)) +
+  xlab("Years") +
+  ylab("Temperature [°C]")
+```
+
 # Correlation
+
 ```{r}
 cor = cor(total_thailand$dengue_cases, total_thailand$temperature, method = "spearman")
 cor
 plot(total_thailand$dengue_cases, total_thailand$temperature, main = "scatterplot", xlab = "cases", ylab = "temperature")
 ```
 
-
 #ARIMA
+
 ```{r}
 Ts_thailand <- ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
 TSstudio::ts_plot(Ts_thailand)
@@ -52,20 +91,16 @@ pacf_thailand <- pacf(total_thailand$dengue_cases)
 
 ```
 
-
 ```{r}
 library(forecast)
 auto_thailand  <- auto.arima(Ts_thailand)
 auto_thailand
 ```
 
-
-
 ```{r}
 #auto_thailand_2  <- auto.arima(Ts_thailand, stepwise = F, approximation = F)
 #auto_thailand_2
 ```
-
 
 ```{r}
 residuals_thailand <- residuals(auto_thailand)
@@ -78,7 +113,6 @@ portmanteau_thailand
 # --> p value (0.52) > 0.05 --> no evidence for autocorrelation --> ARIMA model works well
 ```
 
-
 ```{r}
 library(forecast)
 horizon_thailand <- 12 
@@ -89,14 +123,11 @@ forecastedTs_thailand  <- ts(forecastedTs_thailand, frequency = 12, start = c(20
 plot(forecastedTs_thailand)
 ```
 
-
-
 ```{r}
 forecastDf_thailand <- as.data.frame(forecasted_thailand)
 forecastDf_thailand$time <- time(forecastedTs_thailand)
 names(forecastDf_thailand) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
 ```
-
 
 ```{r}
 ggplot() +
@@ -110,6 +141,7 @@ ggplot() +
 ```
 
 #mean of dengue_cases of whole thailand
+
 ```{r}
 library(ggplot2)
 library(scales)
@@ -151,6 +183,7 @@ gridExtra::grid.arrange(plot1, plot2, nrow = 2)
 ```
 
 #mean and median comparison
+
 ```{r}
 f_median_dengue = function(){
   median_dengue <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
@@ -194,9 +227,8 @@ plot_median_dengue = ggplot2::ggplot() +
 gridExtra::grid.arrange(plot_mean_dengue, plot_mean_temp, plot_median_dengue, plot_median_temp, nrow = 2)
 ```
 
-
-
 #Plot für Bangkok
+
 ```{r}
 dengue_plot_cases = c()
 dengue_plot_time = c()
@@ -208,6 +240,7 @@ plot(dengue_plot_time,dengue_plot_cases, type = "o")
 ```
 
 #correlation between temperature and dengue cases
+
 ```{r}
 i.missing = which(rmv.rows > 0)
 
@@ -220,9 +253,8 @@ plot(data_total$temperature, data_total$incidence, pch = 20,
 
 ```
 
-
-
 #probieren mit time series Objekten
+
 ```{r}
 my_ts <- ts(data_total$dengue_cases, start = c(data_total$time_column[1]), frequency = 12)
 head(my_ts)
@@ -230,6 +262,7 @@ TSstudio::ts_plot(my_ts)
 ```
 
 #GAM
+
 ```{r}
 
 library(readxl)
