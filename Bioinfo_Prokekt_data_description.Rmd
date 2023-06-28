@@ -74,6 +74,8 @@ plot(total_thailand$dengue_cases, total_thailand$temperature, main = "scatterplo
 #ARIMA
 
 ```{r}
+install.packages("TSstudio")
+
 Ts_thailand <- ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
 TSstudio::ts_plot(Ts_thailand)
 
