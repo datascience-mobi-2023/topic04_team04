@@ -142,13 +142,16 @@ ggplot() +
   theme_minimal()
 ```
 
-#mean of dengue_cases of whole thailand
 
+
+
+
+#mean of dengue_cases of whole thailand
 ```{r}
 library(ggplot2)
 library(scales)
 
-
+#dengue cases of whole thailand per month
 f_mean_dengue = function(){
   mean_dengue <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
   months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
@@ -159,7 +162,8 @@ f_mean_dengue = function(){
   }
   return(mean_dengue)
 }
-  
+
+
 f_mean_temp = function(){
   mean_temp <- data.frame(temperature = numeric(), time_column = as.Date(character()))
   months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
@@ -172,14 +176,15 @@ f_mean_temp = function(){
 }
 
 plot1 = ggplot2::ggplot() +
-  geom_line(data = mean_dengue, aes(x = time_column, y = dengue_cases)) +
+  geom_line(data = f_mean_dengue(), aes(x = time_column, y = dengue_cases)) +
   labs(x = "time", y = "dengue-cases") +
   scale_x_continuous(breaks = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "2 year"))
 
 plot2 = ggplot2::ggplot() +
-  geom_line(data = mean_temp, aes(x = time_column, y = temperature), color = "red") +
+  geom_line(data = f_mean_temp(), aes(x = time_column, y = temperature), color = "red") +
   labs(x = "time", y = "temperature") +
   scale_x_continuous(breaks = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "2 year"))
+
 
 gridExtra::grid.arrange(plot1, plot2, nrow = 2)
 ```

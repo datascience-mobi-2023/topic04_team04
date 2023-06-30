@@ -10,9 +10,9 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-install.packages("readxl")
-install.packages("ggplot2")
-install.packages("scales")
+#install.packages("readxl")
+#install.packages("ggplot2")
+#install.packages("scales")
 library(readxl)
 ```
 
@@ -160,19 +160,6 @@ data_total <- apply(data_total, 2, detect_na)
 rmv.rows = apply(data_total,1,function(x){sum(is.na(x))})
 ```
 
-#struture data frame and convert into right datatypes
-```{r}
-data_total = as.data.frame(data_total)
-num_col = c("temperature", "Longitude", "Latitude", "incidence")
-int_col = c("dengue_cases","population_count","year")
-data_total[int_col] = lapply(data_total[int_col], as.integer)
-data_total[num_col] = lapply(data_total[num_col], as.numeric)
-data_total = subset(data_total, select = c("data_names", "Reporting_areas", "year", "month", "time_column", "dengue_cases", "population_count", "temperature", "Longitude", "Latitude", "incidence"))
-
-save(data_total, file = "data_total.RData")
-summary(data_total)
-```
-
 #Inzindenz
 ```{r}
 dimensions= dim(data_total)
@@ -186,13 +173,31 @@ for(Zeile in 1:R){
 }
 ```
 
+#struture data frame and convert into right datatypes
+```{r}
+data_total = as.data.frame(data_total)
+num_col = c("temperature", "Longitude", "Latitude", "incidence")
+int_col = c("dengue_cases","population_count","year")
+date_col = c("time_column")
+data_total[int_col] = lapply(data_total[int_col], as.integer)
+data_total[num_col] = lapply(data_total[num_col], as.numeric)
+data_total[date_col] = lapply(data_total[date_col], as.Date)
+
+data_total = subset(data_total, select = c("data_names", "Reporting_areas", "year", "month", "time_column", "dengue_cases", "population_count", "temperature", "Longitude", "Latitude", "incidence"))
+
+save(data_total, file = "data_total.RData")
+summary(data_total)
+```
+
+
+
 
 #mean of dengue_cases of whole thailand
 ```{r}
 library(ggplot2)
 library(scales)
 
-
+#dengue cases of whole thailand per month
 f_mean_dengue = function(){
   mean_dengue <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
   months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
@@ -203,7 +208,8 @@ f_mean_dengue = function(){
   }
   return(mean_dengue)
 }
-  
+
+
 f_mean_temp = function(){
   mean_temp <- data.frame(temperature = numeric(), time_column = as.Date(character()))
   months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
@@ -216,14 +222,15 @@ f_mean_temp = function(){
 }
 
 plot1 = ggplot2::ggplot() +
-  geom_line(data = mean_dengue, aes(x = time_column, y = dengue_cases)) +
+  geom_line(data = f_mean_dengue(), aes(x = time_column, y = dengue_cases)) +
   labs(x = "time", y = "dengue-cases") +
   scale_x_continuous(breaks = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "2 year"))
 
 plot2 = ggplot2::ggplot() +
-  geom_line(data = mean_temp, aes(x = time_column, y = temperature), color = "red") +
+  geom_line(data = f_mean_temp(), aes(x = time_column, y = temperature), color = "red") +
   labs(x = "time", y = "temperature") +
   scale_x_continuous(breaks = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "2 year"))
+
 
 gridExtra::grid.arrange(plot1, plot2, nrow = 2)
 ```
@@ -289,12 +296,14 @@ plot(dengue_plot_time,dengue_plot_cases, type = "o")
 ```{r}
 i.missing = which(rmv.rows > 0)
 
-
+density_temperature <- density(data_total$temperature)
+plot(density_temperature)
 plot(data_total$temperature, data_total$incidence, pch = 20,
      ylab = "incidence",
-     xlab = "mean temperature",
-     lines(data_total$temperature, data_total$incidence, col = "red")
-     )
+     xlab = "temperature",
+  abline(v = mean(data_total$temperature), col = "red"))
+
+
 
 ```
 
@@ -309,7 +318,7 @@ TSstudio::ts_plot(my_ts)
 
 #GAM
 ```{r}
-
+load(data_total)
 library(readxl)
 library(nlme)
 library(gam)
@@ -331,6 +340,43 @@ smooth_model <- gam(dengue_cases~s(temperature))
 AIC(linear_model, smooth_model)
 ```
 
+```{r}
+library(raster)
+library(sdm)
+library(readxl)
+library(mgcv)
+library(ncdf4)
+
+data <- read_excel("C:/Users/thadl/OneDrive/Dokumente/Bioinfo/Klimaprojekt/data for modeling.xlsx")
+#View(data)
+newdata = data.frame(data)
+attach(newdata)
+
+model <- gam(Abun2~s(Maxtemp), family="quasipoisson")
+plot.gam(model)
+summary(model)
+
+k.check(model)
+
+linear_model <- lm(Abun2~Maxtemp)
+smooth_model <- gam(Abun2~s(Maxtemp))
+AIC(linear_model, smooth_model)
+
+t2m <- stack ("C:/Users/thadl/OneDrive/Dokumente/Bioinfo/Klimaprojekt/t2m_era5_2012_2021_monmax_timmean_chname.nc")
+names(t2m) <- "Maxtemp"
+p1 <- raster::predict(t2m, model, type="response")
+
+gambia <- raster::getData('GADM', country='GMB', level=1)
+my.area <- extent(gambia)
+my.p1 <- crop(p1, my.area)
+my.p1.mask <- mask(my.p1, gambia)
+pdf(file="C:/Users/thadl/OneDrive/Dokumente/Bioinfo/Klimaprojekt/maxtemp_Abun2.pdf")
+plot(my.p1.mask, legend.width=1, legend.shrink=0.75, axes= FALSE, box=FALSE)       
+title("Predicted values: Influence of max Temp on Abun2", line = -1)
+                                                                                   
+plot(gambia, add=TRUE)  
+dev.off()
+```
 
 
 

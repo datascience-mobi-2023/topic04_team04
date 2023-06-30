@@ -159,14 +159,33 @@ data_total <- apply(data_total, 2, detect_na)
 rmv.rows = apply(data_total,1,function(x){sum(is.na(x))})
 ```
 
+#Inzindenz
+```{r}
+dimensions= dim(data_total)
+R= dimensions[1]
+
+for(Zeile in 1:R){
+  Population <- data_total$population_count[Zeile]
+  Infection <- data_total$dengue_cases[Zeile]
+  Incidence = (Infection/Population)*100000
+  data_total$incidence[Zeile] <- Incidence
+}
+```
+
 #struture data frame and convert into right datatypes
 ```{r}
 data_total = as.data.frame(data_total)
-num_col = c("temperature", "Longitude", "Latitude")
+num_col = c("temperature", "Longitude", "Latitude", "incidence")
 int_col = c("dengue_cases","population_count","year")
+date_col = c("time_column")
 data_total[int_col] = lapply(data_total[int_col], as.integer)
 data_total[num_col] = lapply(data_total[num_col], as.numeric)
-data_total = subset(data_total, select = c("data_names", "Reporting_areas", "year", "month", "time_column", "dengue_cases", "population_count", "temperature", "Longitude", "Latitude"))
+data_total[date_col] = lapply(data_total[date_col], as.Date)
+
+data_total = subset(data_total, select = c("data_names", "Reporting_areas", "year", "month", "time_column", "dengue_cases", "population_count", "temperature", "Longitude", "Latitude", "incidence"))
+
+save(data_total, file = "data_total.RData")
+summary(data_total)
 ```
 
 # creating a dataframe for the total dengue cases in thailand over the months
