@@ -157,7 +157,7 @@ f_mean_dengue = function(){
   months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
   for (i in months) {
     month = data_total[data_total$time_column == i,]
-    m_month = data.frame(dengue_cases = mean(month$dengue_case, na.rm = TRUE), time_column = month$time_column[1])
+    m_month = data.frame(dengue_cases = mean(month$dengue_cases, na.rm = TRUE), time_column = month$time_column[1])
     mean_dengue = rbind(mean_dengue, m_month)
   }
   return(mean_dengue)
