@@ -190,8 +190,6 @@ summary(data_total)
 ```
 
 
-
-
 #mean of dengue_cases of whole thailand
 ```{r}
 library(ggplot2)
@@ -203,7 +201,7 @@ f_mean_dengue = function(){
   months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
   for (i in months) {
     month = data_total[data_total$time_column == i,]
-    m_month = data.frame(dengue_cases = mean(month$dengue_case, na.rm = TRUE), time_column = month$time_column[1])
+    m_month = data.frame(dengue_cases = mean(month$dengue_cases, na.rm = TRUE), time_column = month$time_column[1])
     mean_dengue = rbind(mean_dengue, m_month)
   }
   return(mean_dengue)
@@ -237,6 +235,8 @@ gridExtra::grid.arrange(plot1, plot2, nrow = 2)
 
 #mean and median comparison
 ```{r}
+library(ggplot2)
+
 f_median_dengue = function(){
   median_dengue <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
   months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
@@ -258,7 +258,12 @@ f_median_temp = function(){
   }
   return(median_temp)
 }
+#compute difference between mean and median
+dif_mm_dengue = f_mean_dengue()["dengue_cases"]-f_median_dengue()["dengue_cases"]
+dif_mm_dengue = cbind(dif_mm_dengue,f_mean_dengue()["time_column"])
 
+dif_mm_temp = f_mean_temp()["temperature"]-f_median_temp()["temperature"]
+dif_mm_temp = cbind(dif_mm_temp,f_mean_temp()["time_column"])
 
 plot_mean_temp = ggplot2::ggplot() +
   geom_line(data = f_mean_temp(), aes(x = time_column, y = temperature)) +
@@ -276,7 +281,15 @@ plot_median_dengue = ggplot2::ggplot() +
   geom_line(data = f_median_dengue(), aes(x = time_column, y = dengue_cases)) +
   labs(x = "time", y = "dengue-cases", title = "Median dengue cases")
 
-gridExtra::grid.arrange(plot_mean_dengue, plot_mean_temp, plot_median_dengue, plot_median_temp, nrow = 2)
+plot_dif_dengue = ggplot2::ggplot() +
+  geom_line(data = dif_mm_dengue, aes(x = time_column, y = dengue_cases)) +
+  labs(x = "time", y = "dengue-cases", title = "Difference between mean and median")
+
+plot_dif_temp = ggplot2::ggplot() +
+  geom_line(data = dif_mm_temp, aes(x = time_column, y = temperature)) +
+  labs(x = "time", y = "temperature", title = "Difference between mean and median")
+
+gridExtra::grid.arrange(plot_mean_dengue, plot_mean_temp, plot_median_dengue, plot_median_temp,plot_dif_dengue,plot_dif_temp, nrow = 3)
 ```
 
 
@@ -292,6 +305,12 @@ dengue_plot_time <- data_total$time_column[data_total$Reporting_areas == "Bangko
 plot(dengue_plot_time,dengue_plot_cases, type = "o")
 ```
 
+#distribution of incidence
+```{r}
+q.dengue = quantile(data_total$incidence, probs = c(0.01,0.1,0.25,0.5,0.75,0.9,0.99), na.rm = TRUE)
+hist(data_total$incidence,  breaks = 200, main = "Distribution of incidence", xlab = "incidence", freq = TRUE);abline(v=q.dengue,lty=3,lwd=2,col='red')
+```
+
 #correlation between temperature and dengue cases
 ```{r}
 i.missing = which(rmv.rows > 0)
@@ -302,8 +321,6 @@ plot(data_total$temperature, data_total$incidence, pch = 20,
      ylab = "incidence",
      xlab = "temperature",
   abline(v = mean(data_total$temperature), col = "red"))
-
-
 
 ```
 
