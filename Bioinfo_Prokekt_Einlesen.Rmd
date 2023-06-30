@@ -65,7 +65,7 @@ for (k in 1:1155){
 }
 ```
 
-#adding temperature column
+#adding temperature, longitude and latitude column
 ```{r}
 m = 1
 temp_data = read_excel("era5_data_2006_2020_thailand_monmean.xlsx")
