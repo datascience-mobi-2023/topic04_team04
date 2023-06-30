@@ -67,7 +67,7 @@ for (k in 1:1155){
 }
 ```
 
-#adding temperature column
+#adding temperature, longitude and latitude column
 ```{r}
 m = 1
 temp_data = read_excel("era5_data_2006_2020_thailand_monmean.xlsx")
@@ -81,7 +81,7 @@ for (i in 1:77) {
     m = m + 1
   }
 }
-data_total = cbind(data_total_dengue, temp_data_sorted) 
+data_total = cbind(data_total, temp_data_sorted)
 colnames(data_total)[5] = "temperature"
 ```
 
@@ -150,6 +150,7 @@ data_total = cbind(data_total, time_column)
 #data_total = subset(data_total, select = -time_column)
 ```
 
+
 #Detect missing values
 ```{r}
 detect_na <- function(x) {
@@ -163,7 +164,10 @@ i.missing = which(rmv.rows >0)
 
 #Inzindenz
 ```{r}
-dimensions= dim(data_total)
+data_total = as.data.frame(data_total)
+data_total$dengue_cases = as.integer(data_total$dengue_cases)
+data_total$population_count = as.integer(data_total$population_count)
+dimensions = dim(data_total)
 R= dimensions[1]
 
 for(Zeile in 1:R){
@@ -394,8 +398,12 @@ pheatmap::pheatmap(cor(clean_data_total[c("dengue_cases", "population_count", "t
 ```{r}
 t_data_total = t(data_total)
 r_areas = unique(data_total$Reporting_areas)
-r_areas
-for (i in r_areas 
+m_inc_temp.y.r = data.frame(Reporting_areas = character(), incidence = numeric(), temperature = numeric())
+for (i in r_areas){
+  temp_inc = apply(data_total[which(clean_data_total$Reporting_areas == i),c("incidence", "temperature")], 2, mean)
+  m_inc_temp.y.r = rbind(m_inc_temp.y.r, cbind(i, temp_inc))
+}
+
 ```
 
 #probieren mit time series Objekten
