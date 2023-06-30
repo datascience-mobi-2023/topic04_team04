@@ -158,6 +158,16 @@ detect_na <- function(x) {
 }
 data_total <- apply(data_total, 2, detect_na)
 rmv.rows = apply(data_total,1,function(x){sum(is.na(x))})
+i.missing = which(rmv.rows >0)
+
+clean_data_total = as.data.frame(data_total[-i.missing,])
+num_col = c("temperature", "Longitude", "Latitude", "incidence")
+int_col = c("dengue_cases","population_count","year")
+date_col = c("time_column")
+clean_data_total[int_col] = lapply(clean_data_total[int_col], as.integer)
+clean_data_total[num_col] = lapply(clean_data_total[num_col], as.numeric)
+clean_data_total[date_col] = lapply(clean_data_total[date_col], as.Date)
+summary(clean_data_total)
 ```
 
 #Inzindenz
@@ -190,7 +200,7 @@ summary(data_total)
 ```
 
 
-#mean of dengue_cases of whole thailand
+#mean of dengue_cases and temperature of whole thailand per month
 ```{r}
 library(ggplot2)
 library(scales)
@@ -294,6 +304,32 @@ gridExtra::grid.arrange(plot_mean_dengue, plot_mean_temp, plot_median_dengue, pl
 
 
 
+#mean of dengue_cases and temperature of whole thailand per year
+```{r}
+f_mean_dengue.y.t = function(){
+  mean_dengue.y.t <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
+  for (i in c(2006:2020)) {
+    month = data_total[data_total$year == i,]
+    m_month = data.frame(dengue_cases = mean(month$dengue_cases, na.rm = TRUE), time_column = month$time_column[1])
+    mean_dengue.y.t = rbind(mean_dengue.y.t, m_month)
+  }
+  return(mean_dengue.y.t)
+}
+mean_dengue.y.t = as.data.frame(f_mean_dengue.y.t())
+
+f_mean_temp.y.t = function(){
+  mean_temp.y.t <- data.frame(temperature = numeric(), time_column = as.Date(character()))
+  for (i in c(2006:2020)) {
+    month = data_total[data_total$year == i,]
+    m_month = data.frame(temperature = mean(month$temperature, na.rm = TRUE), time_column = month$time_column[1])
+    mean_temp.y.t = rbind(mean_temp.y.t, m_month)
+  }
+  return(mean_temp.y.t)
+}
+mean_temp.y.t = as.data.frame(f_mean_temp.y.t())
+
+```
+
 #Plot für Bangkok
 ```{r}
 dengue_plot_cases = c()
@@ -311,16 +347,32 @@ q.dengue = quantile(data_total$incidence, probs = c(0.01,0.1,0.25,0.5,0.75,0.9,0
 hist(data_total$incidence,  breaks = 200, main = "Distribution of incidence", xlab = "incidence", freq = TRUE);abline(v=q.dengue,lty=3,lwd=2,col='red')
 ```
 
-#correlation between temperature and dengue cases
+#correlation between temperature and incidence
 ```{r}
-i.missing = which(rmv.rows > 0)
 
-density_temperature <- density(data_total$temperature)
-plot(density_temperature)
 plot(data_total$temperature, data_total$incidence, pch = 20,
      ylab = "incidence",
      xlab = "temperature",
   abline(v = mean(data_total$temperature), col = "red"))
+
+plot(rank(data_total$temperature), rank(data_total$incidence), pch = 20,
+     ylab = "incidence",
+     xlab = "temperature",
+  abline(v = mean(data_total$temperature), col = "red"))
+
+qqplot(data_total$temperature, data_total$incidence)
+
+#pearson correlation y.t.
+cor(mean_dengue.y.t$dengue_cases, mean_temp.y.t$temperature)
+#spearman correlation y.t.
+cor(mean_dengue.y.t$dengue_cases, mean_temp.y.t$temperature, method = "spearman")
+
+#pearson correlation m.r.
+cor(clean_data_total$dengue_cases, clean_data_total$temperature)
+#spearman correlation m.r.
+cor(clean_data_total$dengue_cases, clean_data_total$temperature, method = "spearman")
+
+
 
 ```
 
