@@ -159,15 +159,6 @@ detect_na <- function(x) {
 data_total <- apply(data_total, 2, detect_na)
 rmv.rows = apply(data_total,1,function(x){sum(is.na(x))})
 i.missing = which(rmv.rows >0)
-
-clean_data_total = as.data.frame(data_total[-i.missing,])
-num_col = c("temperature", "Longitude", "Latitude", "incidence")
-int_col = c("dengue_cases","population_count","year")
-date_col = c("time_column")
-clean_data_total[int_col] = lapply(clean_data_total[int_col], as.integer)
-clean_data_total[num_col] = lapply(clean_data_total[num_col], as.numeric)
-clean_data_total[date_col] = lapply(clean_data_total[date_col], as.Date)
-summary(clean_data_total)
 ```
 
 #Inzindenz
@@ -181,6 +172,18 @@ for(Zeile in 1:R){
   Incidence = (Infection/Population)*100000
   data_total$incidence[Zeile] <- Incidence
 }
+```
+
+#creat clean data frame
+```{r}
+clean_data_total = as.data.frame(data_total[-i.missing,])
+num_col = c("temperature", "Longitude", "Latitude", "incidence")
+int_col = c("dengue_cases","population_count","year")
+date_col = c("time_column")
+clean_data_total[int_col] = lapply(clean_data_total[int_col], as.integer)
+clean_data_total[num_col] = lapply(clean_data_total[num_col], as.numeric)
+clean_data_total[date_col] = lapply(clean_data_total[date_col], as.Date)
+summary(clean_data_total)
 ```
 
 #struture data frame and convert into right datatypes
@@ -199,6 +202,15 @@ save(data_total, file = "data_total.RData")
 summary(data_total)
 ```
 
+
+#max, min, sd
+```{r}
+apply(data_total[,c(num_col, int_col)], 2, function(x){max(x,na.rm=TRUE)})
+apply(data_total[,c(num_col, int_col)], 2, function(x){min(x,na.rm=TRUE)})
+apply(data_total[,c(num_col, int_col)], 2, function(x){mean(x,na.rm=TRUE)})
+apply(data_total[,c(num_col, int_col)], 2, function(x){median(x,na.rm=TRUE)})
+apply(data_total[,c(num_col, int_col)], 2, function(x){sd(x,na.rm=TRUE)})
+```
 
 #mean of dengue_cases and temperature of whole thailand per month
 ```{r}
@@ -373,10 +385,18 @@ cor(clean_data_total$dengue_cases, clean_data_total$temperature)
 cor(clean_data_total$dengue_cases, clean_data_total$temperature, method = "spearman")
 
 
+pheatmap::pheatmap(cor(clean_data_total[c("dengue_cases", "population_count", "temperature", "incidence")]))
 
 ```
 
 
+#correlation between different areas
+```{r}
+t_data_total = t(data_total)
+r_areas = unique(data_total$Reporting_areas)
+r_areas
+for (i in r_areas 
+```
 
 #probieren mit time series Objekten
 ```{r}
