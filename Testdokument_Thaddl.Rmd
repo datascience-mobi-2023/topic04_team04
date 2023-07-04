@@ -319,7 +319,6 @@ gridExtra::grid.arrange(plot_mean_dengue, plot_mean_temp, plot_median_dengue, pl
 ```
 
 
-
 #mean of dengue_cases and temperature of whole thailand per year
 ```{r}
 f_mean_dengue.y.t = function(){
@@ -407,6 +406,23 @@ for (i in r_areas){
   rownames(m_inc_temp.y.r) <- 1:nrow(m_inc_temp.y.r)
 }
 
+
+
+km = kmeans(m_inc_temp.y.r["incidence"], centers = 2, nstart = 10)
+km$tot.withinss
+
+wss = sapply(2:7,function(k) { 
+  kmeans(m_inc_temp.y.r["incidence"], centers = k)$tot.withinss
+})
+plot(2:7,wss,type='b',pch=19,xlab="Number of clusters K",
+     ylab="Total within-clusters sum of squares")
+
+
+library(cluster)
+D = dist(m_inc_temp.y.r["incidence"])
+km = kmeans(m_inc_temp.y.r["incidence"], centers = 2, nstart = 10)
+s = silhouette(km$cluster,D)
+plot(s)
 
 ```
 
