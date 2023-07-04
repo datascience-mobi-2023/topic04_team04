@@ -429,21 +429,39 @@ library (factoextra)
 #library (fpc)
 #library (clValid)
 
+#find optimal number of clusters by incidence
 D_inc = dist(m_inc_temp.y.r["incidence"])
-km_inc = kmeans(m_inc_temp.y.r["incidence"], centers = 2, nstart = 10)
+km_inc = kmeans(m_inc_temp.y.r["incidence"], centers = 4, nstart = 10)
 s_inc = silhouette(km_inc$cluster,D_inc)
 plot(s_inc)
-
-D_temp = dist(m_inc_temp.y.r["temperature"])
-km_temp = kmeans(m_inc_temp.y.r["temperature"], centers = 2, nstart = 10)
-s_temp = silhouette(km_temp$cluster,D_temp)
-plot(s_temp)
-
 fviz_nbclust(m_inc_temp.y.r["incidence"], pam, method = "silhouette")+ theme_classic()
 
+#find optimal number of clusters by temperature
+D_temp = dist(m_inc_temp.y.r["temperature"])
+km_temp = kmeans(m_inc_temp.y.r["temperature"], centers = 4, nstart = 10)
+s_temp = silhouette(km_temp$cluster,D_temp)
+plot(s_temp)
 fviz_nbclust(m_inc_temp.y.r["temperature"], pam, method = "silhouette")+ theme_classic()
 
+#find optimal number of clusters by temperature and incidence
+D_inc_temp = dist(apply(m_inc_temp.y.r[,c("incidence","temperature")],2, rank))
+km_inc_temp = kmeans(apply(m_inc_temp.y.r[,c("incidence","temperature")],2, rank), centers = 3)
+s_inc_temp = silhouette(km_inc_temp$cluster,D_inc_temp)
+plot(s_inc_temp)
+fviz_nbclust(apply(m_inc_temp.y.r[,c("incidence","temperature")],2, rank), pam, method = "silhouette")+ theme_classic()
 
+m_inc_temp_cluster.y.r = data.frame(m_inc_temp.y.r, km_inc_temp$cluster)
+
+
+ggplot(m_inc_temp_cluster.y.r, aes(x = temperature, y = incidence, color = as.factor(km_inc$cluster))) +
+  geom_point() +
+  labs(title = "Partitioning Clustering Plot") +
+  theme_classic()
+
+ggplot(m_inc_temp_cluster.y.r, aes(x = temperature, y = incidence, color = as.factor(km_inc_temp$cluster))) +
+  geom_point() +
+  labs(title = "Partitioning Clustering Plot") +
+  theme_classic()
 ```
 
 #probieren mit time series Objekten
@@ -465,7 +483,7 @@ library(ncdf4)
 library(mgcv)
 
 attach(data_total)
-model1 <- gam(dengue_cases~s(temperature, k=6), family="quasipoisson")
+model1 <- gam(incidence~s(temperature, k=6), family="quasipoisson")
 plot.gam(model1)
 summary(model1)
 k.check(model1)
