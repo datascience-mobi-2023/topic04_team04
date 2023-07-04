@@ -50,6 +50,8 @@ Plot of yearly mean temperature in Thailand over the years + linear regression o
 library(ggplot2)
 
 # create data
+month_dates <- seq(as.Date("2006-01-01"), as.Date("2020-12-01"), by = "month", format = "%m")
+
 xValue <- month_dates
 yValue <- mean_tempvec
 data <- data.frame(xValue,yValue)
@@ -66,9 +68,8 @@ ggplot() +
 # Correlation
 
 ```{r}
-cor = cor(total_thailand$dengue_cases, total_thailand$temperature, method = "spearman")
-cor
-plot(total_thailand$dengue_cases, total_thailand$temperature, main = "scatterplot", xlab = "cases", ylab = "temperature")
+cor = cor(data_total$incidence, data_total$temperature, use = "pairwise.complete.obs")
+plot(data_total$temperature, data_total$incidence, main = "incidence over temperature", xlab = "inzidenz", ylab = "temperature")
 ```
 
 #ARIMA
@@ -187,6 +188,55 @@ ggplot() +
   theme_minimal()
 ```
 
+
+
+#comparing the decomposition of temperature and cases
+
+```{r}
+library(ggplot2)
+library(forecast)
+library(gridExtra)
+
+total_thailand_temp = cbind(total_thailand, mean_tempvec)
+colnames(total_thailand_temp)[4] = "temperature"
+
+Ts_thailand_temp <- ts(total_thailand_temp$temperature, frequency = 12, start = c(2006, 1))
+TSstudio::ts_plot(Ts_thailand_temp)
+
+#additive decomposing of the temperature
+decomposed_thailand_add_temp <- decompose(Ts_thailand_temp, type="additive") 
+plot(decomposed_thailand_add_temp)
+grid(lty = 2, col = "gray")
+
+#additive decomposing of the dengue cases
+decomposed_thailand_add <- decompose(Ts_thailand, type="additive")
+plot(decomposed_thailand_add)
+grid(lty = 2, col = "gray")
+
+case_trend <- decomposed_thailand_add$trend
+temp_trend <- decomposed_thailand_add_temp$trend
+
+plot_case_trend <- ggplot(case_trend, aes(x, y)) + geom_line() + labs(title = "Cases_trend")
+plot_temp_trend <- ggplot(temp_trend, aes(x, y)) + geom_line() + labs(title = "Temperature_trend")
+
+plot_case_temp_trend <- grid.arrange(plot_case_trend, plot_temp_trend, ncol = 1)
+print(plot_case_temp_trend)
+
+
+```
+
+
+```{r}
+case_seasonal <- decomposed_thailand_add$seasonal
+temp_seasonal <- decomposed_thailand_add_temp$seasonal
+
+plot_case_seasonal <- ggplot(case_seasonal, aes(x, y)) + geom_line() + labs(title = "Cases_seasonal")
+plot_temp_seasonal <- ggplot(temp_seasonal, aes(x, y)) + geom_line() + labs(title = "Temperature_seasonal")
+
+plot_case_temp_seasonal <- grid.arrange(plot_case_seasonal, plot_temp_seasonal, ncol = 1)
+print(plot_case_temp_trend)
+
+```
 #mean of dengue_cases and temperature of whole thailand per month
 ```{r}
 library(ggplot2)
@@ -373,4 +423,22 @@ linear_model <- gam(dengue_cases~temperature)
 smooth_model <- gam(dengue_cases~s(temperature))
 
 AIC(linear_model, smooth_model)
+```
+
+```{r}
+library(readxl)
+library(nlme)
+library(gam)
+library(sdm)
+library(raster)
+library(ncdf4)
+library(mgcv)
+
+attach(data_total)
+model2 <- gam(incidence~s(population_count, k=5), family="quasipoisson")
+plot.gam(model2)
+summary(model2)
+k.check(model2)
+gam.check(model2)
+
 ```
