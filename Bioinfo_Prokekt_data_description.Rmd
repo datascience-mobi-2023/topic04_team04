@@ -373,3 +373,21 @@ smooth_model <- gam(dengue_cases~s(temperature))
 
 AIC(linear_model, smooth_model)
 ```
+
+```{r}
+library(readxl)
+library(nlme)
+library(gam)
+library(sdm)
+library(raster)
+library(ncdf4)
+library(mgcv)
+
+attach(data_total)
+model2 <- gam(incidence~s(population_count, k=5), family="quasipoisson")
+plot.gam(model2)
+summary(model2)
+k.check(model2)
+gam.check(model2)
+
+```
