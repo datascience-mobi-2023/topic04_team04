@@ -72,16 +72,29 @@ plot(total_thailand$dengue_cases, total_thailand$temperature, main = "scatterplo
 ```
 
 #ARIMA
-
 ```{r}
-install.packages("TSstudio")
+library(ggplot2)
+library(forecast)
 
 Ts_thailand <- ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
 TSstudio::ts_plot(Ts_thailand)
 
-decomposed_thailand <- decompose(Ts_thailand, type="additive") # use type = "additive" for additive components
-plot(decomposed_thailand)
+# moving average 
+autoplot(Ts_thailand) +
+  autolayer(ma(Ts_thailand, order = 12)) +
+  xlab("Year") + ylab("dengue_cases") +
+  ggtitle("Dengue_cases_thailand_with_MA") 
+
+#additive decomposing
+decomposed_thailand_add <- decompose(Ts_thailand, type="additive") # use type = "additive" for additive components
+plot(decomposed_thailand_add)
 grid(lty = 2, col = "gray")
+                      
+#seasonal decomposing
+decomposed_thailand_seas <- stl(Ts_thailand, s.window = "periodic")
+plot(decomposed_thailand_seas, main = "Decomposition of a periodic time series", xaxt = "n")
+grid(lty = 2, col = "gray")
+
 
 library(tseries)
 adf.test(Ts_thailand) # p-value (0.01) < 0.05 indicates the TS is stationary --> suggests it is stationary
@@ -97,12 +110,12 @@ pacf_thailand <- pacf(total_thailand$dengue_cases)
 library(forecast)
 auto_thailand  <- auto.arima(Ts_thailand)
 auto_thailand
-```
 
-```{r}
 #auto_thailand_2  <- auto.arima(Ts_thailand, stepwise = F, approximation = F)
 #auto_thailand_2
+#this auto-ARIMA was removed because it took to long and had a higher AIC
 ```
+
 
 ```{r}
 residuals_thailand <- residuals(auto_thailand)
@@ -132,10 +145,42 @@ names(forecastDf_thailand) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "t
 ```
 
 ```{r}
+library(ggplot2)
 ggplot() +
   geom_line(data = Ts_thailand, aes(x = time(Ts_thailand), y = Ts_thailand), color = "black") +
   geom_ribbon(data = forecastDf_thailand, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
   geom_line(data = forecastDf_thailand, aes(x = time, y = point), color = "blue") +
+  labs(title = "Time Series Forecast") +
+  xlab("Year") +
+  ylab("Dengue Cases") +
+  theme_minimal()
+```
+
+```{r}
+library(forecast)
+#exclude_end <- 3
+Ts_thailand_2018 = window(Ts_thailand, end = c(2018, 12))
+
+auto_thailand_2018  <- auto.arima(Ts_thailand_2018)
+auto_thailand_2018
+
+
+horizon_thailand <- 12 
+forecasted_thailand_2018 <- forecast(auto_thailand_2018, h = horizon_thailand)
+
+forecastedTs_thailand_2018 <- forecasted_thailand_2018$mean
+forecastedTs_thailand_2018  <- ts(forecastedTs_thailand_2018, frequency = 12, start = c(2018, 1) )
+plot(forecastedTs_thailand_2018)
+
+forecastDf_thailand_2018 <- as.data.frame(forecasted_thailand_2018)
+forecastDf_thailand_2018$time <- time(forecastedTs_thailand_2018)
+names(forecastDf_thailand_2018) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+
+library(ggplot2)
+ggplot() +
+  geom_ribbon(data = forecastDf_thailand_2018, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
+  geom_line(data = forecastDf_thailand_2018, aes(x = time, y = point), color = "blue") +
+  geom_line(data = Ts_thailand, aes(x = time(Ts_thailand), y = Ts_thailand), color = "black") +
   labs(title = "Time Series Forecast") +
   xlab("Year") +
   ylab("Dengue Cases") +
