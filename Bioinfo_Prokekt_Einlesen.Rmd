@@ -148,20 +148,6 @@ data_total = cbind(data_total, time_column)
 #data_total = subset(data_total, select = -time_column) 
 ```
 
-#Inzindenz
-```{r}
-dimensions= dim(data_total)
-R= dimensions[1]
-
-for(Zeile in 1:R){
-  Population <- data_total$population_count[Zeile]
-  Infection <- data_total$dengue_cases[Zeile]
-  Incidence = (Infection/Population)*100000
-  data_total$incidence[Zeile] <- Incidence
-}
-```
-
-
 #Detect missing values
 ```{r}
 detect_na <- function(x) {
@@ -171,7 +157,24 @@ detect_na <- function(x) {
 data_total <- apply(data_total, 2, detect_na)
 rmv.rows = apply(data_total,1,function(x){sum(is.na(x))})
 i.missing = which(rmv.rows >0)
+```
+#Inzindenz
+```{r}
+data_total = as.data.frame(data_total)
+data_total$dengue_cases = as.integer(data_total$dengue_cases)
+data_total$population_count = as.integer(data_total$population_count)
+dimensions = dim(data_total)
+R= dimensions[1]
 
+for(Zeile in 1:R){
+  Population <- data_total$population_count[Zeile]
+  Infection <- data_total$dengue_cases[Zeile]
+  Incidence = (Infection/Population)*100000
+  data_total$incidence[Zeile] <- Incidence
+}
+```
+#creat clean data frame
+```{r}
 clean_data_total = as.data.frame(data_total[-i.missing,])
 num_col = c("temperature", "Longitude", "Latitude", "incidence")
 int_col = c("dengue_cases","population_count","year")
@@ -181,8 +184,6 @@ clean_data_total[num_col] = lapply(clean_data_total[num_col], as.numeric)
 clean_data_total[date_col] = lapply(clean_data_total[date_col], as.Date)
 summary(clean_data_total)
 ```
-
-
 #struture data frame and convert into right datatypes
 ```{r}
 data_total = as.data.frame(data_total)
@@ -198,6 +199,8 @@ data_total = subset(data_total, select = c("data_names", "Reporting_areas", "yea
 save(data_total, file = "data_total.RData")
 summary(data_total)
 ```
+
+
 
 # creating a dataframe for the total dengue cases in thailand over the months
 ```{r}
