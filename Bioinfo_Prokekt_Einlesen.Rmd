@@ -148,6 +148,19 @@ data_total = cbind(data_total, time_column)
 #data_total = subset(data_total, select = -time_column) 
 ```
 
+#Inzindenz
+```{r}
+dimensions= dim(data_total)
+R= dimensions[1]
+
+for(Zeile in 1:R){
+  Population <- data_total$population_count[Zeile]
+  Infection <- data_total$dengue_cases[Zeile]
+  Incidence = (Infection/Population)*100000
+  data_total$incidence[Zeile] <- Incidence
+}
+```
+
 
 #Detect missing values
 ```{r}
@@ -169,18 +182,6 @@ clean_data_total[date_col] = lapply(clean_data_total[date_col], as.Date)
 summary(clean_data_total)
 ```
 
-#Inzindenz
-```{r}
-dimensions= dim(data_total)
-R= dimensions[1]
-
-for(Zeile in 1:R){
-  Population <- data_total$population_count[Zeile]
-  Infection <- data_total$dengue_cases[Zeile]
-  Incidence = (Infection/Population)*100000
-  data_total$incidence[Zeile] <- Incidence
-}
-```
 
 #struture data frame and convert into right datatypes
 ```{r}
