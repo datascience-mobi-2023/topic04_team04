@@ -50,6 +50,8 @@ Plot of yearly mean temperature in Thailand over the years + linear regression o
 library(ggplot2)
 
 # create data
+month_dates <- seq(as.Date("2006-01-01"), as.Date("2020-12-01"), by = "month", format = "%m")
+
 xValue <- month_dates
 yValue <- mean_tempvec
 data <- data.frame(xValue,yValue)
