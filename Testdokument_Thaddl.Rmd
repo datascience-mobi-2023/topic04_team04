@@ -429,19 +429,21 @@ library (factoextra)
 #library (fpc)
 #library (clValid)
 
-D = dist(m_inc_temp.y.r["incidence"])
-km = kmeans(m_inc_temp.y.r["incidence"], centers = 2, nstart = 10)
-s = silhouette(km$cluster,D)
-plot(s)
+D_inc = dist(m_inc_temp.y.r["incidence"])
+km_inc = kmeans(m_inc_temp.y.r["incidence"], centers = 2, nstart = 10)
+s_inc = silhouette(km_inc$cluster,D_inc)
+plot(s_inc)
 
-D = dist(m_inc_temp.y.r["temperature"])
-km = kmeans(m_inc_temp.y.r["temperature"], centers = 4, nstart = 10)
-s = silhouette(km$cluster,D)
-plot(s)
+D_temp = dist(m_inc_temp.y.r["temperature"])
+km_temp = kmeans(m_inc_temp.y.r["temperature"], centers = 2, nstart = 10)
+s_temp = silhouette(km_temp$cluster,D_temp)
+plot(s_temp)
 
 fviz_nbclust(m_inc_temp.y.r["incidence"], pam, method = "silhouette")+ theme_classic()
 
 fviz_nbclust(m_inc_temp.y.r["temperature"], pam, method = "silhouette")+ theme_classic()
+
+
 ```
 
 #probieren mit time series Objekten
