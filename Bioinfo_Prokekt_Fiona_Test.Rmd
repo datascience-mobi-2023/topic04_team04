@@ -209,7 +209,7 @@ autoplot(Ts_thailand) +
   ggtitle("Dengue_cases_thailand_with_MA") 
 
 
-#ARIMA
+#ARIMA Dengue cases
 
 ```{r}
 library(ggplot2)
@@ -327,8 +327,53 @@ ggplot() +
 ```
 
 
+#ARIMA Temperature
+
+```{r}
+library(ggplot2)
+library(forecast)
+library(gridExtra)
+
+total_thailand_temp = cbind(total_thailand, mean_tempvec)
+colnames(total_thailand_temp)[4] = "temperature"
+
+Ts_thailand_temp <- ts(total_thailand_temp$temperature, frequency = 12, start = c(2006, 1))
+TSstudio::ts_plot(Ts_thailand_temp)
+
+#additive decomposing of the temperature
+decomposed_thailand_add_temp <- decompose(Ts_thailand_temp, type="additive") 
+plot(decomposed_thailand_add_temp)
+grid(lty = 2, col = "gray")
+
+#additive decomposing of the dengue cases
+decomposed_thailand_add <- decompose(Ts_thailand, type="additive")
+plot(decomposed_thailand_add)
+grid(lty = 2, col = "gray")
+
+# Daten für Plot 1
+data1 <- decomposed_thailand_add$trend
+
+# Daten für Plot 2
+data2 <- decomposed_thailand_add_temp$trend
+
+# Plot 1
+plot1 <- ggplot(data1, aes(x, y)) + geom_line() + labs(title = "Plot 1")
+
+# Plot 2
+plot2 <- ggplot(data2, aes(x, y)) + geom_line() + labs(title = "Plot 2")
+
+# Plots kombinieren
+combined_plot <- grid.arrange(plot1, plot2, ncol = 2)
+
+# Darstellung anzeigen
+print(combined_plot)
 
 
+```
+
+
+
+#keine ahnung
 
 ```{r}
 dimensions= dim(data_total)
@@ -555,4 +600,10 @@ gam.check(model2)
 
 cor = cor(data_total$incidence, data_total$population_count, use = "pairwise.complete.obs")
 ```
+
+
+
+
+
+
 
