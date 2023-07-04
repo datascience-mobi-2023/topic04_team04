@@ -142,11 +142,7 @@ ggplot() +
   theme_minimal()
 ```
 
-
-
-
-
-#mean of dengue_cases of whole thailand
+#mean of dengue_cases and temperature of whole thailand per month
 ```{r}
 library(ggplot2)
 library(scales)
@@ -192,6 +188,8 @@ gridExtra::grid.arrange(plot1, plot2, nrow = 2)
 #mean and median comparison
 
 ```{r}
+library(ggplot2)
+
 f_median_dengue = function(){
   median_dengue <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
   months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
@@ -213,7 +211,12 @@ f_median_temp = function(){
   }
   return(median_temp)
 }
+#compute difference between mean and median
+dif_mm_dengue = f_mean_dengue()["dengue_cases"]-f_median_dengue()["dengue_cases"]
+dif_mm_dengue = cbind(dif_mm_dengue,f_mean_dengue()["time_column"])
 
+dif_mm_temp = f_mean_temp()["temperature"]-f_median_temp()["temperature"]
+dif_mm_temp = cbind(dif_mm_temp,f_mean_temp()["time_column"])
 
 plot_mean_temp = ggplot2::ggplot() +
   geom_line(data = f_mean_temp(), aes(x = time_column, y = temperature)) +
@@ -231,7 +234,41 @@ plot_median_dengue = ggplot2::ggplot() +
   geom_line(data = f_median_dengue(), aes(x = time_column, y = dengue_cases)) +
   labs(x = "time", y = "dengue-cases", title = "Median dengue cases")
 
-gridExtra::grid.arrange(plot_mean_dengue, plot_mean_temp, plot_median_dengue, plot_median_temp, nrow = 2)
+plot_dif_dengue = ggplot2::ggplot() +
+  geom_line(data = dif_mm_dengue, aes(x = time_column, y = dengue_cases)) +
+  labs(x = "time", y = "dengue-cases", title = "Difference between mean and median")
+
+plot_dif_temp = ggplot2::ggplot() +
+  geom_line(data = dif_mm_temp, aes(x = time_column, y = temperature)) +
+  labs(x = "time", y = "temperature", title = "Difference between mean and median")
+
+gridExtra::grid.arrange(plot_mean_dengue, plot_mean_temp, plot_median_dengue, plot_median_temp,plot_dif_dengue,plot_dif_temp, nrow = 3)
+```
+
+#mean of dengue_cases and temperature of whole thailand per year
+```{r}
+f_mean_dengue.y.t = function(){
+  mean_dengue.y.t <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
+  for (i in c(2006:2020)) {
+    month = data_total[data_total$year == i,]
+    m_month = data.frame(dengue_cases = mean(month$dengue_cases, na.rm = TRUE), time_column = month$time_column[1])
+    mean_dengue.y.t = rbind(mean_dengue.y.t, m_month)
+  }
+  return(mean_dengue.y.t)
+}
+mean_dengue.y.t = as.data.frame(f_mean_dengue.y.t())
+
+f_mean_temp.y.t = function(){
+  mean_temp.y.t <- data.frame(temperature = numeric(), time_column = as.Date(character()))
+  for (i in c(2006:2020)) {
+    month = data_total[data_total$year == i,]
+    m_month = data.frame(temperature = mean(month$temperature, na.rm = TRUE), time_column = month$time_column[1])
+    mean_temp.y.t = rbind(mean_temp.y.t, m_month)
+  }
+  return(mean_temp.y.t)
+}
+mean_temp.y.t = as.data.frame(f_mean_temp.y.t())
+
 ```
 
 #Plot für Bangkok
