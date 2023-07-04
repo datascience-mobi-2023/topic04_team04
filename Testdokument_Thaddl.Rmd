@@ -406,8 +406,11 @@ for (i in r_areas){
   rownames(m_inc_temp.y.r) <- 1:nrow(m_inc_temp.y.r)
 }
 
+```
 
-
+#k-means clustering
+```{r}
+#elbow method
 km = kmeans(m_inc_temp.y.r["incidence"], centers = 2, nstart = 10)
 km$tot.withinss
 
@@ -418,12 +421,27 @@ plot(2:7,wss,type='b',pch=19,xlab="Number of clusters K",
      ylab="Total within-clusters sum of squares")
 
 
+#silhoutte method
 library(cluster)
+#library (NbClust)
+#library (clustertend)
+library (factoextra)
+#library (fpc)
+#library (clValid)
+
 D = dist(m_inc_temp.y.r["incidence"])
 km = kmeans(m_inc_temp.y.r["incidence"], centers = 2, nstart = 10)
 s = silhouette(km$cluster,D)
 plot(s)
 
+D = dist(m_inc_temp.y.r["temperature"])
+km = kmeans(m_inc_temp.y.r["temperature"], centers = 4, nstart = 10)
+s = silhouette(km$cluster,D)
+plot(s)
+
+fviz_nbclust(m_inc_temp.y.r["incidence"], pam, method = "silhouette")+ theme_classic()
+
+fviz_nbclust(m_inc_temp.y.r["temperature"], pam, method = "silhouette")+ theme_classic()
 ```
 
 #probieren mit time series Objekten
