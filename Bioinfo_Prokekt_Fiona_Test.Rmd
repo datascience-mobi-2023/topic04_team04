@@ -334,9 +334,8 @@ ggplot() +
 # Correlation
 
 ```{r}
-cor = cor(total_thailand$dengue_cases, total_thailand$temperature, method = "spearman")
-cor
-plot(total_thailand$dengue_cases, total_thailand$temperature, main = "scatterplot", xlab = "cases", ylab = "temperature")
+cor = cor(data_total$incidence, data_total$temperature, use = "pairwise.complete.obs")
+plot(data_total$temperature, data_total$incidence, main = "incidence over temperature", xlab = "inzidenz", ylab = "temperature")
 ```
 
 
