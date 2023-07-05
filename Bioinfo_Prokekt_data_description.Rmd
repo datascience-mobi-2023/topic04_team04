@@ -65,6 +65,50 @@ ggplot() +
   ylab("Temperature [°C]")
 ```
 
+Computing minimum and maximum average temperature
+
+```{r}
+max_mean_tempvec = max(mean_tempvec)
+
+min_mean_tempvec = min(mean_tempvec)
+
+max_mean_tempvec
+min_mean_tempvec
+
+
+```
+
+Function for plotting temperature in individual timeframe
+
+```{r}
+
+subset_mean_temp = function(start, end, mean_tempvec, month_dates){
+  # input as string
+  start_date = as.Date(start)
+  end_date = as.Date(end)
+  
+  subset_temp = subset(mean_tempvec, month_dates >= start_date & month_dates <= end_date)
+  
+  month_dates_year = seq(start_date, end_date, by = "month", format = "%m")
+  
+  data_year = data.frame(month_dates_year, subset_temp)
+  
+  ggplot(data_year, mapping = aes(x=month_dates_year, y=subset_temp))+
+    geom_line()+
+    geom_point()+
+    xlab("Months") +
+    ylab("Temperature [°C]") +
+    ggtitle(paste("Monthly mean temperature in Thailand", start, " - ", end))
+}
+
+```
+
+Plot timeframe of min and max temperature
+
+```{r}
+subset_mean_temp("2013-01-01", "2014-12-31", mean_tempvec, month_dates)
+subset_mean_temp("2016-01-01", "2016-12-31", mean_tempvec, month_dates)
+```
 # Correlation
 
 ```{r}
