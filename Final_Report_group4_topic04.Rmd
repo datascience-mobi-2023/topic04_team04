@@ -1,0 +1,27 @@
+---
+title: "Final_Report_group4_topic04"
+output: html_document
+date: "2023-06-29"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+# Materials and Methods
+
+## data cleaning and descriptive Analysis
+
+## Correllation
+
+## ARIMA modeling
+
+## GAM modeling
+
+# Results
+
+
+
+# Discussion

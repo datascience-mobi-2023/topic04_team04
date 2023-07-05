@@ -89,11 +89,7 @@ lmodel_thailand_temp = lm(mean_tempvec ~ month_dates[c(1:180)])
 
 ```
 
-divide Thailand into North, South, ... region to plot individual Temperature plots and compare regions
-
-```{r}
-
-
+```         
 ```
 
 #plot of temperature in thailand from 2006 to 2022
@@ -130,18 +126,75 @@ ggplot() +
 
 ```
 
-```{r}
-install.packages("readxl")
-install.packages("nlme")
-install.packages("gam")
-install.packages("sdm")
-install.packages("raster")
-install.packages("ncdf4")
+Computing minimum and maximum average temperature
 
-library (readxl)
-library(nlme)
-library(gam)
-library(sdm)
-library(raster)
-library(ncdf4)
+```{r}
+max_mean_tempvec = max(mean_tempvec)
+
+min_mean_tempvec = min(mean_tempvec)
+
+max_mean_tempvec
+min_mean_tempvec
+
+
+```
+
+Plot minimum mean temperature of Thailand
+
+```{r}
+
+# Set the desired time frame
+start_date_2013 <- as.Date("2013-01-01")
+end_date_2014 <- as.Date("2014-12-31")
+
+# Select values within the time frame
+subset_temp_1314 <- subset(mean_tempvec, month_dates >= start_date_2013 & month_dates <= end_date_2014)
+
+# Create a sequence of indices for the selected time frame
+month_dates_1314 <- seq(as.Date("2013-01-01"), as.Date("2014-12-31"), by = "month", format = "%m")
+
+
+# Plot the selected values
+data_1314 = data.frame(month_dates_1314, subset_temp_1314)
+ggplot(data_1314, mapping=aes(x=month_dates_1314, y=subset_temp_1314)) +
+  geom_line() +
+  geom_point()+
+  xlab("Months") +
+  ylab("Temperature [°C]") +
+  ggtitle("Monthly mean temperature in Thailand 2013 - 2014")
+
+
+
+```
+
+Function for plotting temperature in individual timeframe
+
+```{r}
+
+subset_mean_temp = function(start, end, mean_tempvec, month_dates){
+  # input as string
+  start_date = as.Date(start)
+  end_date = as.Date(end)
+  
+  subset_temp = subset(mean_tempvec, month_dates >= start_date & month_dates <= end_date)
+  
+  month_dates_year = seq(start_date, end_date, by = "month", format = "%m")
+  
+  data_year = data.frame(month_dates_year, subset_temp)
+  
+  ggplot(data_year, mapping = aes(x=month_dates_year, y=subset_temp))+
+    geom_line()+
+    geom_point()+
+    xlab("Months") +
+    ylab("Temperature [°C]") +
+    ggtitle(paste("Monthly mean temperature in Thailand", start, " - ", end))
+}
+
+```
+
+Plot timeframe of min and max temperature
+
+```{r}
+subset_mean_temp("2013-01-01", "2014-12-31", mean_tempvec, month_dates)
+subset_mean_temp("2016-01-01", "2016-12-31", mean_tempvec, month_dates)
 ```
