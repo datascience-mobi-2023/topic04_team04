@@ -29,14 +29,30 @@ Vektor
 
 library(sf)
 library(ggplot2)
+library(dplyr)
 
-
+Mapping_dengue_2006Apr <- rows_2006Apr
 
 
 district_sf <- st_read("/Users/frederik/Documents/GitHub/Projekt/gadm36_THA_shp/gadm36_THA_1.shp")
 class(district_sf) # [1] "sf"         "data.frame"
 
-plot(district_sf)
+names(district_sf)[4] <-"Reporting_areas"
+
+
+geo_data <- left_join(Mapping_dengue_2006Apr, district_sf, by= join_by(Reporting_areas))
+
+class(geo_data)
+head(geo_data)
+geo_data <- sf::st_as_sf(geo_data)
+class(geo_data)
+plot(geo_data)
+
+library(ggplot2)
+ggplot() +
+  geom_sf(data = geo_data, col = "black", fill = NA) +  # adds geometric layer of polygons stored in the data object
+  geom_point(data = geo_data, aes(x = Longitude, y = Latitude))
+
 
 
 ggplot+
@@ -44,6 +60,16 @@ ggplot+
   labs(title = "Thailand")
   
  
+
+
+
+
+
+
+
+
+
+
 
 
 #calculating incidence
@@ -91,6 +117,10 @@ plot_inzidenz <- data_total_test$Incidence[data_total_test$Reporting_areas=="Amn
 
 
 plot(plot_zeit, plot_inzidenz)
+
+
+
+
 
 
 
