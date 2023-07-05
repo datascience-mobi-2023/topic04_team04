@@ -29,21 +29,62 @@ Vektor
 
 library(sf)
 library(ggplot2)
+library(dplyr)
 
-
+Mapping_dengue_2006Apr <- rows_2006Apr
 
 
 district_sf <- st_read("/Users/frederik/Documents/GitHub/Projekt/gadm36_THA_shp/gadm36_THA_1.shp")
 class(district_sf) # [1] "sf"         "data.frame"
 
-plot(district_sf)
+names(district_sf)[4] <-"Reporting_areas"
 
 
-ggplot+
-  geom_sf(data = district_sf$geometry,) +   # state your data source and which column information you want to plot
-  labs(title = "Thailand")
+geo_data <- left_join(Mapping_dengue_2006Apr, district_sf, by= join_by(Reporting_areas))
+
+class(geo_data)
+head(geo_data)
+geo_data <- sf::st_as_sf(geo_data)
+class(geo_data)
+plot(geo_data)
+
+
+
+# plottet die Karte von allen distrikten
+ggplot() +
+  geom_sf(data = geo_data, col = "black", fill = NA) +  # adds geometric layer of polygons stored in the data object
+  geom_point(data = geo_data, aes(x = Longitude, y = Latitude))
+
+district_sf <- st_read("/Users/frederik/Documents/GitHub/Projekt/gadm36_THA_shp/gadm36_THA_1.shp")
+
+Inzidenz2006Apr <- rows_2006Apr$incidence
+
+district_sf$incidence<- rows_2006Apr$incidence
+
+
+ggplot() +
+  geom_sf(data = district_sf, aes(fill = incidence)) +
+  scale_fill_gradient(low = "blue", high = "red")
+
+
+ggplot()+
+  geom_sf(data = district_sf, aes(fill= AREA))
   
+
+ggplot() +
+  geom_sf(data = district_sf) + # state your data source and which column information you want to plot
+  coord_sf()
  
+
+
+
+
+
+
+
+
+
+
 
 
 #calculating incidence
@@ -91,6 +132,10 @@ plot_inzidenz <- data_total_test$Incidence[data_total_test$Reporting_areas=="Amn
 
 
 plot(plot_zeit, plot_inzidenz)
+
+
+
+
 
 
 

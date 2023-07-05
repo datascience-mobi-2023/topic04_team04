@@ -364,11 +364,14 @@ hist(data_total$incidence,  breaks = 200, main = "Distribution of incidence", xl
 
 #correlation between temperature and incidence
 ```{r}
+d1 = rnorm(n = 13860, mean = 11.4, sd = 1.606010)
 
 plot(data_total$temperature, data_total$incidence, pch = 20,
      ylab = "incidence",
      xlab = "temperature",
-  abline(v = mean(data_total$temperature), col = "red"))
+  abline(v = mean(data_total$temperature), col = "red"), lines(data_total$temperature, d1, col = "red")
+  )
+
 
 plot(rank(data_total$temperature), rank(data_total$incidence), pch = 20,
      ylab = "incidence",
@@ -429,21 +432,45 @@ library (factoextra)
 #library (fpc)
 #library (clValid)
 
+#find optimal number of clusters by incidence
 D_inc = dist(m_inc_temp.y.r["incidence"])
-km_inc = kmeans(m_inc_temp.y.r["incidence"], centers = 2, nstart = 10)
+km_inc = kmeans(m_inc_temp.y.r["incidence"], centers = 4, nstart = 10)
 s_inc = silhouette(km_inc$cluster,D_inc)
 plot(s_inc)
-
-D_temp = dist(m_inc_temp.y.r["temperature"])
-km_temp = kmeans(m_inc_temp.y.r["temperature"], centers = 2, nstart = 10)
-s_temp = silhouette(km_temp$cluster,D_temp)
-plot(s_temp)
-
 fviz_nbclust(m_inc_temp.y.r["incidence"], pam, method = "silhouette")+ theme_classic()
 
+#find optimal number of clusters by temperature
+D_temp = dist(m_inc_temp.y.r["temperature"])
+km_temp = kmeans(m_inc_temp.y.r["temperature"], centers = 4, nstart = 10)
+s_temp = silhouette(km_temp$cluster,D_temp)
+plot(s_temp)
 fviz_nbclust(m_inc_temp.y.r["temperature"], pam, method = "silhouette")+ theme_classic()
 
+#find optimal number of clusters by temperature and incidence
+D_inc_temp = dist(scale(m_inc_temp.y.r[,c("incidence","temperature")]))
+km_inc_temp = kmeans(scale(m_inc_temp.y.r[,c("incidence","temperature")]), centers = 3)
+s_inc_temp = silhouette(km_inc_temp$cluster,D_inc_temp)
+plot(s_inc_temp)
+fviz_nbclust(scale(m_inc_temp.y.r[,c("incidence","temperature")]), pam, method = "silhouette")+ theme_classic()
 
+m_inc_temp_cluster.y.r = data.frame(m_inc_temp.y.r, km_inc_temp$cluster)
+
+plot1 = ggplot(m_inc_temp.y.r, aes(x = temperature, y = incidence, color = as.factor(km_inc$cluster))) +
+  geom_point() +
+  labs(title = "Partitioning Clustering Plot by incidence") +
+  theme_classic()
+
+plot2 = ggplot(m_inc_temp.y.r, aes(x = temperature, y = incidence, color = as.factor(km_temp$cluster))) +
+  geom_point() +
+  labs(title = "Partitioning Clustering Plot by temperature") +
+  theme_classic()
+
+plot3 = ggplot(m_inc_temp.y.r, aes(x = temperature, y = incidence, color = as.factor(km_inc_temp$cluster))) +
+  geom_point() +
+  labs(title = "Partitioning Clustering Plot") +
+  theme_classic()
+plot3
+gridExtra::grid.arrange(plot1, plot2, plot3, ncol = 1)
 ```
 
 #probieren mit time series Objekten
@@ -465,9 +492,10 @@ library(ncdf4)
 library(mgcv)
 
 attach(data_total)
-model1 <- gam(dengue_cases~s(temperature, k=6), family="quasipoisson")
+model1 <- gam(incidence~s(temperature, k=5), family="quasipoisson")
 plot.gam(model1)
-summary(model1)
+summary(model1) #edf: → a value close to 1 tends to be close to a linear term → a higher value means that the spline is more wiggly (non-linear). 
+#F-Wert und der p-Wert geben die statistische Signifikanz der glatten Funktion an. In diesem Fall ist die glatte Funktion von "temperature" hoch signifikant (p-Wert < 2e-16), was darauf hindeutet, dass sie einen signifikanten Einfluss auf die Vorhersage der "incidence" hat.Der angegebene R-squared-Wert (R-sq.(adj)) von 0.0407 gibt an, wie gut das Modell die Varianz der abhängigen Variable erklärt. In diesem Fall erklärt das Modell etwa 4,07% der Varianz in den Daten. Ein niedriger GCV-Wert deutet auf eine gute Anpassung des Modells hin.
 k.check(model1)
 gam.check(model1)
 
@@ -503,16 +531,12 @@ t2m <- stack ("C:/Users/thadl/OneDrive/Dokumente/Bioinfo/Klimaprojekt/t2m_era5_2
 names(t2m) <- "Maxtemp"
 p1 <- raster::predict(t2m, model, type="response")
 
-gambia <- raster::getData('GADM', country='GMB', level=1)
-my.area <- extent(gambia)
+thailand <- raster::getData('GADM', country='THA', level=1)
+my.area <- extent(thailand)
 my.p1 <- crop(p1, my.area)
-my.p1.mask <- mask(my.p1, gambia)
+my.p1.mask <- mask(my.p1, thailand)
 pdf(file="C:/Users/thadl/OneDrive/Dokumente/Bioinfo/Klimaprojekt/maxtemp_Abun2.pdf")
-plot(my.p1.mask, legend.width=1, legend.shrink=0.75, axes= FALSE, box=FALSE)       
-title("Predicted values: Influence of max Temp on Abun2", line = -1)
-                                                                                   
-plot(gambia, add=TRUE)  
-dev.off()
+plot(my.p1.mask, legend.width=1, legend.shrink=0.75, axes= FALSE, box=FALSE) + title("Predicted values: Influence of max Temp on Abun2", line = -1) + plot(gambia, add=TRUE)
 ```
 
 
