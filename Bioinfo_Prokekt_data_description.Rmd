@@ -42,7 +42,7 @@ for (month in c(1:180)) {
 mean_tempvec
 ```
 
-Plot of yearly mean temperature in Thailand over the years + linear regression of temperature
+#Plot of yearly mean temperature in Thailand over the years + linear regression of temperature
 
 ```{r}
 
@@ -376,6 +376,12 @@ dengue_plot_cases <- data_total$dengue_cases[data_total$Reporting_areas == "Bang
 dengue_plot_time <- data_total$time_column[data_total$Reporting_areas == "Bangkok"]
 
 plot(dengue_plot_time,dengue_plot_cases, type = "o")
+```
+
+#distribution of incidence
+```{r}
+q.dengue = quantile(data_total$incidence, probs = c(0.01,0.1,0.25,0.5,0.75,0.9,0.99), na.rm = TRUE)
+hist(data_total$incidence,  breaks = 200, main = "Distribution of incidence", xlab = "incidence", freq = TRUE);abline(v=q.dengue,lty=3,lwd=2,col='red')
 ```
 
 #correlation between temperature and dengue cases
