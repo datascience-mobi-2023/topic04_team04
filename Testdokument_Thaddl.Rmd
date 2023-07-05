@@ -364,12 +364,14 @@ hist(data_total$incidence,  breaks = 200, main = "Distribution of incidence", xl
 
 #correlation between temperature and incidence
 ```{r}
+d1 = rnorm(n = 13860, mean = 11.4, sd = 1.606010)
 
 plot(data_total$temperature, data_total$incidence, pch = 20,
      ylab = "incidence",
      xlab = "temperature",
-  abline(v = mean(data_total$temperature), col = "red"),
+  abline(v = mean(data_total$temperature), col = "red"), lines(data_total$temperature, d1, col = "red")
   )
+
 
 plot(rank(data_total$temperature), rank(data_total$incidence), pch = 20,
      ylab = "incidence",
