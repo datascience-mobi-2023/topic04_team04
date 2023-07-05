@@ -442,3 +442,23 @@ k.check(model2)
 gam.check(model2)
 
 ```
+
+
+
+
+Plotting der Inzidenz eines einzelnen Monats auf die Karte von Thailand
+```{r}
+library(sf)
+library(ggplot2)
+
+
+district_sf <- st_read("gadm36_THA_shp/gadm36_THA_1.shp")
+
+#Inzidenz vom April 2006 auf die karte geplottet
+
+district_sf$incidence2006Aug<- rows_2006Aug$incidence
+
+ggplot() +
+  geom_sf(data = district_sf, aes(fill = incidence2006Aug)) +
+  scale_fill_gradient(low = "yellow", high = "red")
+```
