@@ -327,7 +327,7 @@ ggplot() +
 ```
 
 
-#ARIMA Temperature
+#comparing the decomposition of temperature and cases
 
 ```{r}
 library(ggplot2)
@@ -350,28 +350,30 @@ decomposed_thailand_add <- decompose(Ts_thailand, type="additive")
 plot(decomposed_thailand_add)
 grid(lty = 2, col = "gray")
 
-# Daten für Plot 1
-data1 <- decomposed_thailand_add$trend
+case_trend <- decomposed_thailand_add$trend
+temp_trend <- decomposed_thailand_add_temp$trend
 
-# Daten für Plot 2
-data2 <- decomposed_thailand_add_temp$trend
+plot_case_trend <- ggplot(case_trend, aes(x, y)) + geom_line() + labs(title = "Cases_trend")
+plot_temp_trend <- ggplot(temp_trend, aes(x, y)) + geom_line() + labs(title = "Temperature_trend")
 
-# Plot 1
-plot1 <- ggplot(data1, aes(x, y)) + geom_line() + labs(title = "Plot 1")
-
-# Plot 2
-plot2 <- ggplot(data2, aes(x, y)) + geom_line() + labs(title = "Plot 2")
-
-# Plots kombinieren
-combined_plot <- grid.arrange(plot1, plot2, ncol = 2)
-
-# Darstellung anzeigen
-print(combined_plot)
+plot_case_temp_trend <- grid.arrange(plot_case_trend, plot_temp_trend, ncol = 1)
+print(plot_case_temp_trend)
 
 
 ```
 
 
+```{r}
+case_seasonal <- decomposed_thailand_add$seasonal
+temp_seasonal <- decomposed_thailand_add_temp$seasonal
+
+plot_case_seasonal <- ggplot(case_seasonal, aes(x, y)) + geom_line() + labs(title = "Cases_seasonal")
+plot_temp_seasonal <- ggplot(temp_seasonal, aes(x, y)) + geom_line() + labs(title = "Temperature_seasonal")
+
+plot_case_temp_seasonal <- grid.arrange(plot_case_seasonal, plot_temp_seasonal, ncol = 1)
+print(plot_case_temp_trend)
+
+```
 
 #keine ahnung
 
