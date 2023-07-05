@@ -42,7 +42,7 @@ for (month in c(1:180)) {
 mean_tempvec
 ```
 
-Plot of yearly mean temperature in Thailand over the years + linear regression of temperature
+#Plot of yearly mean temperature in Thailand over the years + linear regression of temperature
 
 ```{r}
 
@@ -378,18 +378,119 @@ dengue_plot_time <- data_total$time_column[data_total$Reporting_areas == "Bangko
 plot(dengue_plot_time,dengue_plot_cases, type = "o")
 ```
 
+#distribution of incidence
+```{r}
+q.dengue = quantile(data_total$incidence, probs = c(0.01,0.1,0.25,0.5,0.75,0.9,0.99), na.rm = TRUE)
+hist(data_total$incidence,  breaks = 200, main = "Distribution of incidence", xlab = "incidence", freq = TRUE);abline(v=q.dengue,lty=3,lwd=2,col='red')
+```
+
 #correlation between temperature and dengue cases
 
 ```{r}
-i.missing = which(rmv.rows > 0)
-
 
 plot(data_total$temperature, data_total$incidence, pch = 20,
      ylab = "incidence",
-     xlab = "mean temperature",
-     lines(data_total$temperature, data_total$incidence, col = "red")
-     )
+     xlab = "temperature",
+  abline(v = mean(data_total$temperature), col = "red"),
+  )
 
+plot(rank(data_total$temperature), rank(data_total$incidence), pch = 20,
+     ylab = "incidence",
+     xlab = "temperature",
+  abline(v = mean(data_total$temperature), col = "red"))
+
+qqplot(data_total$temperature, data_total$incidence)
+
+#pearson correlation y.t.
+cor(mean_dengue.y.t$dengue_cases, mean_temp.y.t$temperature)
+#spearman correlation y.t.
+cor(mean_dengue.y.t$dengue_cases, mean_temp.y.t$temperature, method = "spearman")
+
+#pearson correlation m.r.
+cor(clean_data_total$dengue_cases, clean_data_total$temperature)
+#spearman correlation m.r.
+cor(clean_data_total$dengue_cases, clean_data_total$temperature, method = "spearman")
+
+
+pheatmap::pheatmap(cor(clean_data_total[c("dengue_cases", "population_count", "temperature", "incidence")]))
+
+```
+
+#correlation between different areas
+```{r}
+#mean of temp and incidence over all years per area
+t_data_total = t(data_total)
+r_areas = unique(data_total$Reporting_areas)
+m_inc_temp.y.r = data.frame(Reporting_areas = character(), incidence = numeric(), temperature = numeric())
+for (i in r_areas){
+  temp_inc = apply(data_total[which(clean_data_total$Reporting_areas == i),c("incidence", "temperature")], 2,function(g){mean(g, na.rm = TRUE)})
+  temp_inc_df = data.frame(Reporting_areas = i, incidence = temp_inc["incidence"], temperature = temp_inc["temperature"])
+  m_inc_temp.y.r = rbind(m_inc_temp.y.r, temp_inc_df)
+  rownames(m_inc_temp.y.r) <- 1:nrow(m_inc_temp.y.r)
+}
+
+```
+
+#k-means clustering
+```{r}
+#elbow method
+km = kmeans(m_inc_temp.y.r["incidence"], centers = 2, nstart = 10)
+km$tot.withinss
+
+wss = sapply(2:7,function(k) { 
+  kmeans(m_inc_temp.y.r["incidence"], centers = k)$tot.withinss
+})
+plot(2:7,wss,type='b',pch=19,xlab="Number of clusters K",
+     ylab="Total within-clusters sum of squares")
+
+
+#silhoutte method
+library(cluster)
+#library (NbClust)
+#library (clustertend)
+library (factoextra)
+#library (fpc)
+#library (clValid)
+
+#find optimal number of clusters by incidence
+D_inc = dist(m_inc_temp.y.r["incidence"])
+km_inc = kmeans(m_inc_temp.y.r["incidence"], centers = 4, nstart = 10)
+s_inc = silhouette(km_inc$cluster,D_inc)
+plot(s_inc)
+fviz_nbclust(m_inc_temp.y.r["incidence"], pam, method = "silhouette")+ theme_classic()
+
+#find optimal number of clusters by temperature
+D_temp = dist(m_inc_temp.y.r["temperature"])
+km_temp = kmeans(m_inc_temp.y.r["temperature"], centers = 4, nstart = 10)
+s_temp = silhouette(km_temp$cluster,D_temp)
+plot(s_temp)
+fviz_nbclust(m_inc_temp.y.r["temperature"], pam, method = "silhouette")+ theme_classic()
+
+#find optimal number of clusters by temperature and incidence
+D_inc_temp = dist(scale(m_inc_temp.y.r[,c("incidence","temperature")]))
+km_inc_temp = kmeans(scale(m_inc_temp.y.r[,c("incidence","temperature")]), centers = 3)
+s_inc_temp = silhouette(km_inc_temp$cluster,D_inc_temp)
+plot(s_inc_temp)
+fviz_nbclust(scale(m_inc_temp.y.r[,c("incidence","temperature")]), pam, method = "silhouette")+ theme_classic()
+
+m_inc_temp_cluster.y.r = data.frame(m_inc_temp.y.r, km_inc_temp$cluster)
+
+plot1 = ggplot(m_inc_temp.y.r, aes(x = temperature, y = incidence, color = as.factor(km_inc$cluster))) +
+  geom_point() +
+  labs(title = "Partitioning Clustering Plot by incidence") +
+  theme_classic()
+
+plot2 = ggplot(m_inc_temp.y.r, aes(x = temperature, y = incidence, color = as.factor(km_temp$cluster))) +
+  geom_point() +
+  labs(title = "Partitioning Clustering Plot by temperature") +
+  theme_classic()
+
+plot3 = ggplot(m_inc_temp.y.r, aes(x = temperature, y = incidence, color = as.factor(km_inc_temp$cluster))) +
+  geom_point() +
+  labs(title = "Partitioning Clustering Plot") +
+  theme_classic()
+plot3
+gridExtra::grid.arrange(plot1, plot2, plot3, ncol = 1)
 ```
 
 #probieren mit time series Objekten
