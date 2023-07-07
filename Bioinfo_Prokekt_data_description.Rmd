@@ -42,7 +42,7 @@ for (month in c(1:180)) {
 mean_tempvec
 ```
 
-#Plot of yearly mean temperature in Thailand over the years + linear regression of temperature
+**Plot of yearly mean temperature in Thailand over the years + linear regression of temperature**
 
 ```{r}
 
@@ -65,7 +65,7 @@ ggplot() +
   ylab("Temperature [°C]")
 ```
 
-Computing minimum and maximum average temperature
+**Computing minimum and maximum average temperature**
 
 ```{r}
 max_mean_tempvec = max(mean_tempvec)
@@ -106,9 +106,10 @@ subset_mean_temp = function(start, end, mean_tempvec, month_dates){
 Plot timeframe of min and max temperature
 
 ```{r}
-subset_mean_temp("2013-01-01", "2014-12-31", mean_tempvec, month_dates)
+subset_mean_temp("2013-06-01", "2014-06-30", mean_tempvec, month_dates)
 subset_mean_temp("2016-01-01", "2016-12-31", mean_tempvec, month_dates)
 ```
+
 # Correlation
 
 ```{r}
@@ -117,6 +118,7 @@ plot(data_total$temperature, data_total$incidence, main = "incidence over temper
 ```
 
 #ARIMA
+
 ```{r}
 library(ggplot2)
 library(forecast)
@@ -160,7 +162,6 @@ auto_thailand
 #auto_thailand_2
 #this auto-ARIMA was removed because it took to long and had a higher AIC
 ```
-
 
 ```{r}
 residuals_thailand <- residuals(auto_thailand)
@@ -232,9 +233,7 @@ ggplot() +
   theme_minimal()
 ```
 
-
-
-#comparing the decomposition of temperature and cases
+## comparing the decomposition of temperature and cases
 
 ```{r}
 library(ggplot2)
@@ -269,7 +268,6 @@ print(plot_case_temp_trend)
 
 ```
 
-
 ```{r}
 case_seasonal <- decomposed_thailand_add$seasonal
 temp_seasonal <- decomposed_thailand_add_temp$seasonal
@@ -281,7 +279,9 @@ plot_case_temp_seasonal <- grid.arrange(plot_case_seasonal, plot_temp_seasonal, 
 print(plot_case_temp_trend)
 
 ```
-#mean of dengue_cases and temperature of whole thailand per month
+
+## mean of dengue_cases and temperature of whole thailand per month
+
 ```{r}
 library(ggplot2)
 library(scales)
@@ -324,7 +324,7 @@ plot2 = ggplot2::ggplot() +
 gridExtra::grid.arrange(plot1, plot2, nrow = 2)
 ```
 
-#mean and median comparison
+## mean and median comparison
 
 ```{r}
 library(ggplot2)
@@ -384,7 +384,8 @@ plot_dif_temp = ggplot2::ggplot() +
 gridExtra::grid.arrange(plot_mean_dengue, plot_mean_temp, plot_median_dengue, plot_median_temp,plot_dif_dengue,plot_dif_temp, nrow = 3)
 ```
 
-#mean of dengue_cases and temperature of whole thailand per year
+## mean of dengue_cases and temperature of whole thailand per year
+
 ```{r}
 f_mean_dengue.y.t = function(){
   mean_dengue.y.t <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
@@ -422,13 +423,14 @@ dengue_plot_time <- data_total$time_column[data_total$Reporting_areas == "Bangko
 plot(dengue_plot_time,dengue_plot_cases, type = "o")
 ```
 
-#distribution of incidence
+## distribution of incidence
+
 ```{r}
 q.dengue = quantile(data_total$incidence, probs = c(0.01,0.1,0.25,0.5,0.75,0.9,0.99), na.rm = TRUE)
 hist(data_total$incidence,  breaks = 200, main = "Distribution of incidence", xlab = "incidence", freq = TRUE);abline(v=q.dengue,lty=3,lwd=2,col='red')
 ```
 
-#correlation between temperature and dengue cases
+## correlation between temperature and dengue cases
 
 ```{r}
 
@@ -460,7 +462,8 @@ pheatmap::pheatmap(cor(clean_data_total[c("dengue_cases", "population_count", "t
 
 ```
 
-#correlation between different areas
+## correlation between different areas
+
 ```{r}
 #mean of temp and incidence over all years per area
 t_data_total = t(data_total)
@@ -475,7 +478,8 @@ for (i in r_areas){
 
 ```
 
-#k-means clustering
+# k-means clustering
+
 ```{r}
 #elbow method
 km = kmeans(m_inc_temp.y.r["incidence"], centers = 2, nstart = 10)
@@ -537,7 +541,7 @@ plot3
 gridExtra::grid.arrange(plot1, plot2, plot3, ncol = 1)
 ```
 
-#probieren mit time series Objekten
+## probieren mit time series Objekten
 
 ```{r}
 my_ts <- ts(data_total$dengue_cases, start = c(data_total$time_column[1]), frequency = 12)
@@ -545,7 +549,7 @@ head(my_ts)
 TSstudio::ts_plot(my_ts)
 ```
 
-#GAM
+# GAM
 
 ```{r}
 
@@ -588,10 +592,8 @@ gam.check(model2)
 
 ```
 
-
-
-
 Plotting der Inzidenz eines einzelnen Monats auf die Karte von Thailand
+
 ```{r}
 library(sf)
 library(ggplot2)
@@ -605,5 +607,37 @@ district_sf$incidence2006Aug<- rows_2006Aug$incidence
 
 ggplot() +
   geom_sf(data = district_sf, aes(fill = incidence2006Aug)) +
-  scale_fill_gradient(low = "yellow", high = "red")
+  scale_fill_gradient(low = "yellow", high = "red") + labs(fill = "Incidence in Aug 2006")
+```
+
+Funktion für Inzidenz plot der Monate
+
+```{r}
+
+library(sf)
+library(ggplot2)
+
+
+district_sf <- st_read("gadm36_THA_shp/gadm36_THA_1.shp")
+
+map_incidence_monthly = function(incidence_month){
+  
+ max_incidence = which.max(incidence_month$incidence)
+max_incidence_area = incidence_month$Reporting_areas[max_incidence]
+
+
+
+ggplot() +
+  geom_sf(data = district_sf, aes(fill = incidence_month$incidence)) +
+  scale_fill_gradient(low = "yellow", high = "red") +
+  labs(fill = paste("Highest incidence =", max_incidence, "in", max_incidence_area))
+  
+
+}
+#input for incidence month in format: rows_YYYY_Mon
+
+map_incidence_monthly(rows_2016Apr)
+
+map_incidence_monthly(rows_2013Dec)
+
 ```
