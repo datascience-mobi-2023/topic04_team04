@@ -620,6 +620,7 @@ library(ggplot2)
 
 district_sf <- st_read("gadm36_THA_shp/gadm36_THA_1.shp")
 
+
 map_incidence_monthly = function(incidence_month){
   
  max_incidence = which.max(incidence_month$incidence)
@@ -632,12 +633,13 @@ ggplot() +
   scale_fill_gradient(low = "yellow", high = "red") +
   labs(fill = paste("Highest incidence =", max_incidence, "in", max_incidence_area))
   
-
+  
 }
 #input for incidence month in format: rows_YYYY_Mon
 
+
+
 map_incidence_monthly(rows_2016Apr)
 
-map_incidence_monthly(rows_2013Dec)
 
 ```

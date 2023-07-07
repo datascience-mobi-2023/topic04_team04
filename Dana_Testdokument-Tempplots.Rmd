@@ -198,3 +198,37 @@ Plot timeframe of min and max temperature
 subset_mean_temp("2013-01-01", "2014-12-31", mean_tempvec, month_dates)
 subset_mean_temp("2016-01-01", "2016-12-31", mean_tempvec, month_dates)
 ```
+Probieren Inzidenz Funktion mit Vektor von Monaten 
+```{r}
+
+library(sf)
+library(ggplot2)
+
+
+district_sf <- st_read("gadm36_THA_shp/gadm36_THA_1.shp")
+
+incidence_months = c(rows_2013Dec, rows_2016Apr, rows_2011Jun)
+
+map_incidence_monthly = function(incidence_months){
+  for(incidence_month in incidence_months){
+ max_incidence = which.max(incidence_month$incidence)
+max_incidence_area = incidence_month$Reporting_areas[max_incidence]
+
+
+
+ggplot() +
+  geom_sf(data = district_sf, aes(fill = incidence_month$incidence)) +
+  scale_fill_gradient(low = "yellow", high = "red") +
+  labs(fill = paste("Highest incidence =", max_incidence, "in", max_incidence_area))
+  
+  }
+}
+#input for incidence month in format: rows_YYYY_Mon
+
+
+
+map_incidence_monthly(incidence_months)
+
+
+```
+
