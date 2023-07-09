@@ -344,6 +344,36 @@ f_mean_temp.y.t = function(){
 mean_temp.y.t = as.data.frame(f_mean_temp.y.t())
 
 ```
+#mean of incidence and temperature of each provinze per year
+
+```{r}
+f_mean_inc.y.p = function(period, areas){
+  mean_inc.y.p <- data.frame(incidence = numeric(), time_column = as.Date(character()), Reporting_areas = character())
+  for (i in period){
+    year = data_total[data_total$year == i,]
+    for (p in areas) {
+      provinz = year[year$Reporting_areas == p,]
+      m_y_p = data.frame(incidence = mean(provinz$incidence, na.rm = TRUE), time_column = provinz$time_column[1], Reporting_areas = provinz$Reporting_areas[1])
+      mean_inc.y.p = rbind(mean_inc.y.p, m_y_p)
+    }
+  }
+  return(mean_inc.y.p)
+}
+
+f_mean_temp.y.p = function(period, areas){
+  mean_temp.y.p <- data.frame(temperature = numeric(), time_column = as.Date(character()), Reporting_areas = character())
+  for (i in period){
+    year = data_total[data_total$year == i,]
+    for (p in areas) {
+      provinz = year[year$Reporting_areas == p,]
+      m_y_p = data.frame(temperature = mean(provinz$incidence, na.rm = TRUE), time_column = provinz$time_column[1], Reporting_areas = provinz$Reporting_areas[1])
+      mean_temp.y.p = rbind(mean_temp.y.p, m_y_p)
+    }
+  }
+  return(mean_temp.y.p)
+}
+```
+
 
 #Plot für Bangkok
 ```{r}
@@ -531,3 +561,67 @@ plot(my.p1.mask, legend.width=1, legend.shrink=0.75, axes= FALSE, box=FALSE) + t
 
 
 
+
+#Plotting der Inzidenz eines einzelnen Monats auf die Karte von Thailand
+
+```{r}
+library(sf)
+library(ggplot2)
+
+
+district_sf <- st_read("gadm36_THA_shp/gadm36_THA_1.shp")
+
+#Inzidenz vom April 2006 auf die karte geplottet
+
+district_sf$incidence2006Aug<- rows_2006Aug$incidence
+
+ggplot() +
+  geom_sf(data = district_sf, aes(fill = incidence2006Aug)) +
+  scale_fill_gradient(low = "yellow", high = "red") + labs(fill = "Incidence in Aug 2006")
+```
+
+#Funktion für Inzidenz plot der Monate
+```{r}
+
+library(sf)
+library(ggplot2)
+
+
+district_sf <- st_read("gadm36_THA_shp/gadm36_THA_1.shp")
+
+
+map_incidence_monthly = function(incidence_month){
+  
+ max_incidence = which.max(incidence_month$incidence)
+max_incidence_area = incidence_month$Reporting_areas[max_incidence]
+
+
+
+ggplot() +
+  geom_sf(data = district_sf, aes(fill = incidence_month$incidence)) +
+  scale_fill_gradient(low = "yellow", high = "red") +
+  labs(fill = paste("Highest incidence =", max_incidence, "in", max_incidence_area))
+  
+  
+}
+#input for incidence month in format: rows_YYYY_Mon
+
+map_temp_monthly = function(temp_month){
+  
+max_temp = which.max(temp_month$temperature)
+max_temp_area = temp_month$Reporting_areas[max_temp]
+
+
+
+ggplot() +
+  geom_sf(data = district_sf, aes(fill = temp_month$temperature)) +
+  scale_fill_gradient(low = "yellow", high = "red") +
+  labs(fill = paste("Highest temperature =", max_temp, "in", max_temp_area))
+  
+  
+}
+map_temp_monthly(rows_2006)
+
+gridExtra::grid.arrange(map_temp_monthly(f_mean_temp.y.p(period = c(2006), areas = r_areas)),map_incidence_monthly(f_mean_inc.y.p(period = c(2006), areas = r_areas)))
+
+```
