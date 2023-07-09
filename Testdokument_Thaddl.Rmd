@@ -369,7 +369,7 @@ d1 = rnorm(n = 13860, mean = 11.4, sd = 1.606010)
 plot(data_total$temperature, data_total$incidence, pch = 20,
      ylab = "incidence",
      xlab = "temperature",
-  abline(v = mean(data_total$temperature), col = "red"), lines(data_total$temperature, d1, col = "red")
+  abline(v = mean(data_total$temperature), col = "red")
   )
 
 
@@ -431,6 +431,7 @@ library(cluster)
 library (factoextra)
 #library (fpc)
 #library (clValid)
+library(ggplot2)
 
 #find optimal number of clusters by incidence
 D_inc = dist(m_inc_temp.y.r["incidence"])
@@ -464,6 +465,7 @@ plot2 = ggplot(m_inc_temp.y.r, aes(x = temperature, y = incidence, color = as.fa
   geom_point() +
   labs(title = "Partitioning Clustering Plot by temperature") +
   theme_classic()
+plot2
 
 plot3 = ggplot(m_inc_temp.y.r, aes(x = temperature, y = incidence, color = as.factor(km_inc_temp$cluster))) +
   geom_point() +
@@ -492,7 +494,7 @@ library(ncdf4)
 library(mgcv)
 
 attach(data_total)
-model1 <- gam(incidence~s(temperature, k=5), family="quasipoisson")
+model1 <- gam(incidence~s(temperature, k=5), family = "quasipoisson",  na.rm = T)
 plot.gam(model1)
 summary(model1) #edf: → a value close to 1 tends to be close to a linear term → a higher value means that the spline is more wiggly (non-linear). 
 #F-Wert und der p-Wert geben die statistische Signifikanz der glatten Funktion an. In diesem Fall ist die glatte Funktion von "temperature" hoch signifikant (p-Wert < 2e-16), was darauf hindeutet, dass sie einen signifikanten Einfluss auf die Vorhersage der "incidence" hat.Der angegebene R-squared-Wert (R-sq.(adj)) von 0.0407 gibt an, wie gut das Modell die Varianz der abhängigen Variable erklärt. In diesem Fall erklärt das Modell etwa 4,07% der Varianz in den Daten. Ein niedriger GCV-Wert deutet auf eine gute Anpassung des Modells hin.
@@ -512,31 +514,18 @@ library(readxl)
 library(mgcv)
 library(ncdf4)
 
-data <- read_excel("C:/Users/thadl/OneDrive/Dokumente/Bioinfo/Klimaprojekt/data for modeling.xlsx")
-#View(data)
-newdata = data.frame(data)
-attach(newdata)
+attach(data_total)
 
-model <- gam(Abun2~s(Maxtemp), family="quasipoisson")
-plot.gam(model)
-summary(model)
-
-k.check(model)
-
-linear_model <- lm(Abun2~Maxtemp)
-smooth_model <- gam(Abun2~s(Maxtemp))
-AIC(linear_model, smooth_model)
-
-t2m <- stack ("C:/Users/thadl/OneDrive/Dokumente/Bioinfo/Klimaprojekt/t2m_era5_2012_2021_monmax_timmean_chname.nc")
-names(t2m) <- "Maxtemp"
-p1 <- raster::predict(t2m, model, type="response")
+t2m <- stack ("tas_SEA22_MPI_rcp85_2021-2040_grid_subc_daymean_monmean_swm_timmean_thai.nc")
+names(t2m) <- "temperature"
+p1 <- raster::predict(t2m, model1, type = "response")
 
 thailand <- raster::getData('GADM', country='THA', level=1)
 my.area <- extent(thailand)
 my.p1 <- crop(p1, my.area)
 my.p1.mask <- mask(my.p1, thailand)
 pdf(file="C:/Users/thadl/OneDrive/Dokumente/Bioinfo/Klimaprojekt/maxtemp_Abun2.pdf")
-plot(my.p1.mask, legend.width=1, legend.shrink=0.75, axes= FALSE, box=FALSE) + title("Predicted values: Influence of max Temp on Abun2", line = -1) + plot(gambia, add=TRUE)
+plot(my.p1.mask, legend.width=1, legend.shrink=0.75, axes= FALSE, box=FALSE) + title("Predicted values: Influence of Temp on dengue cases", line = +1) + plot(thailand, add=TRUE)
 ```
 
 
