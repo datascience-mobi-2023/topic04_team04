@@ -246,9 +246,72 @@ pacf_thailand <- pacf(total_thailand$dengue_cases)
 ```
 
 ```{r}
+# 1st Seasonal Differencing 
+# purpose of seasonal differencing is to stabilize the mean and variance of the ts
+Ts_thailand_seasdiff <- diff(Ts_thailand, lag = frequency(Ts_thailand), differences = 1)  # seasonal differencing 
+plot(Ts_thailand_seasdiff, type="l", main = "Seasonally Differenced")  
+
+# 2md Seasonal Differencing
+stationaryTs_thailand <- diff(Ts_thailand_seasdiff, differences = 1)
+plot(stationaryTs_thailand, type = "l", main = "Differenced and Stationary")  # --> USUALLY you do not difference more than TWO times 
+
+acfRes_stationary <- acf(stationaryTs_thailand)
+pacfRes_stationary <- pacf(stationaryTs_thailand)
+```
+
+```{r}
+p_range <- 0:5  # AR order
+d_range <- 0:2 # I order
+q_range <- 0:3 # MA order
+
+# Initialize variables to store AIC and model information
+best_aic <- Inf
+best_model <- NULL
+p_best <- 0
+d_best <- 0
+q_best <- 0
+
+# Loop through the combinations of orders
+for (p in p_range) {
+  for (d in d_range) {
+    for (q in q_range) {
+      print(p); print(d); print(q)
+      # Fit the ARIMA model
+      model <- arima(stationaryTs_thailand, order = c(p, d, q)) 
+      
+      # Calculate AIC
+      aic <- AIC(model)
+      print(aic)
+      # Check if the current model has lower AIC than the best model so far
+      if (aic < best_aic) {
+        best_aic <- aic
+        best_model <- model
+        p_best <- p
+        d_best <- d
+        q_best <- q
+      }
+    }
+  }
+}
+
+# Print the best model and its AIC
+best_model
+best_aic; p_best; d_best; q_best
+
+# Fit the best ARIMA model
+best_model <- arima(stationaryTs_thailand, order = c(p_best, d_best, q_best))  # Replace with the best order values
+best_model 
+
+```
+
+
+```{r}
 library(forecast)
 auto_thailand  <- auto.arima(Ts_thailand)
 auto_thailand
+
+#auto_thailand_stat = auto.arima(stationaryTs_thailand)
+#auto_thailand_stat
 
 #auto_thailand_2  <- auto.arima(Ts_thailand, stepwise = F, approximation = F)
 #auto_thailand_2
