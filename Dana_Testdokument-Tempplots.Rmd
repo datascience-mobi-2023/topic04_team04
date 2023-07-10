@@ -81,6 +81,11 @@ for (month in c(1:180)) {
  }
 mean_tempvec
 ```
+Probieren ob es mit Sortierung geht 
+```{r}
+tempvec = cbind(data_total$month, data_total$year, data_total$temperature)
+tempvec
+```
 
 *linear (or other) regression of temperature*
 
@@ -207,7 +212,10 @@ library(ggplot2)
 
 district_sf <- st_read("gadm36_THA_shp/gadm36_THA_1.shp")
 
-incidence_months = c(rows_2013Dec, rows_2016Apr, rows_2011Jun)
+#Input Section: (Months in format: rows_YYYY_Mon)
+incidence_months = list(rows_2013Dec, rows_2016Apr, rows_2011Jun)
+
+#Function: 
 
 map_incidence_monthly = function(incidence_months){
   for(incidence_month in incidence_months){
@@ -216,17 +224,17 @@ max_incidence_area = incidence_month$Reporting_areas[max_incidence]
 
 
 
-ggplot() +
+incidence_map <- ggplot() +
   geom_sf(data = district_sf, aes(fill = incidence_month$incidence)) +
   scale_fill_gradient(low = "yellow", high = "red") +
-  labs(fill = paste("Highest incidence =", max_incidence, "in", max_incidence_area))
+  labs(fill = paste("Highest incidence =", max_incidence, "in", max_incidence_area)) +
+  labs(title = paste("Dengue Incidence in Thailand in", incidence_month$month, incidence_month$year) )
   
+print(incidence_map)
   }
 }
-#input for incidence month in format: rows_YYYY_Mon
 
-
-
+#Output
 map_incidence_monthly(incidence_months)
 
 
