@@ -9,11 +9,6 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
-#install.packages("readxl")
-library(readxl)
-```
-
 ##Einlesen der Tabellen und umwandeln der Tabellen in data frames
 ```{r}
 library(readxl)
