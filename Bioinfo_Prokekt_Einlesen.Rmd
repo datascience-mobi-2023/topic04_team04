@@ -212,8 +212,7 @@ for (i in 1:dim(data_total)[1]) {
     }
   }
 }
-data_total_test <- data_total_test[data_total_test$Reporting_areas != "Bungkan", ]
-
+data_total <- data_total[data_total$Reporting_areas != "Bungkan", ]
 ```
 
 

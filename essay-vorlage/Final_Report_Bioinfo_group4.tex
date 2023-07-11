@@ -1,0 +1,76 @@
+\documentclass[parskip]{scrartcl}
+\usepackage{preamble}
+
+% Title Page
+% Definitionen für die Titelseite
+% Change the content of the second bracket pair to what you need
+\newcommand{\workauthor}{Thaddeus Kühn, Fiona Tanner, Frederik Racky, Dana Levi}
+\newcommand{\worktitle}{Temperature sensitivity of dengue in Thailand}
+\newcommand{\workyear}{2023}
+\newcommand{\supervisor}{Stella Dafka}
+
+\begin{document}
+
+\begin{titlepage}
+    % HIER NICHTS ÄNDERN SONDER BEI DEN DEFINITIONEN OBEN DRÜBER    
+    {\usekomafont{title}
+    {\vspace*{1cm}\Huge \worktitle{}}}
+    
+    \vspace{\stretch{2}}
+    
+    {\Large \workauthor{}}
+
+    
+    \vspace{\stretch{6}}
+    
+    	Bioinformatics Project group 4 team 4 climate sensitive infectious diseases Summer Term \workyear{}
+    
+    Supervisor: \textbf{\supervisor{}}
+    
+    \vspace{\stretch{4}}
+   
+    
+    \vspace{\stretch{4}}
+
+    
+\end{titlepage}
+
+
+
+
+\begin{abstract}
+
+    The full abstract goes here
+    
+
+\end{abstract}
+
+
+
+\tableofcontents
+
+%    Abkürzungsverzeichnis
+{\setlength{\parskip}{0.2cm}
+\section*{Abbreviations}
+    \begin{acronym}[LC-MS/MS23]
+        % A B C D E F G H I J K L M N O P Q R S T U V W X Y Z        
+        % Abkürzungen
+        \acro{DHF}{Dengue Hemmorhagic Fever}
+        
+        % Formelzeichen
+        
+        
+        % als benutzt markierte Acronyme    
+        
+        
+    \end{acronym}
+}
+\input{chapter/introduction}
+\input{chapter/mandm}
+\input{chapter/results}
+\input{chapter/discussion}
+
+\bibliography{bib/essay.bib}
+
+\end{document}
+

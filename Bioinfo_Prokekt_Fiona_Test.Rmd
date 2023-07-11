@@ -215,30 +215,30 @@ autoplot(Ts_thailand) +
 library(ggplot2)
 library(forecast)
 
-Ts_thailand <- ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
-TSstudio::ts_plot(Ts_thailand)
+Ts_thai <- ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
+TSstudio::ts_plot(Ts_thai)
 
 # moving average 
-autoplot(Ts_thailand) +
-  autolayer(ma(Ts_thailand, order = 12)) +
+autoplot(Ts_thai) +
+  autolayer(ma(Ts_thai, order = 12)) +
   xlab("Year") + ylab("dengue_cases") +
   ggtitle("Dengue_cases_thailand_with_MA") 
 
 #additive decomposing
-decomposed_thailand_add <- decompose(Ts_thailand, type="additive") # use type = "additive" for additive components
-plot(decomposed_thailand_add)
+decomposed_thai_add <- decompose(Ts_thai, type="additive") # use type = "additive" for additive components
+plot(decomposed_thai_add)
 grid(lty = 2, col = "gray")
                       
 #seasonal decomposing
-decomposed_thailand_seas <- stl(Ts_thailand, s.window = "periodic")
-plot(decomposed_thailand_seas, main = "Decomposition of a periodic time series", xaxt = "n")
+decomposed_thai_seas <- stl(Ts_thai, s.window = "periodic")
+plot(decomposed_thai_seas, main = "Decomposition of a periodic time series", xaxt = "n")
 grid(lty = 2, col = "gray")
 
 
 library(tseries)
-adf.test(Ts_thailand) # p-value (0.01) < 0.05 indicates the TS is stationary --> suggests it is stationary
+adf.test(Ts_thai) # p-value (0.01) < 0.05 indicates the TS is stationary --> suggests it is stationary
 # alternative hypothesis: stationary
-kpss.test(Ts_thailand, null = c("Level", "Trend"))
+kpss.test(Ts_thai, null = c("Level", "Trend"))
 
 #both test indicate stationarity
 
@@ -252,17 +252,18 @@ pacf_thailand <- pacf(total_thailand$dengue_cases)
 ```{r}
 # 1st Seasonal Differencing 
 # purpose of seasonal differencing is to stabilize the mean and variance of the ts
-Ts_thailand_seasdiff <- diff(Ts_thailand, lag = frequency(Ts_thailand), differences = 1)  # seasonal differencing 
-plot(Ts_thailand_seasdiff, type="l", main = "Seasonally Differenced")  
+Ts_thai_seasdiff <- diff(Ts_thai, lag = frequency(Ts_thai), differences = 1)  # seasonal differencing 
+plot(Ts_thai_seasdiff, type="l", main = "Seasonally Differenced")  
 
 # 2md Seasonal Differencing
-stationaryTs_thailand <- diff(Ts_thailand_seasdiff, differences = 1)
-plot(stationaryTs_thailand, type = "l", main = "Differenced and Stationary")  # --> USUALLY you do not difference more than TWO times 
+Ts_thai_stat <- diff(Ts_thai_seasdiff, differences = 1)
+plot(Ts_thai_stat, type = "l", main = "Differenced and Stationary")  # --> USUALLY you do not difference more than TWO times 
 
-acfRes_stationary <- acf(stationaryTs_thailand)
-pacfRes_stationary <- pacf(stationaryTs_thailand)
+acfRes_stationary <- acf(Ts_thai_stat)
+pacfRes_stationary <- pacf(Ts_thai_stat)
 ```
 
+#ARIMA "by hand"
 
 ```{r}
 p_range <- 0:4  # AR order
@@ -282,7 +283,7 @@ for (p in p_range) {
     for (q in q_range) {
       print(p); print(d); print(q)
       # Fit the ARIMA model
-      model <- arima(Ts_thailand, order = c(p, d, q)) 
+      model <- arima(Ts_thai, order = c(p, d, q)) 
       
       # Calculate AIC
       aic <- AIC(model)
@@ -304,7 +305,7 @@ best_model
 best_aic; p_best; d_best; q_best
 
 # Fit the best ARIMA model
-best_model <- arima(Ts_thailand, order = c(p_best, d_best, q_best))  # Replace with the best order values
+best_model <- arima(Ts_thai, order = c(p_best, d_best, q_best))  # Replace with the best order values
 best_model 
 
 ```
@@ -312,51 +313,51 @@ best_model
 
 ```{r}
 library(forecast)
-auto_thailand  <- auto.arima(Ts_thailand)
-auto_thailand
+Ts_thai_auto  <- auto.arima(Ts_thai)
+Ts_thai_auto
 
-#auto_thailand_stat = auto.arima(stationaryTs_thailand)
+#auto_thailand_stat = auto.arima(Ts_thai_stat)
 #auto_thailand_stat
 
-#auto_thailand_2  <- auto.arima(Ts_thailand, stepwise = F, approximation = F)
+#auto_thailand_2  <- auto.arima(Ts_thai, stepwise = F, approximation = F)
 #auto_thailand_2
 #this auto-ARIMA was removed because it took to long and had a higher AIC
 ```
 
 
 ```{r}
-residuals_thailand <- residuals(auto_thailand)
-plot(residuals_thailand)
+residuals_thai <- residuals(Ts_thai_auto)
+plot(residuals_thai)
 
-acf(residuals_thailand)
+acf(residuals_thai)
 
-portmanteau_thailand <- Box.test(residuals_thailand, lag = 12, type = "Ljung-Box")
-portmanteau_thailand 
+portmanteau_thai <- Box.test(residuals_thai, lag = 12, type = "Ljung-Box")
+portmanteau_thai 
 # --> p value (0.52) > 0.05 --> no evidence for autocorrelation --> ARIMA model works well
 ```
 
 ```{r}
 library(forecast)
-horizon_thailand <- 12 
-forecasted_thailand <- forecast(auto_thailand, h = horizon_thailand)
+horizon_thai <- 12 
+forecasted_thai_auto <- forecast(Ts_thai_auto, h = horizon_thai)
 
-forecastedTs_thailand <- forecasted_thailand$mean
-forecastedTs_thailand  <- ts(forecastedTs_thailand, frequency = 12, start = c(2021, 1) )
-plot(forecastedTs_thailand)
+forecasted_thai_Ts <- forecasted_thai_auto$mean
+forecasted_thai_Ts  <- ts(forecasted_thai_Ts, frequency = 12, start = c(2021, 1) )
+plot(forecasted_thai_Ts)
 ```
 
 ```{r}
-forecastDf_thailand <- as.data.frame(forecasted_thailand)
-forecastDf_thailand$time <- time(forecastedTs_thailand)
-names(forecastDf_thailand) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+forecast_thai_Df <- as.data.frame(forecasted_thai_auto)
+forecast_thai_Df$time <- time(forecasted_thai_Ts)
+names(forecast_thai_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
 ```
 
 ```{r}
 library(ggplot2)
 ggplot() +
-  geom_line(data = Ts_thailand, aes(x = time(Ts_thailand), y = Ts_thailand), color = "black") +
-  geom_ribbon(data = forecastDf_thailand, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
-  geom_line(data = forecastDf_thailand, aes(x = time, y = point), color = "blue") +
+  geom_line(data = Ts_thai, aes(x = time(Ts_thai), y = Ts_thai), color = "black") +
+  geom_ribbon(data = forecast_thai_Df, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
+  geom_line(data = forecast_thai_Df, aes(x = time, y = point), color = "blue") +
   labs(title = "Time Series Forecast") +
   xlab("Year") +
   ylab("Dengue Cases") +
