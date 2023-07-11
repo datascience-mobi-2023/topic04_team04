@@ -1,0 +1,85 @@
+This is BibTeX, Version 0.99d (TeX Live 2022)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: Final_Report_Bioinfo_group4.aux
+The style file: bibstyle/ipmbCell.bst
+Database file #1: bib/essay.bib
+Warning--entry type for "WHO.2023" isn't style-file defined
+--line 75 of file bib/essay.bib
+You can't pop an empty literal stack for entry Anyamba2019
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Anyamba2019
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Anyamba2019
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Descloux2012
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Descloux2012
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Descloux2012
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Gubler.1998
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Gubler.1998
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Gubler.1998
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Masud2016
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Masud2016
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Masud2016
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Phanitchat.2019
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Phanitchat.2019
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Phanitchat.2019
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry WHO.2023
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry WHO.2023
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry WHO.2023
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You've used 6 entries,
+            2929 wiz_defined-function locations,
+            661 strings with 6788 characters,
+and the built_in function-call counts, 5172 in all, are:
+= -- 382
+> -- 368
+< -- 2
++ -- 138
+- -- 133
+* -- 458
+:= -- 829
+add.period$ -- 23
+call.type$ -- 6
+change.case$ -- 68
+chr.to.int$ -- 7
+cite$ -- 6
+duplicate$ -- 315
+empty$ -- 293
+format.name$ -- 146
+if$ -- 985
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 88
+newline$ -- 37
+num.names$ -- 24
+pop$ -- 161
+preamble$ -- 1
+purify$ -- 74
+quote$ -- 0
+skip$ -- 118
+stack$ -- 0
+substring$ -- 156
+swap$ -- 179
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 54
+warning$ -- 0
+while$ -- 23
+width$ -- 0
+write$ -- 96
+(There were 18 error messages)
