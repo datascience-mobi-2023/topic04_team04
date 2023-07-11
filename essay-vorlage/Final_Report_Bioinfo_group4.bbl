@@ -1,0 +1,59 @@
+\begin{thebibliography}{6}
+\expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{{\tt #1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \expandafter\ifx\csname doi\endcsname\relax
+  \def\doi#1{doi:\discretionary{}{}{}#1}\fi \else
+  \expandafter\ifx\csname doi\endcsname\relax
+  \def\doi{doi:\discretionary{}{}{}\begingroup \urlstyle{rm}\Url}\fi \fi
+\expandafter\ifx\csname eprint\endcsname\relax\def\eprint#1{\url{#1}}\fi
+
+\bibitem[{Anyamba {\textit{et~al.\/}}(2019)Anyamba, Chretien, Britch,
+  Soebiyanto, Small, Jepsen, Forshey, Sanchez, Smith, Harris, Tucker, Karesh,
+  and Linthicum}]{Anyamba2019}
+Anyamba, A., Chretien, J.-P., Britch, S.~C., Soebiyanto, R.~P., Small, J.~L.,
+  Jepsen, R., Forshey, B.~M., Sanchez, J.~L., Smith, R.~D., Harris, R., Tucker,
+  C.~J., Karesh, W.~B., and Linthicum, K.~J. (2019). Global Disease Outbreaks
+  Associated with the 2015–2016 El Niño Event. Scientific Reports
+  {\textit{9\/}}, 1930,  \doi{10.1038/s41598-018-38034-z}.
+
+
+\bibitem[{Descloux {\textit{et~al.\/}}(2012)Descloux, Mangeas, Menkes,
+  Lengaigne, Leroy, Tehei, Guillaumot, Teurlai, Gourinat, Benzler, Pfannstiel,
+  Grangeon, Degallier, and de~Lamballerie}]{Descloux2012}
+Descloux, E., Mangeas, M., Menkes, C.~E., Lengaigne, M., Leroy, A., Tehei, T.,
+  Guillaumot, L., Teurlai, M., Gourinat, A.~C., Benzler, J., Pfannstiel, A.,
+  Grangeon, J.~P., Degallier, N., and de~Lamballerie, X. (2012). Climate-Based
+  Models for Understanding and Forecasting Dengue Epidemics. PLOS Neglected
+  Tropical Diseases {\textit{6\/}}, e1470,  \doi{10.1371/JOURNAL.PNTD.0001470}.
+
+
+\bibitem[{Gubler(1998)}]{Gubler.1998}
+Gubler, D.~J. (1998). Dengue and dengue hemorrhagic fever. Clinical
+  Microbiology Reviews  {\textit{11\/}}, 480--496.
+
+
+\bibitem[{Masud {\textit{et~al.\/}}(2016)Masud, Soni, Shrestha, and
+  Tripathi}]{Masud2016}
+Masud, M.~B., Soni, P., Shrestha, S., and Tripathi, N.~K. (2016). Changes in
+  climate extremes over North Thailand, 1960–2099. downloads.hindawi.com ,
+  1960--2099 \doi{10.1155/2016/4289454}.
+
+
+\bibitem[{Phanitchat {\textit{et~al.\/}}(2019)Phanitchat, Zhao, Haque,
+  Pientong, Ekalaksananan, Aromseree, Thaewnongiew, Fustec, Bangs, Alexander,
+  and Overgaard}]{Phanitchat.2019}
+Phanitchat, T., Zhao, B., Haque, U., Pientong, C., Ekalaksananan, T.,
+  Aromseree, S., Thaewnongiew, K., Fustec, B., Bangs, M.~J., Alexander, N., and
+  Overgaard, H.~J. (2019). Spatial and temporal patterns of dengue incidence in
+  northeastern Thailand 2006–2016. BMC Infectious Diseases  {\textit{19\/}},
+  743.
+
+
+\bibitem[{WHO(2023)}]{WHO.2023}
+WHO, W. H.~O. (2023).  Dengue and severe dengue.
+
+
+\end{thebibliography}
