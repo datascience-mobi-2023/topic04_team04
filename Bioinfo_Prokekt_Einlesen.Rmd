@@ -199,7 +199,27 @@ data_total = subset(data_total, select = c("data_names", "Reporting_areas", "yea
 save(data_total, file = "data_total.RData")
 summary(data_total)
 ```
+# adding the data from Bunkan-district to Nong Khai and deleting all Bunkan-Data
+```{r}
+for (i in 1:dim(data_total)[1]) {
+  
+  if(data_total$Reporting_areas[i]=="Bungkan"){
+    
+    Datum <- data_total$time_column[i]
+    for(j in 1:dim(data_total)[1]){
+      if(data_total$Reporting_areas[j] == "Nong Khai" & data_total$time_column[j] == Datum){
+        
+        data_total$dengue_cases[j]<- ifelse(is.na(data_total$dengue_cases[i]), data_total$dengue_cases[j], data_total$dengue_cases[i]+data_total$dengue_cases[j])
+        data_total$population_count[j]<- ifelse(is.na(data_total$population_count[i]), data_total$population_count[j], data_total$population_count[i]+data_total$population_count[j])
+        data_total$incidence[j]<- ifelse(is.na(data_total$incidence[i]), data_total$incidence[j], data_total$incidence[i]+data_total$incidence[j])
+        
+      }
+    }
+  }
+}
+data_total_test <- data_total_test[data_total_test$Reporting_areas != "Bungkan", ]
 
+```
 
 
 # creating a dataframe for the total dengue cases in thailand over the months
