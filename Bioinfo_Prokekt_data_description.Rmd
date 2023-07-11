@@ -33,7 +33,7 @@ Creating vector of mean temperature in Thailand over the years
  mean_tempvec <- c()
 for (month in c(1:180)) {
    tempvec <- c()
-  for (district in c(1:77)) {
+  for (district in c(1:76)) {
    temp <- data_total$temperature[month + 180*(district-1)]
    tempvec <- c(tempvec,temp)
   }
