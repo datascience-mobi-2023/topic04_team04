@@ -237,7 +237,10 @@ grid(lty = 2, col = "gray")
 
 library(tseries)
 adf.test(Ts_thailand) # p-value (0.01) < 0.05 indicates the TS is stationary --> suggests it is stationary
+# alternative hypothesis: stationary
+kpss.test(Ts_thailand, null = c("Level", "Trend"))
 
+#both test indicate stationarity
 
 acf_thailand <- acf(total_thailand$dengue_cases)
 
@@ -245,6 +248,7 @@ pacf_thailand <- pacf(total_thailand$dengue_cases)
 
 ```
 
+#ARIMA differencing
 ```{r}
 # 1st Seasonal Differencing 
 # purpose of seasonal differencing is to stabilize the mean and variance of the ts
@@ -259,8 +263,9 @@ acfRes_stationary <- acf(stationaryTs_thailand)
 pacfRes_stationary <- pacf(stationaryTs_thailand)
 ```
 
+
 ```{r}
-p_range <- 0:5  # AR order
+p_range <- 0:4  # AR order
 d_range <- 0:2 # I order
 q_range <- 0:3 # MA order
 
@@ -277,7 +282,7 @@ for (p in p_range) {
     for (q in q_range) {
       print(p); print(d); print(q)
       # Fit the ARIMA model
-      model <- arima(stationaryTs_thailand, order = c(p, d, q)) 
+      model <- arima(Ts_thailand, order = c(p, d, q)) 
       
       # Calculate AIC
       aic <- AIC(model)
@@ -299,11 +304,11 @@ best_model
 best_aic; p_best; d_best; q_best
 
 # Fit the best ARIMA model
-best_model <- arima(stationaryTs_thailand, order = c(p_best, d_best, q_best))  # Replace with the best order values
+best_model <- arima(Ts_thailand, order = c(p_best, d_best, q_best))  # Replace with the best order values
 best_model 
 
 ```
-
+#Auto ARIMA
 
 ```{r}
 library(forecast)
@@ -358,6 +363,37 @@ ggplot() +
   theme_minimal()
 ```
 
+#ARIMA forecast best model
+
+```{r}
+library(forecast)
+horizon_thailand <- 12 
+forecasted_best_thailand <- forecast(best_model, h = horizon_thailand)
+
+forecasted_best_Ts_thailand <- forecasted_best_thailand$mean
+forecasted_best_Ts_thailand  <- ts(forecasted_best_Ts_thailand, frequency = 12, start = c(2021, 1) )
+plot(forecasted_best_Ts_thailand)
+```
+
+```{r}
+forecastDf_best_thailand <- as.data.frame(forecasted_best_thailand)
+forecastDf_best_thailand$time <- time(forecasted_best_Ts_thailand)
+names(forecastDf_best_thailand) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+```
+
+```{r}
+library(ggplot2)
+ggplot() +
+  geom_line(data = Ts_thailand, aes(x = time(Ts_thailand), y = Ts_thailand), color = "black") +
+  geom_ribbon(data = forecastDf_best_thailand, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
+  geom_line(data = forecastDf_best_thailand, aes(x = time, y = point), color = "blue") +
+  labs(title = "Time Series Forecast") +
+  xlab("Year") +
+  ylab("Dengue Cases") +
+  theme_minimal()
+```
+
+#ARIMA forecast 2018
 ```{r}
 library(forecast)
 #exclude_end <- 3
