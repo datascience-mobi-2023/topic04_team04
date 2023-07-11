@@ -338,7 +338,7 @@ portmanteau_thai
 
 ```{r}
 library(forecast)
-horizon_thai <- 12 
+horizon_thai <- 48 
 forecasted_thai_auto <- forecast(Ts_thai_auto, h = horizon_thai)
 
 forecasted_thai_Ts <- forecasted_thai_auto$mean
@@ -396,7 +396,6 @@ ggplot() +
 #ARIMA forecast 2018
 ```{r}
 library(forecast)
-#exclude_end <- 3
 Ts_thai_2018 = window(Ts_thai, end = c(2018, 12))
 
 Ts_thai_auto_2018  <- auto.arima(Ts_thai_2018)
