@@ -33,6 +33,7 @@ for (i in 2006:2020) {
   df_dengue <- cbind(data_names, df_dengue)
   assign(Name_df,df_dengue)
 }
+#zusammenfügen der einzelnen Jahre in ein gesamtes DataFrame
 total_years = data.frame()
 for (i in 2006:2020){
   a = get(paste0("Dengue",i))
