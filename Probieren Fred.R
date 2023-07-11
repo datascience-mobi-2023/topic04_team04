@@ -136,6 +136,27 @@ plot(plot_zeit, plot_inzidenz)
 
 
 
+#Fusionieren der distrikte
+
+data_total_test <- data_total
+
+for (i in 1:dim(data_total_test)[1]) {
+  
+  if(data_total_test$Reporting_areas[i]=="Bungkan"){
+    Datum <- data_total_test$time_column[i]
+    
+    for(j in 1:dim(data_total_test)[1]){
+      if(data_total_test$Reporting_areas[j] == "Nong Khai" & data_total_test$time_column[j] == Datum){
+        
+        data_total_test$dengue_cases[j]<- ifelse(is.na(data_total_test$dengue_cases[i]), data_total_test$dengue_cases[j], data_total_test$dengue_cases[i]+data_total_test$dengue_cases[j])
+        data_total_test$population_count[j]<- ifelse(is.na(data_total_test$population_count[i]), data_total_test$population_count[j], data_total_test$population_count[i]+data_total_test$population_count[j])
+        data_total_test$incidence[j]<- ifelse(is.na(data_total_test$incidence[i]), data_total_test$incidence[j], data_total_test$incidence[i]+data_total_test$incidence[j])
+        
+      }
+    }
+  }
+  data_total_test <- data_total_test[-i, ]
+}
 
 
 
