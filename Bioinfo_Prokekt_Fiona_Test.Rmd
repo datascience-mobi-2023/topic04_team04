@@ -338,7 +338,7 @@ portmanteau_thai
 
 ```{r}
 library(forecast)
-horizon_thai <- 12 
+horizon_thai <- 48 
 forecasted_thai_auto <- forecast(Ts_thai_auto, h = horizon_thai)
 
 forecasted_thai_Ts <- forecasted_thai_auto$mean
@@ -368,26 +368,25 @@ ggplot() +
 
 ```{r}
 library(forecast)
-horizon_thailand <- 12 
-forecasted_best_thailand <- forecast(best_model, h = horizon_thailand)
+forecasted_thai_best <- forecast(best_model, h = horizon_thai)
 
-forecasted_best_Ts_thailand <- forecasted_best_thailand$mean
-forecasted_best_Ts_thailand  <- ts(forecasted_best_Ts_thailand, frequency = 12, start = c(2021, 1) )
-plot(forecasted_best_Ts_thailand)
+forecasted_Ts_thai_best <- forecasted_thai_best$mean
+forecasted_Ts_thai_best  <- ts(forecasted_Ts_thai_best, frequency = 12, start = c(2021, 1) )
+plot(forecasted_Ts_thai_best)
 ```
 
 ```{r}
-forecastDf_best_thailand <- as.data.frame(forecasted_best_thailand)
-forecastDf_best_thailand$time <- time(forecasted_best_Ts_thailand)
-names(forecastDf_best_thailand) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+forecast_thai_best_Df <- as.data.frame(forecasted_thai_best)
+forecast_thai_best_Df$time <- time(forecasted_Ts_thai_best)
+names(forecast_thai_best_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
 ```
 
 ```{r}
 library(ggplot2)
 ggplot() +
-  geom_line(data = Ts_thailand, aes(x = time(Ts_thailand), y = Ts_thailand), color = "black") +
-  geom_ribbon(data = forecastDf_best_thailand, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
-  geom_line(data = forecastDf_best_thailand, aes(x = time, y = point), color = "blue") +
+  geom_line(data = Ts_thai, aes(x = time(Ts_thai), y = Ts_thai), color = "black") +
+  geom_ribbon(data = forecast_thai_best_Df, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
+  geom_line(data = forecast_thai_best_Df, aes(x = time, y = point), color = "blue") +
   labs(title = "Time Series Forecast") +
   xlab("Year") +
   ylab("Dengue Cases") +
@@ -397,29 +396,27 @@ ggplot() +
 #ARIMA forecast 2018
 ```{r}
 library(forecast)
-#exclude_end <- 3
-Ts_thailand_2018 = window(Ts_thailand, end = c(2018, 12))
+Ts_thai_2018 = window(Ts_thai, end = c(2018, 12))
 
-auto_thailand_2018  <- auto.arima(Ts_thailand_2018)
-auto_thailand_2018
+Ts_thai_auto_2018  <- auto.arima(Ts_thai_2018)
+Ts_thai_auto_2018
 
 
-horizon_thailand <- 12 
-forecasted_thailand_2018 <- forecast(auto_thailand_2018, h = horizon_thailand)
+forecasted_thai_2018 <- forecast(Ts_thai_auto_2018, h = horizon_thai)
 
-forecastedTs_thailand_2018 <- forecasted_thailand_2018$mean
-forecastedTs_thailand_2018  <- ts(forecastedTs_thailand_2018, frequency = 12, start = c(2018, 1) )
-plot(forecastedTs_thailand_2018)
+forecasted_thai_2018_Ts <- forecasted_thai_2018$mean
+forecasted_thai_2018_Ts  <- ts(forecasted_thai_2018_Ts, frequency = 12, start = c(2018, 1) )
+plot(forecasted_thai_2018_Ts)
 
-forecastDf_thailand_2018 <- as.data.frame(forecasted_thailand_2018)
-forecastDf_thailand_2018$time <- time(forecastedTs_thailand_2018)
-names(forecastDf_thailand_2018) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+forecast_thai_2018_Df <- as.data.frame(forecasted_thai_2018)
+forecast_thai_2018_Df$time <- time(forecasted_thai_2018_Ts)
+names(forecast_thai_2018_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
 
 library(ggplot2)
 ggplot() +
-  geom_ribbon(data = forecastDf_thailand_2018, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
-  geom_line(data = forecastDf_thailand_2018, aes(x = time, y = point), color = "blue") +
-  geom_line(data = Ts_thailand, aes(x = time(Ts_thailand), y = Ts_thailand), color = "black") +
+  geom_ribbon(data = forecast_thai_2018_Df, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
+  geom_line(data = forecast_thai_2018_Df, aes(x = time, y = point), color = "blue") +
+  geom_line(data = Ts_thai, aes(x = time(Ts_thai), y = Ts_thai), color = "black") +
   labs(title = "Time Series Forecast") +
   xlab("Year") +
   ylab("Dengue Cases") +
@@ -437,21 +434,21 @@ library(gridExtra)
 total_thailand_temp = cbind(total_thailand, mean_tempvec)
 colnames(total_thailand_temp)[4] = "temperature"
 
-Ts_thailand_temp <- ts(total_thailand_temp$temperature, frequency = 12, start = c(2006, 1))
-TSstudio::ts_plot(Ts_thailand_temp)
+Ts_thai_temp <- ts(total_thailand_temp$temperature, frequency = 12, start = c(2006, 1))
+TSstudio::ts_plot(Ts_thai_temp)
 
 #additive decomposing of the temperature
-decomposed_thailand_add_temp <- decompose(Ts_thailand_temp, type="additive") 
-plot(decomposed_thailand_add_temp)
+decomposed_thai_temp_add <- decompose(Ts_thai_temp, type="additive") 
+plot(decomposed_thai_temp_add)
 grid(lty = 2, col = "gray")
 
 #additive decomposing of the dengue cases
-decomposed_thailand_add <- decompose(Ts_thailand, type="additive")
-plot(decomposed_thailand_add)
+decomposed_thai_add <- decompose(Ts_thai, type="additive")
+plot(decomposed_thai_add)
 grid(lty = 2, col = "gray")
 
-case_trend <- decomposed_thailand_add$trend
-temp_trend <- decomposed_thailand_add_temp$trend
+case_trend <- decomposed_thai_add$trend
+temp_trend <- decomposed_thai_temp_add$trend
 
 plot_case_trend <- ggplot(case_trend, aes(x, y)) + geom_line() + labs(title = "Cases_trend")
 plot_temp_trend <- ggplot(temp_trend, aes(x, y)) + geom_line() + labs(title = "Temperature_trend")
