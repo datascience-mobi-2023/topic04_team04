@@ -1,0 +1,708 @@
+---
+title: "Bioinfo_Projekt_Einlesen"
+author: "Frederik Racky"
+date: "2023-05-31"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+install.packages("readxl")
+library(readxl)
+```
+
+##Einlesen der Tabellen und umwandeln der Tabellen in data frames
+
+```{r}
+library(readxl)
+library(dplyr)
+
+Endung <- "_dengue_extracted.xlsx"
+Anfang <- "Dengue"
+
+for (i in 2006:2020) {
+  
+  Dateiname <- paste0(i, Endung) #erstellen das Dateinamens
+  Name_df <- paste0(Anfang, i) 
+  assign(Name_df, read_excel(Dateiname)) #erstellen der Variable und zuweisen der Excel-Tabelle
+  
+  df_dengue <- get(Name_df)
+  vec_data_names <- vector("character")
+  
+  vec_data_names <- sapply(df_dengue$Reporting_areas, function(g) {
+    paste(g[1], i)
+  })
+  data_names <- matrix(vec_data_names,nrow = 77, ncol = 1)
+  df_dengue <- cbind(data_names, df_dengue)
+  assign(Name_df,df_dengue)
+}
+total_years = data.frame()
+for (i in 2006:2020){
+  a = get(paste0("Dengue",i))
+  total_years = rbind(total_years, a)
+}
+```
+
+#Rows als Zeitachse mit Monaten
+
+```{r}
+m = 1
+data_total = data.frame(col1 = character(0), col2 = character(0), col3 = numeric(0), month = character(0))
+colnames(data_total) = c("data_names", "Reporting_areas", "dengue_cases", "month")
+sorted_total_years = total_years[order(total_years$"Reporting_areas"),]
+for (k in 1:1155){
+  for (j in 3:14){
+    square <- sorted_total_years[k, c(1, 2, j)]
+    month = colnames(square[3])
+    square <- cbind(square,month)
+    colnames(square) = c("data_names", "Reporting_areas", "dengue_cases", "month")
+    data_total <- rbind(data_total, square)
+    colnames(data_total) = c("data_names", "Reporting_areas", "dengue_cases", "month")
+    data_total[m,1] = paste(data_total[m,1], month[1])
+    m = m + 1
+  }
+}
+```
+
+#adding temperature column
+
+```{r}
+m = 1
+temp_data = read_excel("era5_data_2006_2020_thailand_monmean.xlsx")
+temp_data = as.data.frame(temp_data)
+temp_data_sorted = data.frame( col1 = numeric(0), Longitude = numeric(0), Latitude = numeric(0))
+for (i in 1:77) {
+  for (j in 5:184) {
+    temp_data_sorted[m,1] = temp_data[i,j]
+    temp_data_sorted[m,2] = temp_data[i,3]
+    temp_data_sorted[m,3] = temp_data[i,4]
+    m = m + 1
+  }
+}
+data_total = cbind(data_total, temp_data_sorted) 
+colnames(data_total)[5] = "temperature"
+```
+
+#Einlesen Population data
+
+```{r}
+library(readxl)
+
+Endung <- "_population.xlsx"
+#empty dataframe for the data
+total_population = data.frame(Reporting_areas = character(), population_count = numeric())
+
+# stack years of 2006-2011 below each other
+for (i in 2006:2011) {
+  population_df  = data.frame()
+  Dateiname <- paste0(i, Endung) #erstellen das Dateinamens
+  population_df = read_excel(Dateiname) #erstellen der Variable und zuweisen der Excel-Tabelle
+  vec_years = rep(i, times = 77)
+  population_df = cbind(population_df,vec_years)
+  names(population_df) = c("Reporting_areas", "population_count", "year")
+  # multiply every row 12 times for each month
+  repeat_count <- 12
+  population_df_replicated <- population_df[rep(row.names(population_df), each = repeat_count), ]
+  row.names(population_df_replicated) <- NULL
+  
+  #put all the years together
+  total_population = rbind(total_population, population_df_replicated)
+  
+}
+
+# stack years of 2012-2020 below each other and add to data_total
+population_df = read_excel("2012-2020_population.xlsx")
+colnames(population_df) = c("Reporting_areas", "population_count", "population_count", "population_count", "population_count", "population_count","population_count","population_count","population_count","population_count")
+pop_placeholder = data.frame(Reporting_areas = character(), population_count = numeric(), year = numeric())
+col_num = 2
+for (i in 2012:2020) {
+  year = rep(i, times = 77)
+  pop_placeholder = rbind(pop_placeholder, cbind(population_df[,c(1,col_num)],year))
+  names(pop_placeholder) = c("Reporting_areas", "population_count", "year")
+  col_num = col_num + 1
+}
+
+# multiply every row 12 times for each month
+repeat_count <- 12
+population_df_replicated <- pop_placeholder[rep(row.names(pop_placeholder), each = repeat_count), ]
+row.names(population_df_replicated) <- NULL
+
+# combine all population data in each 
+total_population = rbind(total_population, population_df_replicated)
+sorted_total_population = total_population[order(total_population$"Reporting_areas"),]
+
+data_total = cbind(data_total,sorted_total_population[,c(2,3)])
+row.names(data_total) = NULL
+```
+
+# adding time column
+
+```{r}
+first_date = as.Date("2006-01-01")
+last_date = as.Date("2020-12-31")
+
+time_column_short = seq(first_date, last_date, by = "month")
+time_column_short = as.Date(time_column_short, format = "%Y-%m")
+time_column = rep(time_column_short, times = 77)
+
+data_total = cbind(data_total, time_column)
+#data_total = subset(data_total, select = -time_column) 
+```
+
+#Detect missing values
+
+```{r}
+detect_na <- function(x) {
+  is_na <- x %in% c("N/A", "na", "NA", "n/a")
+  replace(x, is_na, NA)
+}
+data_total <- apply(data_total, 2, detect_na)
+rmv.rows = apply(data_total,1,function(x){sum(is.na(x))})
+```
+
+#struture data frame and convert into right datatypes
+
+```{r}
+data_total = as.data.frame(data_total)
+num_col = c("temperature", "Longitude", "Latitude")
+int_col = c("dengue_cases","population_count","year")
+data_total[int_col] = lapply(data_total[int_col], as.integer)
+data_total[num_col] = lapply(data_total[num_col], as.numeric)
+data_total = subset(data_total, select = c("data_names", "Reporting_areas", "year", "month", "time_column", "dengue_cases", "population_count", "temperature", "Longitude", "Latitude"))
+```
+
+# creating a dataframe for the total dengue cases in thailand over the months
+
+```{r}
+month_vec = c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec" ) 
+total_thailand = data.frame(data_names = character(), dengue_cases = numeric())
+
+for (i in 2006:2020) {
+  name_years = paste0("rows_", i)
+  assign(name_years, data_total[data_total$year == i, ]) 
+  
+  for (month in month_vec) {
+    name_months = paste0(name_years, month)
+    a = get(name_years)
+    assign(name_months, a[a$month == month, ])
+    
+    b = get(name_months)
+    total_cases = sum(b$dengue_cases, na.rm = T)
+    name_column = paste0(i,"_", month)
+    placeholder_df = data.frame(data_names = name_column, dengue_cases = total_cases)   
+    total_thailand = rbind(total_thailand, placeholder_df)
+    
+  }
+}
+
+total_thailand = cbind(total_thailand, time_column_short)
+total_thailand$dengue_cases = as.numeric(total_thailand$dengue_cases)
+```
+
+# moving average 
+autoplot(Ts_thailand) +
+  autolayer(ma(Ts_thailand, order = 12)) +
+  xlab("Year") + ylab("dengue_cases") +
+  ggtitle("Dengue_cases_thailand_with_MA") 
+
+
+#ARIMA Dengue cases
+
+```{r}
+library(ggplot2)
+library(forecast)
+
+Ts_thai <- ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
+TSstudio::ts_plot(Ts_thai)
+
+# moving average 
+autoplot(Ts_thai) +
+  autolayer(ma(Ts_thai, order = 12)) +
+  xlab("Year") + ylab("dengue_cases") +
+  ggtitle("Dengue_cases_thailand_with_MA") 
+
+#additive decomposing
+decomposed_thai_add <- decompose(Ts_thai, type="additive") # use type = "additive" for additive components
+plot(decomposed_thai_add)
+grid(lty = 2, col = "gray")
+                      
+#seasonal decomposing
+decomposed_thai_seas <- stl(Ts_thai, s.window = "periodic")
+plot(decomposed_thai_seas, main = "Decomposition of a periodic time series", xaxt = "n")
+grid(lty = 2, col = "gray")
+
+
+library(tseries)
+adf.test(Ts_thai) # p-value (0.01) < 0.05 indicates the TS is stationary --> suggests it is stationary
+# alternative hypothesis: stationary
+kpss.test(Ts_thai, null = c("Level", "Trend"))
+
+#both test indicate stationarity
+
+acf_thailand <- acf(total_thailand$dengue_cases)
+
+pacf_thailand <- pacf(total_thailand$dengue_cases)
+
+```
+
+#ARIMA differencing
+```{r}
+# 1st Seasonal Differencing 
+# purpose of seasonal differencing is to stabilize the mean and variance of the ts
+Ts_thai_seasdiff <- diff(Ts_thai, lag = frequency(Ts_thai), differences = 1)  # seasonal differencing 
+plot(Ts_thai_seasdiff, type="l", main = "Seasonally Differenced")  
+
+# 2md Seasonal Differencing
+Ts_thai_stat <- diff(Ts_thai_seasdiff, differences = 1)
+plot(Ts_thai_stat, type = "l", main = "Differenced and Stationary")  # --> USUALLY you do not difference more than TWO times 
+
+acfRes_stationary <- acf(Ts_thai_stat)
+pacfRes_stationary <- pacf(Ts_thai_stat)
+```
+
+#ARIMA "by hand"
+
+```{r}
+p_range <- 0:4  # AR order
+d_range <- 0:2 # I order
+q_range <- 0:3 # MA order
+
+# Initialize variables to store AIC and model information
+best_aic <- Inf
+best_model <- NULL
+p_best <- 0
+d_best <- 0
+q_best <- 0
+
+# Loop through the combinations of orders
+for (p in p_range) {
+  for (d in d_range) {
+    for (q in q_range) {
+      print(p); print(d); print(q)
+      # Fit the ARIMA model
+      model <- arima(Ts_thai, order = c(p, d, q)) 
+      
+      # Calculate AIC
+      aic <- AIC(model)
+      print(aic)
+      # Check if the current model has lower AIC than the best model so far
+      if (aic < best_aic) {
+        best_aic <- aic
+        best_model <- model
+        p_best <- p
+        d_best <- d
+        q_best <- q
+      }
+    }
+  }
+}
+
+# Print the best model and its AIC
+best_model
+best_aic; p_best; d_best; q_best
+
+# Fit the best ARIMA model
+best_model <- arima(Ts_thai, order = c(p_best, d_best, q_best))  # Replace with the best order values
+best_model 
+
+```
+#Auto ARIMA
+
+```{r}
+library(forecast)
+Ts_thai_auto  <- auto.arima(Ts_thai)
+Ts_thai_auto
+
+#auto_thailand_stat = auto.arima(Ts_thai_stat)
+#auto_thailand_stat
+
+#auto_thailand_2  <- auto.arima(Ts_thai, stepwise = F, approximation = F)
+#auto_thailand_2
+#this auto-ARIMA was removed because it took to long and had a higher AIC
+```
+
+
+```{r}
+residuals_thai <- residuals(Ts_thai_auto)
+plot(residuals_thai)
+
+acf(residuals_thai)
+
+portmanteau_thai <- Box.test(residuals_thai, lag = 12, type = "Ljung-Box")
+portmanteau_thai 
+# --> p value (0.52) > 0.05 --> no evidence for autocorrelation --> ARIMA model works well
+```
+
+```{r}
+library(forecast)
+horizon_thai <- 48 
+forecasted_thai_auto <- forecast(Ts_thai_auto, h = horizon_thai)
+
+forecasted_thai_Ts <- forecasted_thai_auto$mean
+forecasted_thai_Ts  <- ts(forecasted_thai_Ts, frequency = 12, start = c(2021, 1) )
+plot(forecasted_thai_Ts)
+```
+
+```{r}
+forecast_thai_Df <- as.data.frame(forecasted_thai_auto)
+forecast_thai_Df$time <- time(forecasted_thai_Ts)
+names(forecast_thai_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+```
+
+```{r}
+library(ggplot2)
+ggplot() +
+  geom_line(data = Ts_thai, aes(x = time(Ts_thai), y = Ts_thai), color = "black") +
+  geom_ribbon(data = forecast_thai_Df, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
+  geom_line(data = forecast_thai_Df, aes(x = time, y = point), color = "blue") +
+  labs(title = "Time Series Forecast") +
+  xlab("Year") +
+  ylab("Dengue Cases") +
+  theme_minimal()
+```
+
+#ARIMA forecast best model
+
+```{r}
+library(forecast)
+forecasted_thai_best <- forecast(best_model, h = horizon_thai)
+
+forecasted_Ts_thai_best <- forecasted_thai_best$mean
+forecasted_Ts_thai_best  <- ts(forecasted_Ts_thai_best, frequency = 12, start = c(2021, 1) )
+plot(forecasted_Ts_thai_best)
+```
+
+```{r}
+forecast_thai_best_Df <- as.data.frame(forecasted_thai_best)
+forecast_thai_best_Df$time <- time(forecasted_Ts_thai_best)
+names(forecast_thai_best_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+```
+
+```{r}
+library(ggplot2)
+ggplot() +
+  geom_line(data = Ts_thai, aes(x = time(Ts_thai), y = Ts_thai), color = "black") +
+  geom_ribbon(data = forecast_thai_best_Df, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
+  geom_line(data = forecast_thai_best_Df, aes(x = time, y = point), color = "blue") +
+  labs(title = "Time Series Forecast") +
+  xlab("Year") +
+  ylab("Dengue Cases") +
+  theme_minimal()
+```
+
+#ARIMA forecast 2018
+```{r}
+library(forecast)
+Ts_thai_2018 = window(Ts_thai, end = c(2018, 12))
+
+Ts_thai_auto_2018  <- auto.arima(Ts_thai_2018)
+Ts_thai_auto_2018
+
+
+forecasted_thai_2018 <- forecast(Ts_thai_auto_2018, h = horizon_thai)
+
+forecasted_thai_2018_Ts <- forecasted_thai_2018$mean
+forecasted_thai_2018_Ts  <- ts(forecasted_thai_2018_Ts, frequency = 12, start = c(2018, 1) )
+plot(forecasted_thai_2018_Ts)
+
+forecast_thai_2018_Df <- as.data.frame(forecasted_thai_2018)
+forecast_thai_2018_Df$time <- time(forecasted_thai_2018_Ts)
+names(forecast_thai_2018_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+
+library(ggplot2)
+ggplot() +
+  geom_ribbon(data = forecast_thai_2018_Df, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
+  geom_line(data = forecast_thai_2018_Df, aes(x = time, y = point), color = "blue") +
+  geom_line(data = Ts_thai, aes(x = time(Ts_thai), y = Ts_thai), color = "black") +
+  labs(title = "Time Series Forecast") +
+  xlab("Year") +
+  ylab("Dengue Cases") +
+  theme_minimal()
+```
+
+
+#comparing the decomposition of temperature and cases
+
+```{r}
+library(ggplot2)
+library(forecast)
+library(gridExtra)
+
+total_thailand_temp = cbind(total_thailand, mean_tempvec)
+colnames(total_thailand_temp)[4] = "temperature"
+
+Ts_thai_temp <- ts(total_thailand_temp$temperature, frequency = 12, start = c(2006, 1))
+TSstudio::ts_plot(Ts_thai_temp)
+
+#additive decomposing of the temperature
+decomposed_thai_temp_add <- decompose(Ts_thai_temp, type="additive") 
+plot(decomposed_thai_temp_add)
+grid(lty = 2, col = "gray")
+
+#additive decomposing of the dengue cases
+decomposed_thai_add <- decompose(Ts_thai, type="additive")
+plot(decomposed_thai_add)
+grid(lty = 2, col = "gray")
+
+case_trend <- decomposed_thai_add$trend
+temp_trend <- decomposed_thai_temp_add$trend
+
+plot_case_trend <- ggplot(case_trend, aes(x, y)) + geom_line() + labs(title = "Cases_trend")
+plot_temp_trend <- ggplot(temp_trend, aes(x, y)) + geom_line() + labs(title = "Temperature_trend")
+
+plot_case_temp_trend <- grid.arrange(plot_case_trend, plot_temp_trend, ncol = 1)
+print(plot_case_temp_trend)
+
+
+```
+
+
+```{r}
+case_seasonal <- decomposed_thailand_add$seasonal
+temp_seasonal <- decomposed_thailand_add_temp$seasonal
+
+plot_case_seasonal <- ggplot(case_seasonal, aes(x, y)) + geom_line() + labs(title = "Cases_seasonal")
+plot_temp_seasonal <- ggplot(temp_seasonal, aes(x, y)) + geom_line() + labs(title = "Temperature_seasonal")
+
+plot_case_temp_seasonal <- grid.arrange(plot_case_seasonal, plot_temp_seasonal, ncol = 1)
+print(plot_case_temp_trend)
+
+```
+
+#keine ahnung
+
+```{r}
+dimensions= dim(data_total)
+R= dimensions[1]
+
+for(Zeile in 1:R){
+  Population <- data_total$population_count[Zeile]
+  Infection <- data_total$dengue_cases[Zeile]
+  Incidence = (Infection/Population)*100000
+  data_total$incidence[Zeile] <- Incidence
+}
+```
+
+# Temperature development in Thailand 2006 - 2022
+
+Creating vector of mean temperature in Thailand over the years
+
+```{r}
+ mean_tempvec <- c()
+for (month in c(1:180)) {
+   tempvec <- c()
+  for (district in c(1:77)) {
+   temp <- data_total$temperature[month + 180*(district-1)]
+   tempvec <- c(tempvec,temp)
+  }
+ mean_tempvec <- c(mean_tempvec,mean(tempvec))
+ }
+mean_tempvec
+```
+
+Plot of yearly mean temperature in Thailand over the years + linear regression of temperature
+
+```{r}
+
+# Libraries
+library(ggplot2)
+
+# create data
+xValue <- month_dates
+yValue <- mean_tempvec
+data <- data.frame(xValue,yValue)
+
+# Plot
+
+ggplot() +
+  geom_line(data, mapping=aes(x=xValue, y=yValue)) +
+   stat_smooth(method = "lm", col = "red", mapping=aes(x=xValue, y=yValue)) +
+  xlab("Years") +
+  ylab("Temperature [°C]")
+```
+
+# Correlation
+
+```{r}
+cor = cor(data_total$incidence, data_total$temperature, use = "pairwise.complete.obs")
+plot(data_total$temperature, data_total$incidence, main = "incidence over temperature", xlab = "inzidenz", ylab = "temperature")
+```
+
+#mean of dengue_cases of whole thailand
+
+```{r}
+library(ggplot2)
+library(scales)
+
+
+f_mean_dengue = function(){
+  mean_dengue <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
+  months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
+  for (i in months) {
+    month = data_total[data_total$time_column == i,]
+    m_month = data.frame(dengue_cases = mean(month$dengue_case, na.rm = TRUE), time_column = month$time_column[1])
+    mean_dengue = rbind(mean_dengue, m_month)
+  }
+  return(mean_dengue)
+}
+  
+f_mean_temp = function(){
+  mean_temp <- data.frame(temperature = numeric(), time_column = as.Date(character()))
+  months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
+  for (i in months) {
+    month = data_total[data_total$time_column == i,]
+    m_month = data.frame(temperature = mean(month$temperature, na.rm = TRUE), time_column = month$time_column[1])
+    mean_temp = rbind(mean_temp, m_month)
+  }
+  return(mean_temp)
+}
+
+plot1 = ggplot2::ggplot() +
+  geom_line(data = f_mean_dengue(), aes(x = time_column, y = dengue_cases)) +
+  labs(x = "time", y = "dengue-cases") +
+  scale_x_date(breaks = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "2 year"))
+
+plot2 = ggplot2::ggplot() +
+  geom_line(data = f_mean_temp(), aes(x = time_column, y = temperature), color = "red") +
+  labs(x = "time", y = "temperature") +
+  scale_x_date(breaks = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "2 year"))
+
+gridExtra::grid.arrange(plot1, plot2, nrow = 2)
+```
+
+#mean and median comparison
+
+```{r}
+f_median_dengue = function(){
+  median_dengue <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
+  months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
+  for (i in months) {
+    month = data_total[data_total$time_column == i,]
+    m_month = data.frame(dengue_cases = median(month$dengue_case, na.rm = TRUE), time_column = month$time_column[1])
+    median_dengue = rbind(median_dengue, m_month)
+  }
+  return(median_dengue)
+}
+
+f_median_temp = function(){
+  median_temp <- data.frame(temperature = numeric(), time_column = as.Date(character()))
+  months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
+  for (i in months) {
+    month = data_total[data_total$time_column == i,]
+    m_month = data.frame(temperature = median(month$temperature, na.rm = TRUE), time_column = month$time_column[1])
+    median_temp = rbind(median_temp, m_month)
+  }
+  return(median_temp)
+}
+
+
+plot_mean_temp = ggplot2::ggplot() +
+  geom_line(data = f_mean_temp(), aes(x = time_column, y = temperature)) +
+  labs(x = "time", y = "temperature", title = "Mean temperature")
+
+plot_mean_dengue = ggplot2::ggplot() +
+  geom_line(data = f_mean_dengue(), aes(x = time_column, y = dengue_cases)) +
+  labs(x = "time", y = "dengue-cases", title = "Mean dengue cases")
+
+plot_median_temp = ggplot2::ggplot() +
+  geom_line(data = f_median_temp(), aes(x = time_column, y = temperature)) +
+  labs(x = "time", y = "temperature", title = "Median temperature")
+
+plot_median_dengue = ggplot2::ggplot() +
+  geom_line(data = f_median_dengue(), aes(x = time_column, y = dengue_cases)) +
+  labs(x = "time", y = "dengue-cases", title = "Median dengue cases")
+
+gridExtra::grid.arrange(plot_mean_dengue, plot_mean_temp, plot_median_dengue, plot_median_temp, nrow = 2)
+```
+
+#Plot für Bangkok
+
+```{r}
+dengue_plot_cases = c()
+dengue_plot_time = c()
+
+dengue_plot_cases <- data_total$dengue_cases[data_total$Reporting_areas == "Bangkok"]
+dengue_plot_time <- data_total$time_column[data_total$Reporting_areas == "Bangkok"]
+
+plot(dengue_plot_time,dengue_plot_cases, type = "o")
+```
+
+#correlation between temperature and dengue cases
+
+```{r}
+i.missing = which(rmv.rows > 0)
+
+
+plot(data_total$temperature, data_total$incidence, pch = 20,
+     ylab = "incidence",
+     xlab = "mean temperature",
+     lines(data_total$temperature, data_total$incidence, col = "red")
+     )
+
+```
+
+#probieren mit time series Objekten
+
+```{r}
+my_ts <- ts(data_total$dengue_cases, start = c(data_total$time_column[1]), frequency = 12)
+head(my_ts)
+TSstudio::ts_plot(my_ts)
+```
+
+#GAM
+
+```{r}
+
+library(readxl)
+library(nlme)
+library(gam)
+library(sdm)
+library(raster)
+library(ncdf4)
+library(mgcv)
+
+attach(data_total)
+model1 <- gam(dengue_cases~s(temperature, k=6), family="quasipoisson")
+plot.gam(model1)
+summary(model1)
+k.check(model1)
+gam.check(model1)
+
+linear_model <- gam(dengue_cases~temperature)
+smooth_model <- gam(dengue_cases~s(temperature))
+
+AIC(linear_model, smooth_model)
+
+```
+
+
+```{r}
+library(readxl)
+library(nlme)
+library(gam)
+library(sdm)
+library(raster)
+library(ncdf4)
+library(mgcv)
+
+attach(data_total)
+model2 <- gam(incidence~s(population_count, k=5), family="quasipoisson")
+plot.gam(model2)
+summary(model2)
+k.check(model2)
+gam.check(model2)
+
+
+
+cor = cor(data_total$incidence, data_total$population_count, use = "pairwise.complete.obs")
+```
+
+
+
+
+
+
+
