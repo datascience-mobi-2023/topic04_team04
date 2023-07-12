@@ -180,6 +180,16 @@ clean_data_total[num_col] = lapply(clean_data_total[num_col], as.numeric)
 clean_data_total[date_col] = lapply(clean_data_total[date_col], as.Date)
 summary(clean_data_total)
 ```
+#create data frame for monsoon season 
+
+```{r}
+vec_month_monsoon = c("Jun", "Jul", "Aug")
+data_monsoon = data_total[data_total$month %in% vec_month_monsoon,]
+
+rmv.rows.m = apply(data_monsoon,1,function(x){sum(is.na(x))})
+i.missing.m = which(rmv.rows.m >0)
+clean_data_monsoon = as.data.frame(data_monsoon[-i.missing.m,])
+```
 #struture data frame and convert into right datatypes
 ```{r}
 data_total = as.data.frame(data_total)
