@@ -18,10 +18,10 @@ dimensions= dim(data_total)
 R= dimensions[1]
 
 for(Zeile in 1:R){
-  Population <- data_total$population_count[Zeile]
-  Infection <- data_total$dengue_cases[Zeile]
+  Population = data_total$population_count[Zeile]
+  Infection = data_total$dengue_cases[Zeile]
   Incidence = (Infection/Population)*100000
-  data_total$incidence[Zeile] <- Incidence
+  data_total$incidence[Zeile] = Incidence
 }
 ```
 
@@ -30,14 +30,14 @@ for(Zeile in 1:R){
 Creating vector of mean temperature in Thailand over the years
 
 ```{r}
- mean_tempvec <- c()
+ mean_tempvec = c()
 for (month in c(1:180)) {
-   tempvec <- c()
+   tempvec = c()
   for (district in c(1:76)) {
-   temp <- data_total$temperature[month + 180*(district-1)]
-   tempvec <- c(tempvec,temp)
+   temp = data_total$temperature[month + 180*(district-1)]
+   tempvec = c(tempvec,temp)
   }
- mean_tempvec <- c(mean_tempvec,mean(tempvec))
+ mean_tempvec = c(mean_tempvec,mean(tempvec))
  }
 mean_tempvec
 ```
@@ -50,11 +50,11 @@ mean_tempvec
 library(ggplot2)
 
 # create data
-month_dates <- seq(as.Date("2006-01-01"), as.Date("2020-12-01"), by = "month", format = "%m")
+month_dates = seq(as.Date("2006-01-01"), as.Date("2020-12-01"), by = "month", format = "%m")
 
-xValue <- month_dates
-yValue <- mean_tempvec
-data <- data.frame(xValue,yValue)
+xValue = month_dates
+yValue = mean_tempvec
+data = data.frame(xValue,yValue)
 
 # Plot
 
@@ -117,123 +117,292 @@ cor = cor(data_total$incidence, data_total$temperature, use = "pairwise.complete
 plot(data_total$temperature, data_total$incidence, main = "incidence over temperature", xlab = "inzidenz", ylab = "temperature")
 ```
 
-#ARIMA
+#ARIMA Dengue cases
 
 ```{r}
 library(ggplot2)
 library(forecast)
 
-Ts_thailand <- ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
+<<<<<<< HEAD
+Ts_thailand = ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
 TSstudio::ts_plot(Ts_thailand)
+=======
+Ts_thai <- ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
+TSstudio::ts_plot(Ts_thai)
+>>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
 
 # moving average 
-autoplot(Ts_thailand) +
-  autolayer(ma(Ts_thailand, order = 12)) +
+autoplot(Ts_thai) +
+  autolayer(ma(Ts_thai, order = 12)) +
   xlab("Year") + ylab("dengue_cases") +
   ggtitle("Dengue_cases_thailand_with_MA") 
 
 #additive decomposing
-decomposed_thailand_add <- decompose(Ts_thailand, type="additive") # use type = "additive" for additive components
+<<<<<<< HEAD
+decomposed_thailand_add = decompose(Ts_thailand, type="additive") # use type = "additive" for additive components
 plot(decomposed_thailand_add)
 grid(lty = 2, col = "gray")
                       
 #seasonal decomposing
-decomposed_thailand_seas <- stl(Ts_thailand, s.window = "periodic")
+decomposed_thailand_seas = stl(Ts_thailand, s.window = "periodic")
 plot(decomposed_thailand_seas, main = "Decomposition of a periodic time series", xaxt = "n")
+=======
+decomposed_thai_add <- decompose(Ts_thai, type="additive") # use type = "additive" for additive components
+plot(decomposed_thai_add)
+grid(lty = 2, col = "gray")
+                      
+#seasonal decomposing
+decomposed_thai_seas <- stl(Ts_thai, s.window = "periodic")
+plot(decomposed_thai_seas, main = "Decomposition of a periodic time series", xaxt = "n")
+>>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
 grid(lty = 2, col = "gray")
 
 
 library(tseries)
-adf.test(Ts_thailand) # p-value (0.01) < 0.05 indicates the TS is stationary --> suggests it is stationary
+adf.test(Ts_thai) # p-value (0.01) < 0.05 indicates the TS is stationary --> suggests it is stationary
+# alternative hypothesis: stationary
+kpss.test(Ts_thai, null = c("Level", "Trend"))
 
+#both test indicate stationarity
 
-acf_thailand <- acf(total_thailand$dengue_cases)
+acf_thailand = acf(total_thailand$dengue_cases)
 
-pacf_thailand <- pacf(total_thailand$dengue_cases)
+pacf_thailand = pacf(total_thailand$dengue_cases)
 
 ```
 
+#ARIMA differencing
+```{r}
+# 1st Seasonal Differencing 
+# purpose of seasonal differencing is to stabilize the mean and variance of the ts
+Ts_thai_seasdiff <- diff(Ts_thai, lag = frequency(Ts_thai), differences = 1)  # seasonal differencing 
+plot(Ts_thai_seasdiff, type="l", main = "Seasonally Differenced")  
+
+# 2md Seasonal Differencing
+Ts_thai_stat <- diff(Ts_thai_seasdiff, differences = 1)
+plot(Ts_thai_stat, type = "l", main = "Differenced and Stationary")  # --> USUALLY you do not difference more than TWO times 
+
+acfRes_stationary <- acf(Ts_thai_stat)
+pacfRes_stationary <- pacf(Ts_thai_stat)
+```
+
+#ARIMA "by hand"
+
+```{r}
+p_range <- 0:4  # AR order
+d_range <- 0:2 # I order
+q_range <- 0:3 # MA order
+
+# Initialize variables to store AIC and model information
+best_aic <- Inf
+best_model <- NULL
+p_best <- 0
+d_best <- 0
+q_best <- 0
+
+# Loop through the combinations of orders
+for (p in p_range) {
+  for (d in d_range) {
+    for (q in q_range) {
+      print(p); print(d); print(q)
+      # Fit the ARIMA model
+      model <- arima(Ts_thai, order = c(p, d, q)) 
+      
+      # Calculate AIC
+      aic <- AIC(model)
+      print(aic)
+      # Check if the current model has lower AIC than the best model so far
+      if (aic < best_aic) {
+        best_aic <- aic
+        best_model <- model
+        p_best <- p
+        d_best <- d
+        q_best <- q
+      }
+    }
+  }
+}
+
+# Print the best model and its AIC
+best_model
+best_aic; p_best; d_best; q_best
+
+# Fit the best ARIMA model
+best_model <- arima(Ts_thai, order = c(p_best, d_best, q_best))  # Replace with the best order values
+best_model 
+
+```
+#Auto ARIMA
+
 ```{r}
 library(forecast)
-auto_thailand  <- auto.arima(Ts_thailand)
+<<<<<<< HEAD
+auto_thailand = auto.arima(Ts_thailand)
 auto_thailand
 
-#auto_thailand_2  <- auto.arima(Ts_thailand, stepwise = F, approximation = F)
+#auto_thailand_2  = auto.arima(Ts_thailand, stepwise = F, approximation = F)
+=======
+Ts_thai_auto  <- auto.arima(Ts_thai)
+Ts_thai_auto
+
+#auto_thailand_stat = auto.arima(Ts_thai_stat)
+#auto_thailand_stat
+
+#auto_thailand_2  <- auto.arima(Ts_thai, stepwise = F, approximation = F)
+>>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
 #auto_thailand_2
 #this auto-ARIMA was removed because it took to long and had a higher AIC
 ```
 
+
 ```{r}
-residuals_thailand <- residuals(auto_thailand)
+<<<<<<< HEAD
+residuals_thailand = residuals(auto_thailand)
 plot(residuals_thailand)
+=======
+residuals_thai <- residuals(Ts_thai_auto)
+plot(residuals_thai)
+>>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
 
-acf(residuals_thailand)
+acf(residuals_thai)
 
-portmanteau_thailand <- Box.test(residuals_thailand, lag = 12, type = "Ljung-Box")
+<<<<<<< HEAD
+portmanteau_thailand = Box.test(residuals_thailand, lag = 12, type = "Ljung-Box")
 portmanteau_thailand 
+=======
+portmanteau_thai <- Box.test(residuals_thai, lag = 12, type = "Ljung-Box")
+portmanteau_thai 
+>>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
 # --> p value (0.52) > 0.05 --> no evidence for autocorrelation --> ARIMA model works well
 ```
 
 ```{r}
 library(forecast)
-horizon_thailand <- 12 
-forecasted_thailand <- forecast(auto_thailand, h = horizon_thailand)
+<<<<<<< HEAD
+horizon_thailand = 12 
+forecasted_thailand = forecast(auto_thailand, h = horizon_thailand)
 
-forecastedTs_thailand <- forecasted_thailand$mean
-forecastedTs_thailand  <- ts(forecastedTs_thailand, frequency = 12, start = c(2021, 1) )
+forecastedTs_thailand = forecasted_thailand$mean
+forecastedTs_thailand  = ts(forecastedTs_thailand, frequency = 12, start = c(2021, 1) )
 plot(forecastedTs_thailand)
 ```
 
 ```{r}
-forecastDf_thailand <- as.data.frame(forecasted_thailand)
-forecastDf_thailand$time <- time(forecastedTs_thailand)
-names(forecastDf_thailand) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+forecastDf_thailand = as.data.frame(forecasted_thailand)
+forecastDf_thailand$time = time(forecastedTs_thailand)
+names(forecastDf_thailand) = c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+=======
+horizon_thai <- 12 
+forecasted_thai_auto <- forecast(Ts_thai_auto, h = horizon_thai)
+
+forecasted_thai_Ts <- forecasted_thai_auto$mean
+forecasted_thai_Ts  <- ts(forecasted_thai_Ts, frequency = 12, start = c(2021, 1) )
+plot(forecasted_thai_Ts)
+```
+
+```{r}
+forecast_thai_Df <- as.data.frame(forecasted_thai_auto)
+forecast_thai_Df$time <- time(forecasted_thai_Ts)
+names(forecast_thai_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+>>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
 ```
 
 ```{r}
 library(ggplot2)
 ggplot() +
-  geom_line(data = Ts_thailand, aes(x = time(Ts_thailand), y = Ts_thailand), color = "black") +
-  geom_ribbon(data = forecastDf_thailand, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
-  geom_line(data = forecastDf_thailand, aes(x = time, y = point), color = "blue") +
+  geom_line(data = Ts_thai, aes(x = time(Ts_thai), y = Ts_thai), color = "black") +
+  geom_ribbon(data = forecast_thai_Df, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
+  geom_line(data = forecast_thai_Df, aes(x = time, y = point), color = "blue") +
   labs(title = "Time Series Forecast") +
   xlab("Year") +
   ylab("Dengue Cases") +
   theme_minimal()
 ```
+
+#ARIMA forecast best model
 
 ```{r}
 library(forecast)
-#exclude_end <- 3
+<<<<<<< HEAD
+#exclude_end = 3
 Ts_thailand_2018 = window(Ts_thailand, end = c(2018, 12))
 
-auto_thailand_2018  <- auto.arima(Ts_thailand_2018)
+auto_thailand_2018  = auto.arima(Ts_thailand_2018)
 auto_thailand_2018
+=======
+forecasted_thai_best <- forecast(best_model, h = horizon_thai)
 
+forecasted_Ts_thai_best <- forecasted_thai_best$mean
+forecasted_Ts_thai_best  <- ts(forecasted_Ts_thai_best, frequency = 12, start = c(2021, 1) )
+plot(forecasted_Ts_thai_best)
+```
+>>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
 
-horizon_thailand <- 12 
-forecasted_thailand_2018 <- forecast(auto_thailand_2018, h = horizon_thailand)
+```{r}
+forecast_thai_best_Df <- as.data.frame(forecasted_thai_best)
+forecast_thai_best_Df$time <- time(forecasted_Ts_thai_best)
+names(forecast_thai_best_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+```
 
-forecastedTs_thailand_2018 <- forecasted_thailand_2018$mean
-forecastedTs_thailand_2018  <- ts(forecastedTs_thailand_2018, frequency = 12, start = c(2018, 1) )
+<<<<<<< HEAD
+horizon_thailand = 12 
+forecasted_thailand_2018 = forecast(auto_thailand_2018, h = horizon_thailand)
+
+forecastedTs_thailand_2018 = forecasted_thailand_2018$mean
+forecastedTs_thailand_2018  = ts(forecastedTs_thailand_2018, frequency = 12, start = c(2018, 1) )
 plot(forecastedTs_thailand_2018)
 
-forecastDf_thailand_2018 <- as.data.frame(forecasted_thailand_2018)
-forecastDf_thailand_2018$time <- time(forecastedTs_thailand_2018)
-names(forecastDf_thailand_2018) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+forecastDf_thailand_2018 = as.data.frame(forecasted_thailand_2018)
+forecastDf_thailand_2018$time = time(forecastedTs_thailand_2018)
+names(forecastDf_thailand_2018) = c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
 
+=======
+```{r}
+>>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
 library(ggplot2)
 ggplot() +
-  geom_ribbon(data = forecastDf_thailand_2018, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
-  geom_line(data = forecastDf_thailand_2018, aes(x = time, y = point), color = "blue") +
-  geom_line(data = Ts_thailand, aes(x = time(Ts_thailand), y = Ts_thailand), color = "black") +
+  geom_line(data = Ts_thai, aes(x = time(Ts_thai), y = Ts_thai), color = "black") +
+  geom_ribbon(data = forecast_thai_best_Df, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
+  geom_line(data = forecast_thai_best_Df, aes(x = time, y = point), color = "blue") +
   labs(title = "Time Series Forecast") +
   xlab("Year") +
   ylab("Dengue Cases") +
   theme_minimal()
 ```
 
-## comparing the decomposition of temperature and cases
+#ARIMA forecast 2018
+```{r}
+library(forecast)
+#exclude_end <- 3
+Ts_thai_2018 = window(Ts_thai, end = c(2018, 12))
+
+Ts_thai_auto_2018  <- auto.arima(Ts_thai_2018)
+Ts_thai_auto_2018
+
+
+forecasted_thai_2018 <- forecast(Ts_thai_auto_2018, h = horizon_thai)
+
+forecasted_thai_2018_Ts <- forecasted_thai_2018$mean
+forecasted_thai_2018_Ts  <- ts(forecasted_thai_2018_Ts, frequency = 12, start = c(2018, 1) )
+plot(forecasted_thai_2018_Ts)
+
+forecast_thai_2018_Df <- as.data.frame(forecasted_thai_2018)
+forecast_thai_2018_Df$time <- time(forecasted_thai_2018_Ts)
+names(forecast_thai_2018_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+
+library(ggplot2)
+ggplot() +
+  geom_ribbon(data = forecast_thai_2018_Df, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
+  geom_line(data = forecast_thai_2018_Df, aes(x = time, y = point), color = "blue") +
+  geom_line(data = Ts_thai, aes(x = time(Ts_thai), y = Ts_thai), color = "black") +
+  labs(title = "Time Series Forecast") +
+  xlab("Year") +
+  ylab("Dengue Cases") +
+  theme_minimal()
+```
+
+
+#comparing the decomposition of temperature and cases
 
 ```{r}
 library(ggplot2)
@@ -243,42 +412,62 @@ library(gridExtra)
 total_thailand_temp = cbind(total_thailand, mean_tempvec)
 colnames(total_thailand_temp)[4] = "temperature"
 
-Ts_thailand_temp <- ts(total_thailand_temp$temperature, frequency = 12, start = c(2006, 1))
+<<<<<<< HEAD
+Ts_thailand_temp = ts(total_thailand_temp$temperature, frequency = 12, start = c(2006, 1))
 TSstudio::ts_plot(Ts_thailand_temp)
 
 #additive decomposing of the temperature
-decomposed_thailand_add_temp <- decompose(Ts_thailand_temp, type="additive") 
+decomposed_thailand_add_temp = decompose(Ts_thailand_temp, type="additive") 
 plot(decomposed_thailand_add_temp)
 grid(lty = 2, col = "gray")
 
 #additive decomposing of the dengue cases
-decomposed_thailand_add <- decompose(Ts_thailand, type="additive")
+decomposed_thailand_add = decompose(Ts_thailand, type="additive")
 plot(decomposed_thailand_add)
 grid(lty = 2, col = "gray")
 
-case_trend <- decomposed_thailand_add$trend
-temp_trend <- decomposed_thailand_add_temp$trend
+case_trend = decomposed_thailand_add$trend
+temp_trend = decomposed_thailand_add_temp$trend
+=======
+Ts_thai_temp <- ts(total_thailand_temp$temperature, frequency = 12, start = c(2006, 1))
+TSstudio::ts_plot(Ts_thai_temp)
 
-plot_case_trend <- ggplot(case_trend, aes(x, y)) + geom_line() + labs(title = "Cases_trend")
-plot_temp_trend <- ggplot(temp_trend, aes(x, y)) + geom_line() + labs(title = "Temperature_trend")
+#additive decomposing of the temperature
+decomposed_thai_temp_add <- decompose(Ts_thai_temp, type="additive") 
+plot(decomposed_thai_temp_add)
+grid(lty = 2, col = "gray")
 
-plot_case_temp_trend <- grid.arrange(plot_case_trend, plot_temp_trend, ncol = 1)
+#additive decomposing of the dengue cases
+decomposed_thai_add <- decompose(Ts_thai, type="additive")
+plot(decomposed_thai_add)
+grid(lty = 2, col = "gray")
+
+case_trend <- decomposed_thai_add$trend
+temp_trend <- decomposed_thai_temp_add$trend
+>>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
+
+plot_case_trend = ggplot(case_trend, aes(x, y)) + geom_line() + labs(title = "Cases_trend")
+plot_temp_trend = ggplot(temp_trend, aes(x, y)) + geom_line() + labs(title = "Temperature_trend")
+
+plot_case_temp_trend = grid.arrange(plot_case_trend, plot_temp_trend, ncol = 1)
 print(plot_case_temp_trend)
 
 
 ```
+
 
 ```{r}
-case_seasonal <- decomposed_thailand_add$seasonal
-temp_seasonal <- decomposed_thailand_add_temp$seasonal
+case_seasonal = decomposed_thailand_add$seasonal
+temp_seasonal = decomposed_thailand_add_temp$seasonal
 
-plot_case_seasonal <- ggplot(case_seasonal, aes(x, y)) + geom_line() + labs(title = "Cases_seasonal")
-plot_temp_seasonal <- ggplot(temp_seasonal, aes(x, y)) + geom_line() + labs(title = "Temperature_seasonal")
+plot_case_seasonal = ggplot(case_seasonal, aes(x, y)) + geom_line() + labs(title = "Cases_seasonal")
+plot_temp_seasonal = ggplot(temp_seasonal, aes(x, y)) + geom_line() + labs(title = "Temperature_seasonal")
 
-plot_case_temp_seasonal <- grid.arrange(plot_case_seasonal, plot_temp_seasonal, ncol = 1)
+plot_case_temp_seasonal = grid.arrange(plot_case_seasonal, plot_temp_seasonal, ncol = 1)
 print(plot_case_temp_trend)
 
 ```
+
 
 ## mean of dengue_cases and temperature of whole thailand per month
 
@@ -288,7 +477,7 @@ library(scales)
 
 #dengue cases of whole thailand per month
 f_mean_dengue = function(){
-  mean_dengue <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
+  mean_dengue = data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
   months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
   for (i in months) {
     month = data_total[data_total$time_column == i,]
@@ -300,7 +489,7 @@ f_mean_dengue = function(){
 
 
 f_mean_temp = function(){
-  mean_temp <- data.frame(temperature = numeric(), time_column = as.Date(character()))
+  mean_temp = data.frame(temperature = numeric(), time_column = as.Date(character()))
   months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
   for (i in months) {
     month = data_total[data_total$time_column == i,]
@@ -330,7 +519,7 @@ gridExtra::grid.arrange(plot1, plot2, nrow = 2)
 library(ggplot2)
 
 f_median_dengue = function(){
-  median_dengue <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
+  median_dengue = data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
   months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
   for (i in months) {
     month = data_total[data_total$time_column == i,]
@@ -341,7 +530,7 @@ f_median_dengue = function(){
 }
 
 f_median_temp = function(){
-  median_temp <- data.frame(temperature = numeric(), time_column = as.Date(character()))
+  median_temp = data.frame(temperature = numeric(), time_column = as.Date(character()))
   months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
   for (i in months) {
     month = data_total[data_total$time_column == i,]
@@ -388,7 +577,7 @@ gridExtra::grid.arrange(plot_mean_dengue, plot_mean_temp, plot_median_dengue, pl
 
 ```{r}
 f_mean_dengue.y.t = function(){
-  mean_dengue.y.t <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
+  mean_dengue.y.t = data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
   for (i in c(2006:2020)) {
     month = data_total[data_total$year == i,]
     m_month = data.frame(dengue_cases = mean(month$dengue_cases, na.rm = TRUE), time_column = month$time_column[1])
@@ -399,7 +588,7 @@ f_mean_dengue.y.t = function(){
 mean_dengue.y.t = as.data.frame(f_mean_dengue.y.t())
 
 f_mean_temp.y.t = function(){
-  mean_temp.y.t <- data.frame(temperature = numeric(), time_column = as.Date(character()))
+  mean_temp.y.t = data.frame(temperature = numeric(), time_column = as.Date(character()))
   for (i in c(2006:2020)) {
     month = data_total[data_total$year == i,]
     m_month = data.frame(temperature = mean(month$temperature, na.rm = TRUE), time_column = month$time_column[1])
@@ -417,8 +606,8 @@ mean_temp.y.t = as.data.frame(f_mean_temp.y.t())
 dengue_plot_cases = c()
 dengue_plot_time = c()
 
-dengue_plot_cases <- data_total$dengue_cases[data_total$Reporting_areas == "Bangkok"]
-dengue_plot_time <- data_total$time_column[data_total$Reporting_areas == "Bangkok"]
+dengue_plot_cases = data_total$dengue_cases[data_total$Reporting_areas == "Bangkok"]
+dengue_plot_time = data_total$time_column[data_total$Reporting_areas == "Bangkok"]
 
 plot(dengue_plot_time,dengue_plot_cases, type = "o")
 ```
@@ -473,7 +662,7 @@ for (i in r_areas){
   temp_inc = apply(data_total[which(clean_data_total$Reporting_areas == i),c("incidence", "temperature")], 2,function(g){mean(g, na.rm = TRUE)})
   temp_inc_df = data.frame(Reporting_areas = i, incidence = temp_inc["incidence"], temperature = temp_inc["temperature"])
   m_inc_temp.y.r = rbind(m_inc_temp.y.r, temp_inc_df)
-  rownames(m_inc_temp.y.r) <- 1:nrow(m_inc_temp.y.r)
+  rownames(m_inc_temp.y.r) = 1:nrow(m_inc_temp.y.r)
 }
 
 ```
@@ -544,7 +733,7 @@ gridExtra::grid.arrange(plot1, plot2, plot3, ncol = 1)
 ## probieren mit time series Objekten
 
 ```{r}
-my_ts <- ts(data_total$dengue_cases, start = c(data_total$time_column[1]), frequency = 12)
+my_ts = ts(data_total$dengue_cases, start = c(data_total$time_column[1]), frequency = 12)
 head(my_ts)
 TSstudio::ts_plot(my_ts)
 ```
@@ -562,15 +751,15 @@ library(ncdf4)
 library(mgcv)
 
 attach(data_total)
-model1 <- gam(incidence~s(temperature, k=5), family = "quasipoisson",  na.rm = T)
+model1 = gam(incidence~s(temperature, k=5), family = "quasipoisson",  na.rm = T)
 plot.gam(model1)
 summary(model1) #edf: → a value close to 1 tends to be close to a linear term → a higher value means that the spline is more wiggly (non-linear). 
 #F-Wert und der p-Wert geben die statistische Signifikanz der glatten Funktion an. In diesem Fall ist die glatte Funktion von "temperature" hoch signifikant (p-Wert < 2e-16), was darauf hindeutet, dass sie einen signifikanten Einfluss auf die Vorhersage der "incidence" hat.Der angegebene R-squared-Wert (R-sq.(adj)) von 0.0407 gibt an, wie gut das Modell die Varianz der abhängigen Variable erklärt. In diesem Fall erklärt das Modell etwa 4,07% der Varianz in den Daten. Ein niedriger GCV-Wert deutet auf eine gute Anpassung des Modells hin.
 k.check(model1)
 gam.check(model1)
 
-linear_model <- gam(dengue_cases~temperature)
-smooth_model <- gam(dengue_cases~s(temperature))
+linear_model = gam(dengue_cases~temperature)
+smooth_model = gam(dengue_cases~s(temperature))
 
 AIC(linear_model, smooth_model)
 ```
@@ -584,15 +773,23 @@ library(ncdf4)
 
 attach(data_total)
 
-t2m <- stack ("tas_SEA22_MPI_rcp85_2021-2040_grid_subc_daymean_monmean_swm_timmean_thai.nc")
-names(t2m) <- "temperature"
-p1 <- raster::predict(t2m, model1, type = "response")
+t2m = stack ("tas_SEA22_MPI_rcp85_2021-2040_grid_subc_daymean_monmean_swm_timmean_thai.nc")
+names(t2m) = "temperature"
+p1 = raster::predict(t2m, model1, type = "response")
 
+<<<<<<< HEAD
+thailand = raster::getData('GADM', country='THA', level=1)
+my.area = extent(thailand)
+my.p1 = crop(p1, my.area)
+my.p1.mask = mask(my.p1, thailand)
+pdf(file="C:/Users/thadl/OneDrive/Dokumente/Bioinfo/Klimaprojekt/maxtemp_Abun2.pdf")
+=======
 thailand <- raster::getData('GADM', country='THA', level=1)
 my.area <- extent(thailand)
 my.p1 <- crop(p1, my.area)
 my.p1.mask <- mask(my.p1, thailand)
-pdf(file="C:/Users/thadl/OneDrive/Dokumente/Bioinfo/Klimaprojekt/maxtemp_Abun2.pdf")
+#pdf(file="C:/Users/thadl/OneDrive/Dokumente/Bioinfo/Klimaprojekt/maxtemp_Abun2.pdf")
+>>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
 plot(my.p1.mask, legend.width=1, legend.shrink=0.75, axes= FALSE, box=FALSE) + title("Predicted values: Influence of Temp on dengue cases", line = +1) + plot(thailand, add=TRUE)
 ```
 
@@ -603,11 +800,11 @@ library(sf)
 library(ggplot2)
 
 
-district_sf <- st_read("gadm36_THA_shp/gadm36_THA_1.shp")
+district_sf = st_read("gadm36_THA_shp/gadm36_THA_1.shp")
 
 #Inzidenz vom April 2006 auf die karte geplottet
 
-district_sf$incidence2006Aug<- rows_2006Aug$incidence
+district_sf$incidence2006Aug = rows_2006Aug$incidence
 
 ggplot() +
   geom_sf(data = district_sf, aes(fill = incidence2006Aug)) +
@@ -622,7 +819,7 @@ library(sf)
 library(ggplot2)
 
 
-district_sf <- st_read("gadm36_THA_shp/gadm36_THA_1.shp")
+district_sf = st_read("gadm36_THA_shp/gadm36_THA_1.shp")
 
 
 map_incidence_monthly = function(incidence_month){
