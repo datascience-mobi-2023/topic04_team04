@@ -14,23 +14,23 @@ knitr::opts_chunk$set(echo = TRUE)
 library(readxl)
 library(dplyr)
 
-Endung <- "_dengue_extracted.xlsx"
-Anfang <- "Dengue"
+Endung = "_dengue_extracted.xlsx"
+Anfang = "Dengue"
 
 for (i in 2006:2020) {
   
-  Dateiname <- paste0(i, Endung) #erstellen das Dateinamens
-  Name_df <- paste0(Anfang, i) 
+  Dateiname = paste0(i, Endung) #erstellen das Dateinamens
+  Name_df = paste0(Anfang, i) 
   assign(Name_df, read_excel(Dateiname)) #erstellen der Variable und zuweisen der Excel-Tabelle
   
-  df_dengue <- get(Name_df)
-  vec_data_names <- vector("character")
+  df_dengue = get(Name_df)
+  vec_data_names = vector("character")
   
-  vec_data_names <- sapply(df_dengue$Reporting_areas, function(g) {
+  vec_data_names = sapply(df_dengue$Reporting_areas, function(g) {
     paste(g[1], i)
   })
-  data_names <- matrix(vec_data_names,nrow = 77, ncol = 1)
-  df_dengue <- cbind(data_names, df_dengue)
+  data_names = matrix(vec_data_names,nrow = 77, ncol = 1)
+  df_dengue = cbind(data_names, df_dengue)
   assign(Name_df,df_dengue)
 }
 #zusammenfügen der einzelnen Jahre in ein gesamtes DataFrame
@@ -49,11 +49,11 @@ colnames(data_total) = c("data_names", "Reporting_areas", "dengue_cases", "month
 sorted_total_years = total_years[order(total_years$"Reporting_areas"),]
 for (k in 1:1155){
   for (j in 3:14){
-    square <- sorted_total_years[k, c(1, 2, j)]
+    square = sorted_total_years[k, c(1, 2, j)]
     month = colnames(square[3])
-    square <- cbind(square,month)
+    square = cbind(square,month)
     colnames(square) = c("data_names", "Reporting_areas", "dengue_cases", "month")
-    data_total <- rbind(data_total, square)
+    data_total = rbind(data_total, square)
     colnames(data_total) = c("data_names", "Reporting_areas", "dengue_cases", "month")
     data_total[m,1] = paste(data_total[m,1], month[1])
     m = m + 1
@@ -83,22 +83,22 @@ colnames(data_total)[5] = "temperature"
 ```{r}
 library(readxl)
 
-Endung <- "_population.xlsx"
+Endung = "_population.xlsx"
 #empty dataframe for the data
 total_population = data.frame(Reporting_areas = character(), population_count = numeric())
 
 # stack years of 2006-2011 below each other
 for (i in 2006:2011) {
   population_df  = data.frame()
-  Dateiname <- paste0(i, Endung) #erstellen das Dateinamens
+  Dateiname = paste0(i, Endung) #erstellen das Dateinamens
   population_df = read_excel(Dateiname) #erstellen der Variable und zuweisen der Excel-Tabelle
   vec_years = rep(i, times = 77)
   population_df = cbind(population_df,vec_years)
   names(population_df) = c("Reporting_areas", "population_count", "year")
   # multiply every row 12 times for each month
-  repeat_count <- 12
-  population_df_replicated <- population_df[rep(row.names(population_df), each = repeat_count), ]
-  row.names(population_df_replicated) <- NULL
+  repeat_count = 12
+  population_df_replicated = population_df[rep(row.names(population_df), each = repeat_count), ]
+  row.names(population_df_replicated) = NULL
   
   #put all the years together
   total_population = rbind(total_population, population_df_replicated)
@@ -118,9 +118,9 @@ for (i in 2012:2020) {
 }
 
 # multiply every row 12 times for each month
-repeat_count <- 12
-population_df_replicated <- pop_placeholder[rep(row.names(pop_placeholder), each = repeat_count), ]
-row.names(population_df_replicated) <- NULL
+repeat_count = 12
+population_df_replicated = pop_placeholder[rep(row.names(pop_placeholder), each = repeat_count), ]
+row.names(population_df_replicated) = NULL
 
 # combine all population data in each 
 total_population = rbind(total_population, population_df_replicated)
@@ -146,11 +146,11 @@ data_total = cbind(data_total, time_column)
 
 #Detect missing values
 ```{r}
-detect_na <- function(x) {
-  is_na <- x %in% c("N/A", "na", "NA", "n/a")
+detect_na = function(x) {
+  is_na = x %in% c("N/A", "na", "NA", "n/a")
   replace(x, is_na, NA)
 }
-data_total <- apply(data_total, 2, detect_na)
+data_total = apply(data_total, 2, detect_na)
 rmv.rows = apply(data_total,1,function(x){sum(is.na(x))})
 i.missing = which(rmv.rows >0)
 ```
@@ -163,10 +163,10 @@ dimensions = dim(data_total)
 R= dimensions[1]
 
 for(Zeile in 1:R){
-  Population <- data_total$population_count[Zeile]
-  Infection <- data_total$dengue_cases[Zeile]
+  Population = data_total$population_count[Zeile]
+  Infection = data_total$dengue_cases[Zeile]
   Incidence = (Infection/Population)*100000
-  data_total$incidence[Zeile] <- Incidence
+  data_total$incidence[Zeile] = Incidence
 }
 ```
 #creat clean data frame
@@ -201,19 +201,19 @@ for (i in 1:dim(data_total)[1]) {
   
   if(data_total$Reporting_areas[i]=="Bungkan"){
     
-    Datum <- data_total$time_column[i]
+    Datum = data_total$time_column[i]
     for(j in 1:dim(data_total)[1]){
       if(data_total$Reporting_areas[j] == "Nong Khai" & data_total$time_column[j] == Datum){
         
-        data_total$dengue_cases[j]<- ifelse(is.na(data_total$dengue_cases[i]), data_total$dengue_cases[j], data_total$dengue_cases[i]+data_total$dengue_cases[j])
-        data_total$population_count[j]<- ifelse(is.na(data_total$population_count[i]), data_total$population_count[j], data_total$population_count[i]+data_total$population_count[j])
-        data_total$incidence[j]<- ifelse(is.na(data_total$incidence[i]), data_total$incidence[j], data_total$incidence[i]+data_total$incidence[j])
+        data_total$dengue_cases[j]= ifelse(is.na(data_total$dengue_cases[i]), data_total$dengue_cases[j], data_total$dengue_cases[i]+data_total$dengue_cases[j])
+        data_total$population_count[j]= ifelse(is.na(data_total$population_count[i]), data_total$population_count[j], data_total$population_count[i]+data_total$population_count[j])
+        data_total$incidence[j]= ifelse(is.na(data_total$incidence[i]), data_total$incidence[j], data_total$incidence[i]+data_total$incidence[j])
         
       }
     }
   }
 }
-data_total <- data_total[data_total$Reporting_areas != "Bungkan", ]
+data_total = data_total[data_total$Reporting_areas != "Bungkan", ]
 ```
 
 
