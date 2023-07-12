@@ -117,24 +117,15 @@ cor = cor(data_total$incidence, data_total$temperature, use = "pairwise.complete
 plot(data_total$temperature, data_total$incidence, main = "incidence over temperature", xlab = "inzidenz", ylab = "temperature")
 ```
 
+
 #ARIMA Dengue cases
 
 ```{r}
 library(ggplot2)
 library(forecast)
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-Ts_thailand = ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
-TSstudio::ts_plot(Ts_thailand)
-=======
 Ts_thai <- ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
 TSstudio::ts_plot(Ts_thai)
->>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
-=======
-Ts_thai <- ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
-TSstudio::ts_plot(Ts_thai)
->>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
 
 # moving average 
 autoplot(Ts_thai) +
@@ -143,16 +134,6 @@ autoplot(Ts_thai) +
   ggtitle("Dengue_cases_thailand_with_MA") 
 
 #additive decomposing
-<<<<<<< HEAD
-<<<<<<< HEAD
-decomposed_thailand_add = decompose(Ts_thailand, type="additive") # use type = "additive" for additive components
-plot(decomposed_thailand_add)
-grid(lty = 2, col = "gray")
-                      
-#seasonal decomposing
-decomposed_thailand_seas = stl(Ts_thailand, s.window = "periodic")
-plot(decomposed_thailand_seas, main = "Decomposition of a periodic time series", xaxt = "n")
-=======
 decomposed_thai_add <- decompose(Ts_thai, type="additive") # use type = "additive" for additive components
 plot(decomposed_thai_add)
 grid(lty = 2, col = "gray")
@@ -160,16 +141,6 @@ grid(lty = 2, col = "gray")
 #seasonal decomposing
 decomposed_thai_seas <- stl(Ts_thai, s.window = "periodic")
 plot(decomposed_thai_seas, main = "Decomposition of a periodic time series", xaxt = "n")
->>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
-=======
-decomposed_thai_add <- decompose(Ts_thai, type="additive") # use type = "additive" for additive components
-plot(decomposed_thai_add)
-grid(lty = 2, col = "gray")
-                      
-#seasonal decomposing
-decomposed_thai_seas <- stl(Ts_thai, s.window = "periodic")
-plot(decomposed_thai_seas, main = "Decomposition of a periodic time series", xaxt = "n")
->>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
 grid(lty = 2, col = "gray")
 
 
@@ -180,9 +151,9 @@ kpss.test(Ts_thai, null = c("Level", "Trend"))
 
 #both test indicate stationarity
 
-acf_thailand = acf(total_thailand$dengue_cases)
+acf_thailand <- acf(total_thailand$dengue_cases)
 
-pacf_thailand = pacf(total_thailand$dengue_cases)
+pacf_thailand <- pacf(total_thailand$dengue_cases)
 
 ```
 
@@ -251,54 +222,19 @@ best_model
 
 ```{r}
 library(forecast)
-<<<<<<< HEAD
-<<<<<<< HEAD
-auto_thailand = auto.arima(Ts_thailand)
-auto_thailand
-
-#auto_thailand_2  = auto.arima(Ts_thailand, stepwise = F, approximation = F)
-=======
 Ts_thai_auto  <- auto.arima(Ts_thai)
 Ts_thai_auto
 
-=======
-Ts_thai_auto  <- auto.arima(Ts_thai)
-Ts_thai_auto
-
->>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
 #auto_thailand_stat = auto.arima(Ts_thai_stat)
 #auto_thailand_stat
 
 #auto_thailand_2  <- auto.arima(Ts_thai, stepwise = F, approximation = F)
-<<<<<<< HEAD
->>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
-=======
->>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
 #auto_thailand_2
 #this auto-ARIMA was removed because it took to long and had a higher AIC
 ```
 
 
 ```{r}
-<<<<<<< HEAD
-<<<<<<< HEAD
-residuals_thailand = residuals(auto_thailand)
-plot(residuals_thailand)
-=======
-residuals_thai <- residuals(Ts_thai_auto)
-plot(residuals_thai)
->>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
-
-acf(residuals_thai)
-
-<<<<<<< HEAD
-portmanteau_thailand = Box.test(residuals_thailand, lag = 12, type = "Ljung-Box")
-portmanteau_thailand 
-=======
-portmanteau_thai <- Box.test(residuals_thai, lag = 12, type = "Ljung-Box")
-portmanteau_thai 
->>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
-=======
 residuals_thai <- residuals(Ts_thai_auto)
 plot(residuals_thai)
 
@@ -306,28 +242,12 @@ acf(residuals_thai)
 
 portmanteau_thai <- Box.test(residuals_thai, lag = 12, type = "Ljung-Box")
 portmanteau_thai 
->>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
 # --> p value (0.52) > 0.05 --> no evidence for autocorrelation --> ARIMA model works well
 ```
 
 ```{r}
 library(forecast)
-<<<<<<< HEAD
-<<<<<<< HEAD
-horizon_thailand = 12 
-forecasted_thailand = forecast(auto_thailand, h = horizon_thailand)
-
-forecastedTs_thailand = forecasted_thailand$mean
-forecastedTs_thailand  = ts(forecastedTs_thailand, frequency = 12, start = c(2021, 1) )
-plot(forecastedTs_thailand)
-```
-
-```{r}
-forecastDf_thailand = as.data.frame(forecasted_thailand)
-forecastDf_thailand$time = time(forecastedTs_thailand)
-names(forecastDf_thailand) = c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
-=======
-horizon_thai <- 12 
+horizon_thai <- 48 
 forecasted_thai_auto <- forecast(Ts_thai_auto, h = horizon_thai)
 
 forecasted_thai_Ts <- forecasted_thai_auto$mean
@@ -339,21 +259,6 @@ plot(forecasted_thai_Ts)
 forecast_thai_Df <- as.data.frame(forecasted_thai_auto)
 forecast_thai_Df$time <- time(forecasted_thai_Ts)
 names(forecast_thai_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
->>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
-=======
-horizon_thai <- 12 
-forecasted_thai_auto <- forecast(Ts_thai_auto, h = horizon_thai)
-
-forecasted_thai_Ts <- forecasted_thai_auto$mean
-forecasted_thai_Ts  <- ts(forecasted_thai_Ts, frequency = 12, start = c(2021, 1) )
-plot(forecasted_thai_Ts)
-```
-
-```{r}
-forecast_thai_Df <- as.data.frame(forecasted_thai_auto)
-forecast_thai_Df$time <- time(forecasted_thai_Ts)
-names(forecast_thai_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
->>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
 ```
 
 ```{r}
@@ -372,44 +277,6 @@ ggplot() +
 
 ```{r}
 library(forecast)
-<<<<<<< HEAD
-<<<<<<< HEAD
-#exclude_end = 3
-Ts_thailand_2018 = window(Ts_thailand, end = c(2018, 12))
-
-auto_thailand_2018  = auto.arima(Ts_thailand_2018)
-auto_thailand_2018
-=======
-forecasted_thai_best <- forecast(best_model, h = horizon_thai)
-
-forecasted_Ts_thai_best <- forecasted_thai_best$mean
-forecasted_Ts_thai_best  <- ts(forecasted_Ts_thai_best, frequency = 12, start = c(2021, 1) )
-plot(forecasted_Ts_thai_best)
-```
->>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
-
-```{r}
-forecast_thai_best_Df <- as.data.frame(forecasted_thai_best)
-forecast_thai_best_Df$time <- time(forecasted_Ts_thai_best)
-names(forecast_thai_best_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
-```
-
-<<<<<<< HEAD
-horizon_thailand = 12 
-forecasted_thailand_2018 = forecast(auto_thailand_2018, h = horizon_thailand)
-
-forecastedTs_thailand_2018 = forecasted_thailand_2018$mean
-forecastedTs_thailand_2018  = ts(forecastedTs_thailand_2018, frequency = 12, start = c(2018, 1) )
-plot(forecastedTs_thailand_2018)
-
-forecastDf_thailand_2018 = as.data.frame(forecasted_thailand_2018)
-forecastDf_thailand_2018$time = time(forecastedTs_thailand_2018)
-names(forecastDf_thailand_2018) = c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
-
-=======
-```{r}
->>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
-=======
 forecasted_thai_best <- forecast(best_model, h = horizon_thai)
 
 forecasted_Ts_thai_best <- forecasted_thai_best$mean
@@ -424,7 +291,6 @@ names(forecast_thai_best_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", 
 ```
 
 ```{r}
->>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
 library(ggplot2)
 ggplot() +
   geom_line(data = Ts_thai, aes(x = time(Ts_thai), y = Ts_thai), color = "black") +
@@ -439,7 +305,6 @@ ggplot() +
 #ARIMA forecast 2018
 ```{r}
 library(forecast)
-#exclude_end <- 3
 Ts_thai_2018 = window(Ts_thai, end = c(2018, 12))
 
 Ts_thai_auto_2018  <- auto.arima(Ts_thai_2018)
@@ -478,27 +343,6 @@ library(gridExtra)
 total_thailand_temp = cbind(total_thailand, mean_tempvec)
 colnames(total_thailand_temp)[4] = "temperature"
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-Ts_thailand_temp = ts(total_thailand_temp$temperature, frequency = 12, start = c(2006, 1))
-TSstudio::ts_plot(Ts_thailand_temp)
-
-#additive decomposing of the temperature
-decomposed_thailand_add_temp = decompose(Ts_thailand_temp, type="additive") 
-plot(decomposed_thailand_add_temp)
-grid(lty = 2, col = "gray")
-
-#additive decomposing of the dengue cases
-decomposed_thailand_add = decompose(Ts_thailand, type="additive")
-plot(decomposed_thailand_add)
-grid(lty = 2, col = "gray")
-
-case_trend = decomposed_thailand_add$trend
-temp_trend = decomposed_thailand_add_temp$trend
-=======
-Ts_thai_temp <- ts(total_thailand_temp$temperature, frequency = 12, start = c(2006, 1))
-TSstudio::ts_plot(Ts_thai_temp)
-=======
 Ts_thai_temp <- ts(total_thailand_temp$temperature, frequency = 12, start = c(2006, 1))
 TSstudio::ts_plot(Ts_thai_temp)
 
@@ -514,26 +358,11 @@ grid(lty = 2, col = "gray")
 
 case_trend <- decomposed_thai_add$trend
 temp_trend <- decomposed_thai_temp_add$trend
->>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
 
-#additive decomposing of the temperature
-decomposed_thai_temp_add <- decompose(Ts_thai_temp, type="additive") 
-plot(decomposed_thai_temp_add)
-grid(lty = 2, col = "gray")
+plot_case_trend <- ggplot(case_trend, aes(x, y)) + geom_line() + labs(title = "Cases_trend")
+plot_temp_trend <- ggplot(temp_trend, aes(x, y)) + geom_line() + labs(title = "Temperature_trend")
 
-#additive decomposing of the dengue cases
-decomposed_thai_add <- decompose(Ts_thai, type="additive")
-plot(decomposed_thai_add)
-grid(lty = 2, col = "gray")
-
-case_trend <- decomposed_thai_add$trend
-temp_trend <- decomposed_thai_temp_add$trend
->>>>>>> 9248f342c879558170cb5302294d1bf2241ad65c
-
-plot_case_trend = ggplot(case_trend, aes(x, y)) + geom_line() + labs(title = "Cases_trend")
-plot_temp_trend = ggplot(temp_trend, aes(x, y)) + geom_line() + labs(title = "Temperature_trend")
-
-plot_case_temp_trend = grid.arrange(plot_case_trend, plot_temp_trend, ncol = 1)
+plot_case_temp_trend <- grid.arrange(plot_case_trend, plot_temp_trend, ncol = 1)
 print(plot_case_temp_trend)
 
 
@@ -541,13 +370,13 @@ print(plot_case_temp_trend)
 
 
 ```{r}
-case_seasonal = decomposed_thailand_add$seasonal
-temp_seasonal = decomposed_thailand_add_temp$seasonal
+case_seasonal <- decomposed_thailand_add$seasonal
+temp_seasonal <- decomposed_thailand_add_temp$seasonal
 
-plot_case_seasonal = ggplot(case_seasonal, aes(x, y)) + geom_line() + labs(title = "Cases_seasonal")
-plot_temp_seasonal = ggplot(temp_seasonal, aes(x, y)) + geom_line() + labs(title = "Temperature_seasonal")
+plot_case_seasonal <- ggplot(case_seasonal, aes(x, y)) + geom_line() + labs(title = "Cases_seasonal")
+plot_temp_seasonal <- ggplot(temp_seasonal, aes(x, y)) + geom_line() + labs(title = "Temperature_seasonal")
 
-plot_case_temp_seasonal = grid.arrange(plot_case_seasonal, plot_temp_seasonal, ncol = 1)
+plot_case_temp_seasonal <- grid.arrange(plot_case_seasonal, plot_temp_seasonal, ncol = 1)
 print(plot_case_temp_trend)
 
 ```
