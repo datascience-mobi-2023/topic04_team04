@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.6.13)  11 JUL 2023 16:54
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.6.13)  12 JUL 2023 19:24
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1253,36 +1253,36 @@ File: t1lmss.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 
 {/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 (./Final_Report_Bioinfo_group4.toc
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 6
-.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 1
+0.
 
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 6
-.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
+0.
 
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-6.
+10.
 
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-6.
+10.
 
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10.95> on input line 6.
+(Font)              <10.95> on input line 10.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 6.
+(Font)              <8> on input line 10.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 6.
+(Font)              <6> on input line 10.
 )
 \tf@toc=\write4
 \openout4 = `Final_Report_Bioinfo_group4.toc'.
@@ -1296,6 +1296,22 @@ LaTeX Warning: Hyper reference `acro:DHF' on page 2 undefined on input line 58.
 LaTeX Warning: Hyper reference `acro:DHF' on page 2 undefined on input line 58.
 
 
+
+LaTeX Warning: Hyper reference `acro:ARIMA' on page 2 undefined on input line 5
+9.
+
+
+LaTeX Warning: Hyper reference `acro:ARIMA' on page 2 undefined on input line 5
+9.
+
+
+LaTeX Warning: Hyper reference `acro:GAM' on page 2 undefined on input line 60.
+
+
+
+LaTeX Warning: Hyper reference `acro:GAM' on page 2 undefined on input line 60.
+
+
 (./chapter/introduction.tex
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 8
 .
@@ -1303,8 +1319,8 @@ LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 8
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) [2])
-(./chapter/mandm.tex) (./chapter/results.tex) (./chapter/discussion.tex)
-(./Final_Report_Bioinfo_group4.bbl [3]) [4] (./Final_Report_Bioinfo_group4.aux)
+(./chapter/mandm.tex [3]) (./chapter/results.tex) (./chapter/discussion.tex)
+(./Final_Report_Bioinfo_group4.bbl [4]) [5] (./Final_Report_Bioinfo_group4.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -1313,13 +1329,13 @@ nged.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 23344 strings out of 478268
- 468421 string characters out of 5846347
- 949298 words of memory out of 5000000
- 41162 multiletter control sequences out of 15000+600000
+ 23361 strings out of 478268
+ 468664 string characters out of 5846347
+ 950781 words of memory out of 5000000
+ 41174 multiletter control sequences out of 15000+600000
  506088 words of font info for 49 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 108i,7n,106p,10643b,844s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 108i,7n,106p,10643b,949s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{/usr/local
 /texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}</usr/local/texlive/2022/
 texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2022/texmf-dist
@@ -1328,10 +1344,10 @@ texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2022/texmf-dist
 /lmri10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmss10.pf
 b></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmss12.pfb></usr/lo
 cal/texlive/2022/texmf-dist/fonts/type1/public/lm/lmss17.pfb>
-Output written on Final_Report_Bioinfo_group4.pdf (4 pages, 165804 bytes).
+Output written on Final_Report_Bioinfo_group4.pdf (5 pages, 170727 bytes).
 PDF statistics:
- 142 PDF objects out of 1000 (max. 8388607)
- 119 compressed objects within 2 object streams
- 30 named destinations out of 1000 (max. 500000)
+ 156 PDF objects out of 1000 (max. 8388607)
+ 132 compressed objects within 2 object streams
+ 35 named destinations out of 1000 (max. 500000)
  41 words of extra memory for PDF output out of 10000 (max. 10000000)
 

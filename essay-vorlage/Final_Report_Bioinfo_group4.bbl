@@ -1,4 +1,4 @@
-\begin{thebibliography}{6}
+\begin{thebibliography}{8}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 \expandafter\ifx\csname url\endcsname\relax
   \def\url#1{{\tt #1}}\fi
@@ -35,6 +35,24 @@ Gubler, D.~J. (1998). Dengue and dengue hemorrhagic fever. Clinical
   Microbiology Reviews  {\textit{11\/}}, 480--496.
 
 
+\bibitem[{Hersbach {\textit{et~al.\/}}(2020)Hersbach, Bell, Berrisford,
+  Hirahara, Horányi, Muñoz-Sabater, Nicolas, Peubey, Radu, Schepers, Simmons,
+  Soci, Abdalla, Abellan, Balsamo, Bechtold, Biavati, Bidlot, Bonavita, Chiara,
+  Dahlgren, Dee, Diamantakis, Dragani, Flemming, Forbes, Fuentes, Geer,
+  Haimberger, Healy, Hogan, Hólm, Janisková, Keeley, Laloyaux, Lopez, Lupu,
+  Radnoti, de~Rosnay, Rozum, Vamborg, Villaume, and Thépaut}]{Hersbach2020}
+Hersbach, H., Bell, B., Berrisford, P., Hirahara, S., Horányi, A.,
+  Muñoz-Sabater, J., Nicolas, J., Peubey, C., Radu, R., Schepers, D., Simmons,
+  A., Soci, C., Abdalla, S., Abellan, X., Balsamo, G., Bechtold, P., Biavati,
+  G., Bidlot, J., Bonavita, M., Chiara, G.~D., Dahlgren, P., Dee, D.,
+  Diamantakis, M., Dragani, R., Flemming, J., Forbes, R., Fuentes, M., Geer,
+  A., Haimberger, L., Healy, S., Hogan, R.~J., Hólm, E., Janisková, M.,
+  Keeley, S., Laloyaux, P., Lopez, P., Lupu, C., Radnoti, G., de~Rosnay, P.,
+  Rozum, I., Vamborg, F., Villaume, S., and Thépaut, J.~N. (2020). The ERA5
+  global reanalysis. Quarterly Journal of the Royal Meteorological Society
+  {\textit{146\/}}, 1999--2049,  \doi{10.1002/QJ.3803}.
+
+
 \bibitem[{Masud {\textit{et~al.\/}}(2016)Masud, Soni, Shrestha, and
   Tripathi}]{Masud2016}
 Masud, M.~B., Soni, P., Shrestha, S., and Tripathi, N.~K. (2016). Changes in
@@ -50,6 +68,14 @@ Phanitchat, T., Zhao, B., Haque, U., Pientong, C., Ekalaksananan, T.,
   Overgaard, H.~J. (2019). Spatial and temporal patterns of dengue incidence in
   northeastern Thailand 2006–2016. BMC Infectious Diseases  {\textit{19\/}},
   743.
+
+
+\bibitem[{Schneider {\textit{et~al.\/}}(2010)Schneider, Hommel, and
+  Blettner}]{Schneider2010}
+Schneider, A., Hommel, G., and Blettner, M. (2010). Linear Regression Analysis:
+  Part 14 of a Series on Evaluation of Scientific Publications. Deutsches
+  Ärzteblatt International {\textit{107\/}}, 776,
+  \doi{10.3238/ARZTEBL.2010.0776}.
 
 
 \bibitem[{WHO(2023)}]{WHO.2023}
