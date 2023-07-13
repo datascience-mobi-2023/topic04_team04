@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.6.13)  12 JUL 2023 19:24
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.6.13)  13 JUL 2023 10:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1331,7 +1331,7 @@ nged.
 Here is how much of TeX's memory you used:
  23361 strings out of 478268
  468664 string characters out of 5846347
- 950781 words of memory out of 5000000
+ 951785 words of memory out of 5000000
  41174 multiletter control sequences out of 15000+600000
  506088 words of font info for 49 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -1344,7 +1344,7 @@ texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2022/texmf-dist
 /lmri10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmss10.pf
 b></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmss12.pfb></usr/lo
 cal/texlive/2022/texmf-dist/fonts/type1/public/lm/lmss17.pfb>
-Output written on Final_Report_Bioinfo_group4.pdf (5 pages, 170727 bytes).
+Output written on Final_Report_Bioinfo_group4.pdf (5 pages, 170938 bytes).
 PDF statistics:
  156 PDF objects out of 1000 (max. 8388607)
  132 compressed objects within 2 object streams
