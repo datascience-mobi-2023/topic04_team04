@@ -568,16 +568,21 @@ AIC(linear_model, smooth_model)
 # GAM forcast
 ```{r}
 library(raster)
+library(gam)
 library(sdm)
 library(readxl)
 library(mgcv)
 library(ncdf4)
 
+lower_limit = quantile(data_monsoon$temperature, probs = 0.05, na.rm = T)
+upper_limit = quantile(data_monsoon$temperature, probs = 0.95, na.rm = T)
 
-attach(data_monsoon)
+data_monsoon_5.95 = subset(data_monsoon, temperature >= lower_limit & temperature <= upper_limit)
 
-model1 <- gam(incidence~s(temperature, k=6), family = "quasipoisson")
-tas <- stack("tas_SEA22_MPI_rcp85_2021-2040_grid_subc_daymean_monmean_swm_timmean_thai.nc")
+attach(data_monsoon_5.95)
+
+model1 <- gam(incidence~s(temperature, k = 6), family = "quasipoisson")
+tas <- stack("tas_SEA22_MPI_rcp85_2021-2040_grid_subc_daymean_monmean_swm_timmean_thai_new.nc")
 names(tas) <- "temperature"
 p1 <- raster::predict(tas, model1, type = "response")
 
@@ -586,7 +591,7 @@ my.area <- extent(thailand)
 my.p1 <- crop(p1, my.area)
 my.p1.mask <- mask(my.p1, thailand)
 plot(my.p1.mask, legend.width=1, legend.shrink=0.75, axes= FALSE, box=FALSE) + title("Predicted values: Influence of Temp on dengue cases", line = +1) + plot(thailand, add=TRUE)
-detach(data_monsoon)
+detach(data_monsoon_5.95)
 ```
 
 
