@@ -178,7 +178,7 @@ for(Zeile in 1:R){
 }
 ```
 
-#creat clean data frame
+#create clean data frame
 ```{r}
 clean_data_total = as.data.frame(data_total[-i.missing,])
 num_col = c("temperature", "Longitude", "Latitude", "incidence")
@@ -188,6 +188,17 @@ clean_data_total[int_col] = lapply(clean_data_total[int_col], as.integer)
 clean_data_total[num_col] = lapply(clean_data_total[num_col], as.numeric)
 clean_data_total[date_col] = lapply(clean_data_total[date_col], as.Date)
 summary(clean_data_total)
+```
+
+#create data frame for monsoon season 
+
+```{r}
+vec_month_monsoon = c("Jun", "Jul", "Aug", "Sep")
+data_monsoon = data_total[data_total$month %in% vec_month_monsoon,]
+
+rmv.rows.m = apply(data_monsoon,1,function(x){sum(is.na(x))})
+i.missing.m = which(rmv.rows.m >0)
+clean_data_monsoon = as.data.frame(data_monsoon[-i.missing.m,])
 ```
 
 #struture data frame and convert into right datatypes
@@ -394,13 +405,19 @@ hist(data_total$incidence,  breaks = 200, main = "Distribution of incidence", xl
 
 #correlation between temperature and incidence
 ```{r}
-d1 = rnorm(n = 13860, mean = 11.4, sd = 1.606010)
+library(npreg)
+library(ggplot2)
 
-plot(data_total$temperature, data_total$incidence, pch = 20,
+smoothed_curve <- ss(clean_data_total$temperature, clean_data_total$incidence, nknots = 10)
+str(smoothed_curve)
+a = max(smoothed_curve$x)
+a
+plot(clean_data_total$temperature, clean_data_total$incidence, pch = 20,
      ylab = "incidence",
      xlab = "temperature",
-  abline(v = mean(data_total$temperature), col = "red")
-  )
+  abline(v = mean(clean_data_total$temperature), col = "red"))
+plot(smoothed_curve, col = "blue")
+
 
 
 plot(rank(data_total$temperature), rank(data_total$incidence), pch = 20,
@@ -415,15 +432,28 @@ cor(mean_dengue.y.t$dengue_cases, mean_temp.y.t$temperature)
 #spearman correlation y.t.
 cor(mean_dengue.y.t$dengue_cases, mean_temp.y.t$temperature, method = "spearman")
 
-#pearson correlation m.r.
+#pearson correlation m.p.
 cor(clean_data_total$dengue_cases, clean_data_total$temperature)
-#spearman correlation m.r.
+#spearman correlation m.p.
 cor(clean_data_total$dengue_cases, clean_data_total$temperature, method = "spearman")
 
 
 pheatmap::pheatmap(cor(clean_data_total[c("dengue_cases", "population_count", "temperature", "incidence")]))
 
 ```
+#monsoon season smoothed curve incidence temperature
+```{r}
+library(npreg)
+library(ggplot2)
+
+smoothed_curve <- ss(clean_data_monsoon$temperature, clean_data_monsoon$incidence, nknots = 10)
+plot(clean_data_monsoon$temperature, clean_data_monsoon$incidence, pch = 20,
+     ylab = "incidence",
+     xlab = "temperature",
+  abline(v = mean(clean_data_monsoon$temperature), col = "red"))
+plot(smoothed_curve, col = "blue")
+```
+
 
 
 #correlation between different areas
@@ -514,7 +544,6 @@ TSstudio::ts_plot(my_ts)
 
 #GAM
 ```{r}
-load(data_total)
 library(readxl)
 library(nlme)
 library(gam)
@@ -523,39 +552,46 @@ library(raster)
 library(ncdf4)
 library(mgcv)
 
-attach(data_total)
-model1 <- gam(incidence~s(temperature, k=5), family = "quasipoisson",  na.rm = T)
+attach(data_monsoon)
+model1 <- gam(incidence~s(temperature, k = 6), family = "quasipoisson")
 plot.gam(model1)
 summary(model1) #edf: → a value close to 1 tends to be close to a linear term → a higher value means that the spline is more wiggly (non-linear). 
 #F-Wert und der p-Wert geben die statistische Signifikanz der glatten Funktion an. In diesem Fall ist die glatte Funktion von "temperature" hoch signifikant (p-Wert < 2e-16), was darauf hindeutet, dass sie einen signifikanten Einfluss auf die Vorhersage der "incidence" hat.Der angegebene R-squared-Wert (R-sq.(adj)) von 0.0407 gibt an, wie gut das Modell die Varianz der abhängigen Variable erklärt. In diesem Fall erklärt das Modell etwa 4,07% der Varianz in den Daten. Ein niedriger GCV-Wert deutet auf eine gute Anpassung des Modells hin.
 k.check(model1)
 gam.check(model1)
 
-linear_model <- gam(dengue_cases~temperature)
-smooth_model <- gam(dengue_cases~s(temperature))
+linear_model <- gam(incidence~temperature)
+smooth_model <- gam(incidence~s(temperature))
 
 AIC(linear_model, smooth_model)
 ```
-
+# GAM forcast
 ```{r}
 library(raster)
+library(gam)
 library(sdm)
 library(readxl)
 library(mgcv)
 library(ncdf4)
 
-attach(data_total)
+lower_limit = quantile(data_monsoon$temperature, probs = 0.05, na.rm = T)
+upper_limit = quantile(data_monsoon$temperature, probs = 0.95, na.rm = T)
 
-t2m <- stack ("tas_SEA22_MPI_rcp85_2021-2040_grid_subc_daymean_monmean_swm_timmean_thai.nc")
-names(t2m) <- "temperature"
-p1 <- raster::predict(t2m, model1, type = "response")
+data_monsoon_5.95 = subset(data_monsoon, temperature >= lower_limit & temperature <= upper_limit)
+
+attach(data_monsoon_5.95)
+
+model1 <- gam(incidence~s(temperature, k = 6), family = "quasipoisson")
+tas <- stack("tas_SEA22_MPI_rcp85_2021-2040_grid_subc_daymean_monmean_swm_timmean_thai_new.nc")
+names(tas) <- "temperature"
+p1 <- raster::predict(tas, model1, type = "response")
 
 thailand <- raster::getData('GADM', country='THA', level=1)
 my.area <- extent(thailand)
 my.p1 <- crop(p1, my.area)
 my.p1.mask <- mask(my.p1, thailand)
-pdf(file="C:/Users/thadl/OneDrive/Dokumente/Bioinfo/Klimaprojekt/maxtemp_Abun2.pdf")
 plot(my.p1.mask, legend.width=1, legend.shrink=0.75, axes= FALSE, box=FALSE) + title("Predicted values: Influence of Temp on dengue cases", line = +1) + plot(thailand, add=TRUE)
+detach(data_monsoon_5.95)
 ```
 
 
@@ -599,7 +635,7 @@ max_incidence_area = incidence_month$Reporting_areas[max_incidence]
 
 ggplot() +
   geom_sf(data = district_sf, aes(fill = incidence_month$incidence)) +
-  scale_fill_gradient(low = "yellow", high = "red") +
+  scale_fill_gradient(low = "white", high = "green") +
   labs(fill = paste("Highest incidence =", max_incidence, "in", max_incidence_area))
   
   
@@ -615,13 +651,13 @@ max_temp_area = temp_month$Reporting_areas[max_temp]
 
 ggplot() +
   geom_sf(data = district_sf, aes(fill = temp_month$temperature)) +
-  scale_fill_gradient(low = "yellow", high = "red") +
+  scale_fill_gradient(low = "white", high = "green") +
   labs(fill = paste("Highest temperature =", max_temp, "in", max_temp_area))
   
   
 }
 map_temp_monthly(rows_2006)
 
-gridExtra::grid.arrange(map_temp_monthly(f_mean_temp.y.p(period = c(2006), areas = r_areas)),map_incidence_monthly(f_mean_inc.y.p(period = c(2006), areas = r_areas)))
+gridExtra::grid.arrange(map_temp_monthly(f_mean_temp.y.p(period = c(2020), areas = r_areas)),map_incidence_monthly(f_mean_inc.y.p(period = c(2020), areas = r_areas)))
 
 ```
