@@ -1,4 +1,4 @@
-\begin{thebibliography}{8}
+\begin{thebibliography}{13}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 \expandafter\ifx\csname url\endcsname\relax
   \def\url#1{{\tt #1}}\fi
@@ -17,7 +17,12 @@ Anyamba, A., Chretien, J.-P., Britch, S.~C., Soebiyanto, R.~P., Small, J.~L.,
   Jepsen, R., Forshey, B.~M., Sanchez, J.~L., Smith, R.~D., Harris, R., Tucker,
   C.~J., Karesh, W.~B., and Linthicum, K.~J. (2019). Global Disease Outbreaks
   Associated with the 2015–2016 El Niño Event. Scientific Reports
-  {\textit{9\/}}, 1930,  \doi{10.1038/s41598-018-38034-z}.
+  {\textit{9\/}}, 1930.
+
+
+\bibitem[{{Copernicus Climate Change Service}(2019)}]{Copernicus2019}
+{Copernicus Climate Change Service} (2019).  CORDEX regional climate model data
+  on single levels.
 
 
 \bibitem[{Descloux {\textit{et~al.\/}}(2012)Descloux, Mangeas, Menkes,
@@ -53,11 +58,28 @@ Hersbach, H., Bell, B., Berrisford, P., Hirahara, S., Horányi, A.,
   {\textit{146\/}}, 1999--2049,  \doi{10.1002/QJ.3803}.
 
 
+\bibitem[{Kripalani {\textit{et~al.\/}}(1995)Kripalani, Singh, Panchawagh, and
+  Brikshavana}]{Kripalani1995}
+Kripalani, R.~H., Singh, S.~V., Panchawagh, N., and Brikshavana, M. (1995).
+  Variability of the summer monsoon rainfall over Thailand—comparison with
+  features over India. International Journal of Climatology  {\textit{15\/}},
+  657--672.
+
+
 \bibitem[{Masud {\textit{et~al.\/}}(2016)Masud, Soni, Shrestha, and
   Tripathi}]{Masud2016}
 Masud, M.~B., Soni, P., Shrestha, S., and Tripathi, N.~K. (2016). Changes in
   climate extremes over North Thailand, 1960–2099. downloads.hindawi.com ,
-  1960--2099 \doi{10.1155/2016/4289454}.
+  1960--2099.
+
+
+\bibitem[{Pebesma and Bivand(2023)}]{sds}
+Pebesma, E., and Bivand, R. (2023). {Spatial Data Science: With Applications in
+  R}  (Chapman and Hall/CRC).
+
+
+\bibitem[{Peri(2021)}]{Peri2021}
+Peri, S.~P. (2021). GAMs and Smoothing Splines. Towards AI .
 
 
 \bibitem[{Phanitchat {\textit{et~al.\/}}(2019)Phanitchat, Zhao, Haque,
@@ -74,12 +96,16 @@ Phanitchat, T., Zhao, B., Haque, U., Pientong, C., Ekalaksananan, T.,
   Blettner}]{Schneider2010}
 Schneider, A., Hommel, G., and Blettner, M. (2010). Linear Regression Analysis:
   Part 14 of a Series on Evaluation of Scientific Publications. Deutsches
-  Ärzteblatt International {\textit{107\/}}, 776,
-  \doi{10.3238/ARZTEBL.2010.0776}.
+  Ärzteblatt International  {\textit{107\/}}, 776.
 
 
 \bibitem[{WHO(2023)}]{WHO.2023}
-WHO, W. H.~O. (2023).  Dengue and severe dengue.
+WHO, W. H.~O. (2023).  Dengue and severe dengue,
+  https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue.
+
+
+\bibitem[{Wood(2006)}]{Wood2006}
+Wood, S. (2006). Generalized Additive Models: An Introduction With R,  vol.~66.
 
 
 \end{thebibliography}

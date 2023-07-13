@@ -1,15 +1,37 @@
 \section{Material and Methods}
 
+\subsection{Material}
+
 	\paragraph{ERA5 data (climate)}
 	The ERA5 database is a global climate database by the European Centre for Medium-Range Weather Forecasts (ECMWF), covering the earth in a 31 km horizontal grid up to 80 km in the atmosphere in the time period from 1950 to present. It was generated from measurements of various climate variables combined with a reanalysis of existing data and past reanalysis data to accurately model and complete the dataset in the given resolution \citep{Hersbach2020}. For this project, monthly temperature data 2m above ground for every province in Thailand in the timeframe of 2006 - 2020 was extracted.
 	\paragraph{Dengue data}
-	The Dengue case numbers were retrieved from annual infectious disease reports published by the Thailand ministry of health. Monthly case numbers of DHF for every province in the timeframe of 2006 - 2020 were used in this project. 
+	The Dengue case numbers are retrieved from annual infectious disease reports published by the Thailand ministry of health. Monthly case numbers of DHF for every province in the timeframe of 2006 - 2020 are used in this project. 
 	
-	Both datasets were used with a resolution at province level. As of 2011, Thailand has a total of 77 provinces, but had 76 provinces before 2011, as Bueng Kan was split from Nong Khai in 2011. For better compatibility of the data before and after 2011, the two new provinces were merged into a province equivalent to Nong Khai before 2011. 
+	The datasets are used with a resolution at province level. As of 2011, Thailand has a total of 77 provinces, but had 76 provinces before 2011, as Bueng Kan was split from Nong Khai in 2011. For better compatibility of the data before and after 2011, the two new provinces are merged into a province equivalent to Nong Khai before 2011. 
+	
+	\paragraph{Climate forecast}
+	For GAM modeling, temperature  data from the CORDEX climate model is used. It includes the temperature 2m above ground for June to August (south west monsoon) of the years 2021 -2040 at a 22 km grid \citep{Copernicus2019}. 
+	\paragraph{Population data}
+	We used ... population data of every Thailand province from 2006 - 2020 (Quelle?).
+	
+	\paragraph{Spatial data}
+	To associate our data with the different provinces and visualize it, we use spatial data of Thailand’s provinces. The two main data types in spatial data are vector-data and raster-data. Vector-data consists of a list of points with their exact location, which can then form lines or polygons. Raster-data assigns a value to every square of a raster. In this case, maps consisting of polygons for each province are used \citep{sds}. With the sf package, objects associating our data for each province with its coordinates and polygons are created, describing its shape. The function geom\_sf of ggplot2 are used for mapping. 
+	
+	\subsection{Methods}
 	
 	\paragraph{Descriptive analysis}
 	Linear regression is a method to describe a linear relationship between variables, using the minimum sum of squares between regression line and data points to identify possible trends \citep{Schneider2010}. 
 
+
 	\paragraph{ARIMA}
 	\paragraph{GAM}
+	GAM provides insight into the shape and direction of the relationship between temperature and dengue cases. Additionally, it was used to forecast the future dengue case development based on the temperature development prediction. 
+	A GAM is a flexible extension of Generalized Linear Models (GLMs) that allows for the modelling of non-linear relationships between the response variable and predictor variables. A linear model can be described as follows:
+	$y=\beta _0+\beta _1 x_1+\beta _2 x_2 +…+\beta _p x_p+\epsilon$
+	GAMs are now a nonparametric form of regression where the linear predictors $(\beta_i x_i)$ of the regression are replaced by smooth functions of the explanatory variables, $f(x_i)$. The model can be defined as:
+	$y_i=f(x_i )+\in_i$
+	where $y_i$ is the response variable, $x_i$ is the predictor variable, and f is the smooth function \citep{Wood2006}.
+	It is called an additive model, because all the $f(x_i)$ functions and therefore their predictor variables contribute individually to the response variable and are added up. The advantage is that the different smooth functions can capture complex relationships by flexibly fitting curves to the data.
+	There are two different ways to interpolate the functions of the predictor values. Finding a polynomial with a specific degree that passes through all the data points is a polynomial interpolation approach. Because high-degree polynomials may result into wide oscillation or overfitting, piece-wise interpolation is sometimes more accurate. Here, the data is divided into smaller intervals, each one is described by an individual function. Defining the number of knots determines into how many segments the model is divided. All polynomials together are called splines with a degree of k. They connect the knots one by one. The spline can be differentiated k-1 times. A smaller number of knots makes the response smoother, while a higher k value results in a curve that closely follows the individual data points. Choosing from various types of splines, in the GAM smoothing splines were used, which try to fit the data closely as well as maintaining smoothness \citep{Peri2021}.
+	The obtained model includes the relationship between incidence of dengue cases and temperature. Such GAMs can be used to forecast the development of the response variable (incidence of dengue fever) based on the predictor variables (temperature). The predicted values can than be plotted on a map of Thailand. The prediction is based on the average temperature for the months June to August for the south west monsoon over the time period of 2021 until 2040 in Thailand.
 	
