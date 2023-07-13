@@ -644,12 +644,31 @@ plot(data_total$temperature, data_total$incidence, pch = 20,
 
 ```
 
+
+```{r}
+library(ggplot2)
+library(ggseas)
+
+
+plot1 = ggseasonplot(Ts_thai, polar=TRUE) +
+  ggtitle("dengue cases")
+
+plot2 = ggseasonplot(Ts_thai_temp, polar=TRUE) +
+  ggtitle("temperature")
+
+gridExtra::grid.arrange(plot1, plot2, nrow =1)
+```
+
 #probieren mit time series Objekten
 
 ```{r}
 my_ts <- ts(data_total$dengue_cases, start = c(data_total$time_column[1]), frequency = 12)
 head(my_ts)
 TSstudio::ts_plot(my_ts)
+```
+
+```{r}
+
 ```
 
 #GAM
@@ -708,6 +727,10 @@ my.p1.mask = mask(my.p1, thailand)
 plot(my.p1.mask, legend.width=1, legend.shrink=0.75, axes= FALSE, box=FALSE) + title("Predicted values: Influence of Temp on dengue cases", line = +1) + plot(thailand, add=TRUE)
 
 detach(data_monsoon)
+```
+
+```{r}
+
 ```
 
 ```{r}
