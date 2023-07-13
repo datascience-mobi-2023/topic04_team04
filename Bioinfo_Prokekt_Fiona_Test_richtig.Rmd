@@ -664,8 +664,8 @@ library(raster)
 library(ncdf4)
 library(mgcv)
 
-attach(data_total)
-model1 <- gam(dengue_cases~s(temperature, k=6), family="quasipoisson")
+attach(data_monsoon)
+model1 <- gam(incidence~s(temperature, k = 9), family="quasipoisson")
 plot.gam(model1)
 summary(model1)
 k.check(model1)
@@ -676,8 +676,39 @@ smooth_model <- gam(dengue_cases~s(temperature))
 
 AIC(linear_model, smooth_model)
 
+detach(data_monsoon)
 ```
 
+```{r}
+library(gam)
+library(raster)
+library(sdm)
+library(readxl)
+library(mgcv)
+library(ncdf4)
+
+attach(data_monsoon)
+
+tas = stack ("tas_SEA22_MPI_rcp85_2021-2040_grid_subc_daymean_monmean_swm_timmean_thai.nc") 
+names(tas) = "temperature"
+p1 = raster::predict(tas, model1, type = "response")
+
+
+thailand = raster::getData('GADM', country='THA', level=1)
+my.area = extent(thailand)
+my.p1 = crop(p1, my.area)
+my.p1.mask = mask(my.p1, thailand)
+
+thailand = raster::getData('GADM', country='THA', level=1)
+my.area = extent(thailand)
+my.p1 = crop(p1, my.area)
+my.p1.mask = mask(my.p1, thailand)
+#pdf(file="C:/Users/thadl/OneDrive/Dokumente/Bioinfo/Klimaprojekt/maxtemp_Abun2.pdf")
+
+plot(my.p1.mask, legend.width=1, legend.shrink=0.75, axes= FALSE, box=FALSE) + title("Predicted values: Influence of Temp on dengue cases", line = +1) + plot(thailand, add=TRUE)
+
+detach(data_monsoon)
+```
 
 ```{r}
 library(readxl)
