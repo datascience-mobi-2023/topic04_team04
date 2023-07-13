@@ -218,7 +218,7 @@ data_total = data_total[data_total$Reporting_areas != "Bungkan", ]
 ```
 #create data frame for monsoon season 
 ```{r}
-vec_month_monsoon = c("Jun", "Jul", "Aug")
+vec_month_monsoon = c("Jun", "Jul", "Aug", "Sep")
 data_monsoon = data_total[data_total$month %in% vec_month_monsoon,]
 
 rmv.rows.m = apply(data_monsoon,1,function(x){sum(is.na(x))})
