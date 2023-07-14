@@ -13,18 +13,6 @@ knitr::opts_chunk$set(echo = TRUE)
 summary(data_total)
 ```
 
-```{r}
-dimensions= dim(data_total)
-R= dimensions[1]
-
-for(Zeile in 1:R){
-  Population = data_total$population_count[Zeile]
-  Infection = data_total$dengue_cases[Zeile]
-  Incidence = (Infection/Population)*100000
-  data_total$incidence[Zeile] = Incidence
-}
-```
-
 # Temperature development in Thailand 2006 - 2022
 
 Creating vector of mean temperature in Thailand over the years
