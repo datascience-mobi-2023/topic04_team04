@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.6.13)  13 JUL 2023 19:08
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.6.13)  14 JUL 2023 09:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1319,13 +1319,325 @@ LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 8
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) [2])
-(./chapter/mandm.tex [3]
+(./chapter/mandm.tex [3] [4]
 
-LaTeX Warning: Command \textellipsis invalid in math mode on input line 30.
+! LaTeX Error: Unicode character − (U+2212)
+               not set up for use with LaTeX.
 
-[4]) (./chapter/results.tex) (./chapter/discussion.tex)
-(./Final_Report_Bioinfo_group4.bbl [5] [6]) [7]
-(./Final_Report_Bioinfo_group4.aux)
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.32 	$$yt=c+\phi 1yt−
+                        1+\phi 2yt−2+⋯+\phi pyt−p+\epsilon t
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+! LaTeX Error: Unicode character − (U+2212)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.32 	$$yt=c+\phi 1yt−1+\phi 2yt−
+                                     2+⋯+\phi pyt−p+\epsilon t
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+! LaTeX Error: Unicode character ⋯ (U+22EF)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.32 	$$yt=c+\phi 1yt−1+\phi 2yt−2+⋯
+                                          +\phi pyt−p+\epsilon t
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+! LaTeX Error: Unicode character − (U+2212)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.32 ...+\phi 1yt−1+\phi 2yt−2+⋯+\phi pyt−
+                                                  p+\epsilon t
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+LaTeX Warning: Command \textellipsis invalid in math mode on input line 34.
+
+
+LaTeX Warning: Command \textellipsis invalid in math mode on input line 35.
+
+
+LaTeX Warning: Command \textepsilon invalid in math mode on input line 37.
+
+
+! LaTeX Error: Command \textepsilon unavailable in encoding T1.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.37 	yt=c+ε
+             t+θ1εt−1+θ2εt−2+⋯+θqεt−q
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+LaTeX Warning: Command \texttheta invalid in math mode on input line 37.
+
+
+! LaTeX Error: Command \texttheta unavailable in encoding T1.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.37 	yt=c+εt+θ
+                 1εt−1+θ2εt−2+⋯+θqεt−q
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+LaTeX Warning: Command \textepsilon invalid in math mode on input line 37.
+
+
+! LaTeX Error: Command \textepsilon unavailable in encoding T1.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.37 	yt=c+εt+θ1ε
+                    t−1+θ2εt−2+⋯+θqεt−q
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Unicode character − (U+2212)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.37 	yt=c+εt+θ1εt−
+                        1+θ2εt−2+⋯+θqεt−q
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+LaTeX Warning: Command \texttheta invalid in math mode on input line 37.
+
+
+! LaTeX Error: Command \texttheta unavailable in encoding T1.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.37 	yt=c+εt+θ1εt−1+θ
+                            2εt−2+⋯+θqεt−q
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+LaTeX Warning: Command \textepsilon invalid in math mode on input line 37.
+
+
+! LaTeX Error: Command \textepsilon unavailable in encoding T1.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.37 	yt=c+εt+θ1εt−1+θ2ε
+                               t−2+⋯+θqεt−q
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Unicode character − (U+2212)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.37 	yt=c+εt+θ1εt−1+θ2εt−
+                                   2+⋯+θqεt−q
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+! LaTeX Error: Unicode character ⋯ (U+22EF)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.37 	yt=c+εt+θ1εt−1+θ2εt−2+⋯
+                                        +θqεt−q
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+LaTeX Warning: Command \texttheta invalid in math mode on input line 37.
+
+
+! LaTeX Error: Command \texttheta unavailable in encoding T1.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.37 	yt=c+εt+θ1εt−1+θ2εt−2+⋯+θ
+                                           qεt−q
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+LaTeX Warning: Command \textepsilon invalid in math mode on input line 37.
+
+
+! LaTeX Error: Command \textepsilon unavailable in encoding T1.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.37 	yt=c+εt+θ1εt−1+θ2εt−2+⋯+θqε
+                                              t−q
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+! LaTeX Error: Unicode character − (U+2212)
+               not set up for use with LaTeX.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.37 	yt=c+εt+θ1εt−1+θ2εt−2+⋯+θqεt−
+                                                  q
+You may provide a definition with
+\DeclareUnicodeCharacter 
+
+
+LaTeX Warning: Command \texttheta invalid in math mode on input line 38.
+
+
+! LaTeX Error: Command \texttheta unavailable in encoding T1.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.38 	θ
+        1,…, θq = parameters
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+LaTeX Warning: Command \textellipsis invalid in math mode on input line 38.
+
+
+LaTeX Warning: Command \texttheta invalid in math mode on input line 38.
+
+
+! LaTeX Error: Command \texttheta unavailable in encoding T1.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.38 	θ1,…, θ
+                 q = parameters
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+
+LaTeX Warning: Command \textquoteright invalid in math mode on input line 41.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.48 	
+      
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Display math should end with $$.
+<to be read again> 
+                   \tex_par:D 
+l.48 	
+      
+The `$' that I just saw supposedly matches a previous `$$'.
+So I shall assume that you typed `$$' both times.
+
+
+Overfull \hbox (5464.86536pt too wide) detected at line 48
+\OML/lmm/m/it/10.95 yt \OT1/lmr/m/n/10.95 = \OML/lmm/m/it/10.95 c \OT1/lmr/m/n/
+10.95 + \OML/lmm/m/it/10.95 ^^^\OT1/lmr/m/n/10.95 1\OML/lmm/m/it/10.95 yt\OT1/l
+mr/m/n/10.95 1 + \OML/lmm/m/it/10.95 ^^^\OT1/lmr/m/n/10.95 2\OML/lmm/m/it/10.95
+ yt\OT1/lmr/m/n/10.95 2 + +\OML/lmm/m/it/10.95 ^^^pytp \OT1/lmr/m/n/10.95 + \OM
+L/lmm/m/it/10.95 ^^Ot^^Ot \OT1/lmr/m/n/10.95 = \OML/lmm/m/it/10.95 whitenoise\O
+T1/lmr/m/n/10.95 1\OML/lmm/m/it/10.95 ; :::; ^^^p \OT1/lmr/m/n/10.95 = \OML/lmm
+/m/it/10.95 parametersyt \OMS/lmsy/m/n/10.95 ^^@ \OT1/lmr/m/n/10.95 1\OML/lmm/m
+/it/10.95 ; :::; yt \OMS/lmsy/m/n/10.95 ^^@ \OML/lmm/m/it/10.95 p \OT1/lmr/m/n/
+10.95 = \OML/lmm/m/it/10.95 laggedvaluesForthemovingaveragethecurrentvalueconsi
+stsofthemeanvalueofthetimeseriesandweightedcurrentandpasterrorterms \OT1/lmr/m/
+n/10.95 : \OML/lmm/m/it/10.95 yt \OT1/lmr/m/n/10.95 = \OML/lmm/m/it/10.95 c \OT
+1/lmr/m/n/10.95 + \OML/lmm/m/it/10.95 t \OT1/lmr/m/n/10.95 + 1\OML/lmm/m/it/10.
+95 t\OT1/lmr/m/n/10.95 1 + 2\OML/lmm/m/it/10.95 t\OT1/lmr/m/n/10.95 2 + +\OML/l
+mm/m/it/10.95 qtq\OT1/lmr/m/n/10.95 1\OML/lmm/m/it/10.95 ; :::; q \OT1/lmr/m/n/
+10.95 = \OML/lmm/m/it/10.95 parametersI\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 
+t\OT1/lmr/m/n/10.95 )\OML/lmm/m/it/10.95 isthenumberoftimesdifferencingwasperfo
+rmedtomakethetimeseriesstationary:Tofindthebestvaluesforpandq; theAutocorrelati
+onfunction\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 ACF\OT1/lmr/m/n/10.95 )\OML/l
+mm/m/it/10.95 andpartialAutocorrelationfunction\OT1/lmr/m/n/10.95 (\OML/lmm/m/i
+t/10.95 pACF\OT1/lmr/m/n/10.95 )\OML/lmm/m/it/10.95 canbeevaluated:TheACFplotsh
+owsthecorrelationsofatime \OMS/lmsy/m/n/10.95 ^^@ \OML/lmm/m/it/10.95 serieswit
+hlagsofitself; whilethepACFadditionallyremovestheeffectsoflags:Asecondevaluatio
+ntoolistheauto:arimafunction:ItautomaticallyfitsthebestARIMAmodelbyminimizingth
+eAkaike[]sInformationCriterion\OT1/lmr/m/n/10.95 (\OML/lmm/m/it/10.95 AIC\OT1/l
+mr/m/n/10.95 )\OML/lmm/m/it/10.95 :Theaout:arimafunctioncanalsoconsiderseasonal
+models:Agoodforecastingmethodwillyieldresidualswiththefollowingproperties \OT1/
+lmr/m/n/10.95 : 1\OML/lmm/m/it/10.95 :Theresidualsareuncorrelated:Iftherearecor
+relationsbetweenresiduals; thenthereisinformationleftintheresidualswhichshouldb
+eusedincomputingforecasts:\OT1/lmr/m/n/10.95 2\OML/lmm/m/it/10.95 :Theresiduals
+havezeromean:Iftheresidualshaveameanotherthanzero; thentheforecastsarebiased:\O
+T1/lmr/m/n/10.95 3\OML/lmm/m/it/10.95 :Theresidualshaveconstantvariance:\OT1/lm
+r/m/n/10.95 4\OML/lmm/m/it/10.95 :Theresidualsarenormallydistributed:\OT1/lmr/m
+/n/10.95 5\OML/lmm/m/it/10.95 :
+ []
+
+
+LaTeX Warning: Command \textellipsis invalid in math mode on input line 54.
+
+[5]) (./chapter/results.tex) (./chapter/discussion.tex)
+(./Final_Report_Bioinfo_group4.bbl [6]) [7] (./Final_Report_Bioinfo_group4.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -1334,16 +1646,16 @@ nged.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 23399 strings out of 478268
- 469201 string characters out of 5846347
- 954648 words of memory out of 5000000
- 41197 multiletter control sequences out of 15000+600000
+ 23405 strings out of 478268
+ 469263 string characters out of 5846347
+ 956648 words of memory out of 5000000
+ 41203 multiletter control sequences out of 15000+600000
  506088 words of font info for 49 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 108i,8n,106p,10643b,961s stack positions out of 10000i,1000n,20000p,200000b,200000s
-{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/lo
-cal/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texliv
-e/2022/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2022/texmf-d
+ 108i,8n,106p,10643b,951s stack positions out of 10000i,1000n,20000p,200000b,200000s
+{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/lo
+cal/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/20
+22/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2022/texmf-d
 ist/fonts/enc/dvips/lm/lm-ts1.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc
 /dvips/lm/lm-ec.enc}</usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/l
 mbx10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi10.pfb>
@@ -1354,11 +1666,12 @@ st/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2022/texmf-dist/fonts/typ
 e1/public/lm/lmri10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/
 lm/lmss10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmss12.
 pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmss17.pfb></usr/
-local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy10.pfb>
-Output written on Final_Report_Bioinfo_group4.pdf (7 pages, 214723 bytes).
+local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texl
+ive/2022/texmf-dist/fonts/type1/public/lm/lmsy8.pfb>
+Output written on Final_Report_Bioinfo_group4.pdf (7 pages, 228196 bytes).
 PDF statistics:
- 227 PDF objects out of 1000 (max. 8388607)
- 192 compressed objects within 2 object streams
+ 232 PDF objects out of 1000 (max. 8388607)
+ 195 compressed objects within 2 object streams
  50 named destinations out of 1000 (max. 500000)
  57 words of extra memory for PDF output out of 10000 (max. 10000000)
 
