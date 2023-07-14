@@ -513,11 +513,13 @@ dengue_plot_time = data_total$time_column[data_total$Reporting_areas == "Bangkok
 plot(dengue_plot_time,dengue_plot_cases, type = "o")
 ```
 
-## distribution of incidence
-
+#distribution of incidence
 ```{r}
 q.dengue = quantile(data_total$incidence, probs = c(0.01,0.1,0.25,0.5,0.75,0.9,0.99), na.rm = TRUE)
 hist(data_total$incidence,  breaks = 200, main = "Distribution of incidence", xlab = "incidence", freq = TRUE);abline(v=q.dengue,lty=3,lwd=2,col='red')
+
+q.temp = quantile(data_total$temperature, probs = c(0.01,0.1,0.25,0.5,0.75,0.9,0.99), na.rm = TRUE)
+hist(data_total$temperature,  breaks = 200, main = "Distribution of temperature", xlab = "temperature", freq = TRUE);abline(v=q.temp,lty=3,lwd=2,col='red')
 ```
 
 #correlation between temperature and incidence
