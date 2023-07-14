@@ -527,10 +527,15 @@ library(ggplot2)
 
 smoothed_curve <- ss(clean_data_monsoon_5.95$temperature, clean_data_monsoon_5.95$incidence, nknots = 10)
 
+plot(clean_data_monsoon$temperature, clean_data_monsoon$incidence, pch = 20,
+     ylab = "incidence",
+     xlab = "temperature",
+  abline(v = mean(clean_data_monsoon$temperature), col = "red"))
 plot(clean_data_total$temperature, clean_data_total$incidence, pch = 20,
      ylab = "incidence",
      xlab = "temperature",
   abline(v = mean(clean_data_total$temperature), col = "red"))
+
 plot(smoothed_curve, col = "blue")
 
 
