@@ -196,6 +196,21 @@ data_total = subset(data_total, select = c("data_names", "Reporting_areas", "yea
 save(data_total, file = "data_total.RData")
 summary(data_total)
 ```
+#adding an incidence column to the data frame
+
+```{r}
+dimensions= dim(data_total)
+R= dimensions[1]
+
+for(Zeile in 1:R){
+  Population = data_total$population_count[Zeile]
+  Infection = data_total$dengue_cases[Zeile]
+  Incidence = (Infection/Population)*100000
+  data_total$incidence[Zeile] = Incidence
+}
+```
+
+
 # adding the data from Bunkan-district to Nong Khai and deleting all Bunkan-Data
 ```{r}
 for (i in 1:dim(data_total)[1]) {
