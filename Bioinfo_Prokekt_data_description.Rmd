@@ -520,15 +520,19 @@ q.dengue = quantile(data_total$incidence, probs = c(0.01,0.1,0.25,0.5,0.75,0.9,0
 hist(data_total$incidence,  breaks = 200, main = "Distribution of incidence", xlab = "incidence", freq = TRUE);abline(v=q.dengue,lty=3,lwd=2,col='red')
 ```
 
-## correlation between temperature and dengue cases
-
+#correlation between temperature and incidence
 ```{r}
+library(npreg)
+library(ggplot2)
 
-plot(data_total$temperature, data_total$incidence, pch = 20,
+smoothed_curve <- ss(clean_data_monsoon_5.95$temperature, clean_data_monsoon_5.95$incidence, nknots = 10)
+
+plot(clean_data_total$temperature, clean_data_total$incidence, pch = 20,
      ylab = "incidence",
      xlab = "temperature",
-  abline(v = mean(data_total$temperature), col = "red"),
-  )
+  abline(v = mean(clean_data_total$temperature), col = "red"))
+plot(smoothed_curve, col = "blue")
+
 
 plot(rank(data_total$temperature), rank(data_total$incidence), pch = 20,
      ylab = "incidence",
@@ -542,9 +546,9 @@ cor(mean_dengue.y.t$dengue_cases, mean_temp.y.t$temperature)
 #spearman correlation y.t.
 cor(mean_dengue.y.t$dengue_cases, mean_temp.y.t$temperature, method = "spearman")
 
-#pearson correlation m.r.
+#pearson correlation m.p.
 cor(clean_data_total$dengue_cases, clean_data_total$temperature)
-#spearman correlation m.r.
+#spearman correlation m.p.
 cor(clean_data_total$dengue_cases, clean_data_total$temperature, method = "spearman")
 
 
