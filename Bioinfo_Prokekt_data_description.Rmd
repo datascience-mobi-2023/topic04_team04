@@ -650,18 +650,23 @@ library(ncdf4)
 library(mgcv)
 
 attach(data_monsoon)
-model1 <- gam(incidence~s(temperature, k = 6), family = "quasipoisson")
+model1 = gam(incidence~s(temperature, k = 5), family = "quasipoisson", na.rm = T)
 plot.gam(model1)
 summary(model1) #edf: → a value close to 1 tends to be close to a linear term → a higher value means that the spline is more wiggly (non-linear). 
 #F-Wert und der p-Wert geben die statistische Signifikanz der glatten Funktion an. In diesem Fall ist die glatte Funktion von "temperature" hoch signifikant (p-Wert < 2e-16), was darauf hindeutet, dass sie einen signifikanten Einfluss auf die Vorhersage der "incidence" hat.Der angegebene R-squared-Wert (R-sq.(adj)) von 0.0407 gibt an, wie gut das Modell die Varianz der abhängigen Variable erklärt. In diesem Fall erklärt das Modell etwa 4,07% der Varianz in den Daten. Ein niedriger GCV-Wert deutet auf eine gute Anpassung des Modells hin.
 k.check(model1)
 gam.check(model1)
 
-linear_model <- gam(incidence~temperature)
-smooth_model <- gam(incidence~s(temperature))
-
-AIC(linear_model, smooth_model)
+AIC_best = c()
+for (i in 3:10){
+  smooth_model = gam(incidence~s(temperature, k = i))
+  linear_model = gam(incidence~temperature, k = i)
+  AIC_best = c(AIC_best, AIC(linear_model, smooth_model))
+}
+AIC_best
+detach(data_monsoon)
 ```
+
 # GAM forcast
 ```{r}
 library(raster)
@@ -678,10 +683,11 @@ data_monsoon_5.95 = subset(data_monsoon, temperature >= lower_limit & temperatur
 
 attach(data_monsoon_5.95)
 
-model1 <- gam(incidence~s(temperature, k = 6), family = "quasipoisson")
+model2 <- gam(incidence~s(temperature, k = 5), family = "quasipoisson")
+plot.gam(model2)
 tas <- stack("tas_SEA22_MPI_rcp85_2021-2040_grid_subc_daymean_monmean_swm_timmean_thai_new.nc")
 names(tas) <- "temperature"
-p1 <- raster::predict(tas, model1, type = "response")
+p1 <- raster::predict(tas, model2, type = "response")
 
 thailand <- raster::getData('GADM', country='THA', level=1)
 my.area <- extent(thailand)
@@ -689,24 +695,6 @@ my.p1 <- crop(p1, my.area)
 my.p1.mask <- mask(my.p1, thailand)
 plot(my.p1.mask, legend.width=1, legend.shrink=0.75, axes= FALSE, box=FALSE) + title("Predicted values: Influence of Temp on dengue cases", line = +1) + plot(thailand, add=TRUE)
 detach(data_monsoon_5.95)
-```
-
-Plotting der Inzidenz eines einzelnen Monats auf die Karte von Thailand
-
-```{r}
-library(sf)
-library(ggplot2)
-
-
-district_sf = st_read("gadm36_THA_shp/gadm36_THA_1.shp")
-
-#Inzidenz vom April 2006 auf die karte geplottet
-
-district_sf$incidence2006Aug = rows_2006Aug$incidence
-
-ggplot() +
-  geom_sf(data = district_sf, aes(fill = incidence2006Aug)) +
-  scale_fill_gradient(low = "yellow", high = "red") + labs(fill = "Incidence in Aug 2006")
 ```
 
 Funktion für Inzidenz plot der Monate
