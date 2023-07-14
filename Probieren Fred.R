@@ -167,6 +167,45 @@ data_total_test <- data_total_test[data_total_test$Reporting_areas != "Bungkan",
 
 
 
+dengue_spatial_plotting = 
+
+shp <- sf::st_read("/Users/frederik/Documents/GitHub/Projekt/gadm36_THA_shp/gadm36_THA_1.shp") # you will have to adjust this
+
+
+
+dat <- sf::st_as_sf(
+  ETH_malaria_data,
+  coords = c("longitude", "latitude"),
+  crs = 4326 
+)
+# CRS code 4326 corresponds to the World Geodetic System 1984 (WGS84)
+# coordinates are expressed as decimal degrees (long & lat from -180 to 180)
+​
+# look for the column you want to plot 
+names(dat)
+​
+ggplot() +
+  geom_sf(data = shp) +  # gets the mapping data for the background
+  geom_sf(data = dat, aes(size = pf_pr, color = pf_pr)) + # gets the data information with according coordinate point on the map
+  # geom_sf(data = dat, aes(size = pf_pr)) + # you can try around and only use one of the eastetics aes()
+  labs(title = "Location of schools studied in Ethopia with size and color according to falciparum rate",
+       color = "Falciparum Rate",
+       size = "Falciparum\nRate") + # changes agenda labels
+  xlab("Longitude") + 
+  ylab("Latitude") + # changes axsis lables
+  ggspatial::annotation_north_arrow(location = "br") + # adds arrow indicating north for maps
+  ggspatial::annotation_scale(location = "bl") # adds scale to maps
+​
+​
+
+
+
+
+
+
+
+
+
 
 
 
