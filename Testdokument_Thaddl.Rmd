@@ -199,6 +199,7 @@ data_monsoon = data_total[data_total$month %in% vec_month_monsoon,]
 rmv.rows.m = apply(data_monsoon,1,function(x){sum(is.na(x))})
 i.missing.m = which(rmv.rows.m >0)
 clean_data_monsoon = as.data.frame(data_monsoon[-i.missing.m,])
+
 ```
 
 #struture data frame and convert into right datatypes
@@ -409,9 +410,7 @@ library(npreg)
 library(ggplot2)
 
 smoothed_curve <- ss(clean_data_total$temperature, clean_data_total$incidence, nknots = 10)
-str(smoothed_curve)
-a = max(smoothed_curve$x)
-a
+
 plot(clean_data_total$temperature, clean_data_total$incidence, pch = 20,
      ylab = "incidence",
      xlab = "temperature",
@@ -446,12 +445,26 @@ pheatmap::pheatmap(cor(clean_data_total[c("dengue_cases", "population_count", "t
 library(npreg)
 library(ggplot2)
 
-smoothed_curve <- ss(clean_data_monsoon$temperature, clean_data_monsoon$incidence, nknots = 10)
+smoothed_curve_m <- ss(clean_data_monsoon$temperature, clean_data_monsoon$incidence, nknots = 10)
 plot(clean_data_monsoon$temperature, clean_data_monsoon$incidence, pch = 20,
      ylab = "incidence",
      xlab = "temperature",
   abline(v = mean(clean_data_monsoon$temperature), col = "red"))
 plot(smoothed_curve, col = "blue")
+
+#only for quantile 5% to 95%
+lower_limit = quantile(clean_data_monsoon$temperature, probs = 0.05, na.rm = T)
+upper_limit = quantile(clean_data_monsoon$temperature, probs = 0.95, na.rm = T)
+
+clean_data_monsoon_5.95 = subset(clean_data_monsoon, temperature >= lower_limit & temperature <= upper_limit)
+
+smoothed_curve_m_5.95 <- ss(clean_data_monsoon_5.95$temperature, clean_data_monsoon_5.95$incidence, nknots = 10)
+plot(clean_data_monsoon_5.95$temperature, clean_data_monsoon_5.95$incidence, pch = 20,
+     ylab = "incidence",
+     xlab = "temperature",
+  abline(v = mean(clean_data_monsoon_5.95$temperature), col = "red"))
+plot(smoothed_curve_m_5.95, col = "blue")
+
 ```
 
 
@@ -553,17 +566,20 @@ library(ncdf4)
 library(mgcv)
 
 attach(data_monsoon)
-model1 <- gam(incidence~s(temperature, k = 6), family = "quasipoisson")
+model1 = gam(incidence~s(temperature, k = 5), family = "quasipoisson", na.rm = T)
 plot.gam(model1)
 summary(model1) #edf: → a value close to 1 tends to be close to a linear term → a higher value means that the spline is more wiggly (non-linear). 
 #F-Wert und der p-Wert geben die statistische Signifikanz der glatten Funktion an. In diesem Fall ist die glatte Funktion von "temperature" hoch signifikant (p-Wert < 2e-16), was darauf hindeutet, dass sie einen signifikanten Einfluss auf die Vorhersage der "incidence" hat.Der angegebene R-squared-Wert (R-sq.(adj)) von 0.0407 gibt an, wie gut das Modell die Varianz der abhängigen Variable erklärt. In diesem Fall erklärt das Modell etwa 4,07% der Varianz in den Daten. Ein niedriger GCV-Wert deutet auf eine gute Anpassung des Modells hin.
 k.check(model1)
 gam.check(model1)
 
-linear_model <- gam(incidence~temperature)
-smooth_model <- gam(incidence~s(temperature))
-
-AIC(linear_model, smooth_model)
+AIC_best = c()
+for (i in 3:10){
+  smooth_model = gam(incidence~s(temperature, k = i))
+  linear_model = gam(incidence~temperature, k = i)
+  AIC_best = c(AIC_best, AIC(linear_model, smooth_model))
+}
+AIC_best
 ```
 # GAM forcast
 ```{r}
@@ -581,10 +597,11 @@ data_monsoon_5.95 = subset(data_monsoon, temperature >= lower_limit & temperatur
 
 attach(data_monsoon_5.95)
 
-model1 <- gam(incidence~s(temperature, k = 6), family = "quasipoisson")
+model2 <- gam(incidence~s(temperature, k = 5), family = "quasipoisson")
+plot.gam(model2)
 tas <- stack("tas_SEA22_MPI_rcp85_2021-2040_grid_subc_daymean_monmean_swm_timmean_thai_new.nc")
 names(tas) <- "temperature"
-p1 <- raster::predict(tas, model1, type = "response")
+p1 <- raster::predict(tas, model2, type = "response")
 
 thailand <- raster::getData('GADM', country='THA', level=1)
 my.area <- extent(thailand)

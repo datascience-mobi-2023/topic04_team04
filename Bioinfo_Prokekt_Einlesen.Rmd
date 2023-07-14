@@ -171,6 +171,14 @@ for(Zeile in 1:R){
 ```
 #creat clean data frame
 ```{r}
+detect_na = function(x) {
+  is_na = x %in% c("N/A", "na", "NA", "n/a")
+  replace(x, is_na, NA)
+}
+data_total = apply(data_total, 2, detect_na)
+rmv.rows = apply(data_total,1,function(x){sum(is.na(x))})
+i.missing = which(rmv.rows >0)
+
 clean_data_total = as.data.frame(data_total[-i.missing,])
 num_col = c("temperature", "Longitude", "Latitude", "incidence")
 int_col = c("dengue_cases","population_count","year")
