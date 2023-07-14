@@ -202,12 +202,9 @@ total_thailand = cbind(total_thailand, time_column_short)
 total_thailand$dengue_cases = as.numeric(total_thailand$dengue_cases)
 ```
 
-# moving average 
-autoplot(Ts_thailand) +
-  autolayer(ma(Ts_thailand, order = 12)) +
-  xlab("Year") + ylab("dengue_cases") +
-  ggtitle("Dengue_cases_thailand_with_MA") 
+# moving average
 
+autoplot(Ts_thailand) + autolayer(ma(Ts_thailand, order = 12)) + xlab("Year") + ylab("dengue_cases") + ggtitle("Dengue_cases_thailand_with_MA")
 
 #ARIMA Dengue cases
 
@@ -229,6 +226,9 @@ decomposed_thai_add <- decompose(Ts_thai, type="additive") # use type = "additiv
 plot(decomposed_thai_add)
 grid(lty = 2, col = "gray")
                       
+hist(decomposed_thai_add$random, breaks = 20) 
+
+
 #seasonal decomposing
 decomposed_thai_seas <- stl(Ts_thai, s.window = "periodic")
 plot(decomposed_thai_seas, main = "Decomposition of a periodic time series", xaxt = "n")
@@ -242,22 +242,21 @@ kpss.test(Ts_thai, null = c("Level", "Trend"))
 
 #both test indicate stationarity
 
-acf_thailand <- acf(total_thailand$dengue_cases)
+acf_thailand <- acf(Ts_thai)
 
-pacf_thailand <- pacf(total_thailand$dengue_cases)
+pacf_thailand <- pacf(Ts_thai)
 
 ```
 
-#ARIMA differencing
+#ARIMA differencing (not necessary as the time series is stationary) 
+
 ```{r}
-# 1st Seasonal Differencing 
-# purpose of seasonal differencing is to stabilize the mean and variance of the ts
+
 Ts_thai_seasdiff <- diff(Ts_thai, lag = frequency(Ts_thai), differences = 1)  # seasonal differencing 
 plot(Ts_thai_seasdiff, type="l", main = "Seasonally Differenced")  
 
-# 2md Seasonal Differencing
 Ts_thai_stat <- diff(Ts_thai_seasdiff, differences = 1)
-plot(Ts_thai_stat, type = "l", main = "Differenced and Stationary")  # --> USUALLY you do not difference more than TWO times 
+plot(Ts_thai_stat, type = "l", main = "Differenced and Stationary")  
 
 acfRes_stationary <- acf(Ts_thai_stat)
 pacfRes_stationary <- pacf(Ts_thai_stat)
@@ -309,6 +308,7 @@ best_model <- arima(Ts_thai, order = c(p_best, d_best, q_best))  # Replace with 
 best_model 
 
 ```
+
 #Auto ARIMA
 
 ```{r}
@@ -324,12 +324,12 @@ Ts_thai_auto
 #this auto-ARIMA was removed because it took to long and had a higher AIC
 ```
 
-
 ```{r}
 residuals_thai <- residuals(Ts_thai_auto)
 plot(residuals_thai)
 
 acf(residuals_thai)
+hist(residuals_thai)
 
 portmanteau_thai <- Box.test(residuals_thai, lag = 12, type = "Ljung-Box")
 portmanteau_thai 
@@ -394,6 +394,7 @@ ggplot() +
 ```
 
 #ARIMA forecast 2018
+
 ```{r}
 library(forecast)
 Ts_thai_2018 = window(Ts_thai, end = c(2018, 12))
@@ -422,7 +423,6 @@ ggplot() +
   ylab("Dengue Cases") +
   theme_minimal()
 ```
-
 
 #comparing the decomposition of temperature and cases
 
@@ -458,7 +458,6 @@ print(plot_case_temp_trend)
 
 
 ```
-
 
 ```{r}
 case_seasonal <- decomposed_thailand_add$seasonal
@@ -644,6 +643,7 @@ plot(data_total$temperature, data_total$incidence, pch = 20,
 
 ```
 
+# polar
 
 ```{r}
 library(ggplot2)
@@ -683,12 +683,15 @@ library(raster)
 library(ncdf4)
 library(mgcv)
 
-attach(data_monsoon)
-model1 <- gam(incidence~s(temperature, k = 9), family="quasipoisson")
-plot.gam(model1)
-summary(model1)
-k.check(model1)
-gam.check(model1)
+data_monsoon_log = data_monsoon
+data_monsoon_log$incidence = log(data_monsoon_log$incidence+1)
+
+attach(data_monsoon_log)
+model4 <- gam(incidence~s(temperature, k = 5), family="quasipoisson")
+plot.gam(model4)
+summary(model4)
+k.check(model4)
+gam.check(model4)
 
 linear_model <- gam(dengue_cases~temperature)
 smooth_model <- gam(dengue_cases~s(temperature))
@@ -730,10 +733,6 @@ detach(data_monsoon)
 ```
 
 ```{r}
-
-```
-
-```{r}
 library(readxl)
 library(nlme)
 library(gam)
@@ -753,10 +752,3 @@ gam.check(model2)
 
 cor = cor(data_total$incidence, data_total$population_count, use = "pairwise.complete.obs")
 ```
-
-
-
-
-
-
-
