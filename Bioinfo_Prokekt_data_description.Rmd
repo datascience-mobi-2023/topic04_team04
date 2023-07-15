@@ -105,14 +105,13 @@ cor = cor(data_total$incidence, data_total$temperature, use = "pairwise.complete
 plot(data_total$temperature, data_total$incidence, main = "incidence over temperature", xlab = "inzidenz", ylab = "temperature")
 ```
 
-
 #ARIMA Dengue cases
 
 ```{r}
 library(ggplot2)
 library(forecast)
 
-Ts_thai = ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
+Ts_thai <- ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
 TSstudio::ts_plot(Ts_thai)
 
 # moving average 
@@ -122,12 +121,15 @@ autoplot(Ts_thai) +
   ggtitle("Dengue_cases_thailand_with_MA") 
 
 #additive decomposing
-decomposed_thai_add = decompose(Ts_thai, type="additive") # use type = "additive" for additive components
+decomposed_thai_add <- decompose(Ts_thai, type="additive") # use type = "additive" for additive components
 plot(decomposed_thai_add)
 grid(lty = 2, col = "gray")
                       
+hist(decomposed_thai_add$random, breaks = 20) 
+
+
 #seasonal decomposing
-decomposed_thai_seas = stl(Ts_thai, s.window = "periodic")
+decomposed_thai_seas <- stl(Ts_thai, s.window = "periodic")
 plot(decomposed_thai_seas, main = "Decomposition of a periodic time series", xaxt = "n")
 grid(lty = 2, col = "gray")
 
@@ -139,40 +141,39 @@ kpss.test(Ts_thai, null = c("Level", "Trend"))
 
 #both test indicate stationarity
 
-acf_thailand = acf(total_thailand$dengue_cases)
+acf_thailand <- acf(Ts_thai)
 
-pacf_thailand = pacf(total_thailand$dengue_cases)
+pacf_thailand <- pacf(Ts_thai)
 
 ```
 
-#ARIMA differencing
+#ARIMA differencing (not necessary as the time series is stationary) 
+
 ```{r}
-# 1st Seasonal Differencing 
-# purpose of seasonal differencing is to stabilize the mean and variance of the ts
-Ts_thai_seasdiff = diff(Ts_thai, lag = frequency(Ts_thai), differences = 1)  # seasonal differencing 
+
+Ts_thai_seasdiff <- diff(Ts_thai, lag = frequency(Ts_thai), differences = 1)  # seasonal differencing 
 plot(Ts_thai_seasdiff, type="l", main = "Seasonally Differenced")  
 
-# 2md Seasonal Differencing
-Ts_thai_stat = diff(Ts_thai_seasdiff, differences = 1)
-plot(Ts_thai_stat, type = "l", main = "Differenced and Stationary")  # --> USUALLY you do not difference more than TWO times 
+Ts_thai_stat <- diff(Ts_thai_seasdiff, differences = 1)
+plot(Ts_thai_stat, type = "l", main = "Differenced and Stationary")  
 
-acfRes_stationary = acf(Ts_thai_stat)
-pacfRes_stationary = pacf(Ts_thai_stat)
+acfRes_stationary <- acf(Ts_thai_stat)
+pacfRes_stationary <- pacf(Ts_thai_stat)
 ```
 
 #ARIMA "by hand"
 
 ```{r}
-p_range = 0:4  # AR order
-d_range = 0:2 # I order
-q_range = 0:3 # MA order
+p_range <- 0:4  # AR order
+d_range <- 0:2 # I order
+q_range <- 0:3 # MA order
 
 # Initialize variables to store AIC and model information
-best_aic = Inf
-best_model = NULL
-p_best = 0
-d_best = 0
-q_best = 0
+best_aic <- Inf
+best_model <- NULL
+p_best <- 0
+d_best <- 0
+q_best <- 0
 
 # Loop through the combinations of orders
 for (p in p_range) {
@@ -180,18 +181,18 @@ for (p in p_range) {
     for (q in q_range) {
       print(p); print(d); print(q)
       # Fit the ARIMA model
-      model = arima(Ts_thai, order = c(p, d, q)) 
+      model <- arima(Ts_thai, order = c(p, d, q)) 
       
       # Calculate AIC
-      aic = AIC(model)
+      aic <- AIC(model)
       print(aic)
       # Check if the current model has lower AIC than the best model so far
       if (aic < best_aic) {
-        best_aic = aic
-        best_model = model
-        p_best = p
-        d_best = d
-        q_best = q
+        best_aic <- aic
+        best_model <- model
+        p_best <- p
+        d_best <- d
+        q_best <- q
       }
     }
   }
@@ -202,51 +203,52 @@ best_model
 best_aic; p_best; d_best; q_best
 
 # Fit the best ARIMA model
-best_model = arima(Ts_thai, order = c(p_best, d_best, q_best))  # Replace with the best order values
+best_model <- arima(Ts_thai, order = c(p_best, d_best, q_best))  # Replace with the best order values
 best_model 
 
 ```
+
 #Auto ARIMA
 
 ```{r}
 library(forecast)
-Ts_thai_auto  = auto.arima(Ts_thai)
+Ts_thai_auto  <- auto.arima(Ts_thai)
 Ts_thai_auto
 
 #auto_thailand_stat = auto.arima(Ts_thai_stat)
 #auto_thailand_stat
 
-#auto_thailand_2  = auto.arima(Ts_thai, stepwise = F, approximation = F)
+#auto_thailand_2  <- auto.arima(Ts_thai, stepwise = F, approximation = F)
 #auto_thailand_2
 #this auto-ARIMA was removed because it took to long and had a higher AIC
 ```
 
-
 ```{r}
-residuals_thai = residuals(Ts_thai_auto)
+residuals_thai <- residuals(Ts_thai_auto)
 plot(residuals_thai)
 
 acf(residuals_thai)
+hist(residuals_thai, breaks = 50)
 
-portmanteau_thai = Box.test(residuals_thai, lag = 12, type = "Ljung-Box")
+portmanteau_thai <- Box.test(residuals_thai, lag = 12, type = "Ljung-Box")
 portmanteau_thai 
-# --> p value (0.52) > 0.05 --> no evidence for autocorrelation --> ARIMA model works well
+# --> p value (0.41) > 0.05 --> no evidence for autocorrelation --> ARIMA model works well
 ```
 
 ```{r}
 library(forecast)
-horizon_thai = 48 
-forecasted_thai_auto = forecast(Ts_thai_auto, h = horizon_thai)
+horizon_thai <- 48 
+forecasted_thai_auto <- forecast(Ts_thai_auto, h = horizon_thai)
 
-forecasted_thai_Ts = forecasted_thai_auto$mean
-forecasted_thai_Ts  = ts(forecasted_thai_Ts, frequency = 12, start = c(2021, 1) )
+forecasted_thai_Ts <- forecasted_thai_auto$mean
+forecasted_thai_Ts  <- ts(forecasted_thai_Ts, frequency = 12, start = c(2021, 1) )
 plot(forecasted_thai_Ts)
 ```
 
 ```{r}
-forecast_thai_Df = as.data.frame(forecasted_thai_auto)
-forecast_thai_Df$time = time(forecasted_thai_Ts)
-names(forecast_thai_Df) = c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+forecast_thai_Df <- as.data.frame(forecasted_thai_auto)
+forecast_thai_Df$time <- time(forecasted_thai_Ts)
+names(forecast_thai_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
 ```
 
 ```{r}
@@ -265,17 +267,17 @@ ggplot() +
 
 ```{r}
 library(forecast)
-forecasted_thai_best = forecast(best_model, h = horizon_thai)
+forecasted_thai_best <- forecast(best_model, h = horizon_thai)
 
-forecasted_Ts_thai_best = forecasted_thai_best$mean
-forecasted_Ts_thai_best  = ts(forecasted_Ts_thai_best, frequency = 12, start = c(2021, 1) )
+forecasted_Ts_thai_best <- forecasted_thai_best$mean
+forecasted_Ts_thai_best  <- ts(forecasted_Ts_thai_best, frequency = 12, start = c(2021, 1) )
 plot(forecasted_Ts_thai_best)
 ```
 
 ```{r}
-forecast_thai_best_Df = as.data.frame(forecasted_thai_best)
-forecast_thai_best_Df$time = time(forecasted_Ts_thai_best)
-names(forecast_thai_best_Df) = c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+forecast_thai_best_Df <- as.data.frame(forecasted_thai_best)
+forecast_thai_best_Df$time <- time(forecasted_Ts_thai_best)
+names(forecast_thai_best_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
 ```
 
 ```{r}
@@ -290,29 +292,30 @@ ggplot() +
   theme_minimal()
 ```
 
-#ARIMA forecast 2018
+#ARIMA forecast 2016
+
 ```{r}
 library(forecast)
-Ts_thai_2018 = window(Ts_thai, end = c(2018, 12))
+Ts_thai_2016 = window(Ts_thai, end = c(2016, 12))
 
-Ts_thai_auto_2018  = auto.arima(Ts_thai_2018)
-Ts_thai_auto_2018
+Ts_thai_auto_2016  <- auto.arima(Ts_thai_2016)
+Ts_thai_auto_2016
 
 
-forecasted_thai_2018 = forecast(Ts_thai_auto_2018, h = horizon_thai)
+forecasted_thai_2016 <- forecast(Ts_thai_auto_2016, h = horizon_thai)
 
-forecasted_thai_2018_Ts = forecasted_thai_2018$mean
-forecasted_thai_2018_Ts  = ts(forecasted_thai_2018_Ts, frequency = 12, start = c(2018, 1) )
-plot(forecasted_thai_2018_Ts)
+forecasted_thai_2016_Ts <- forecasted_thai_2016$mean
+forecasted_thai_2016_Ts  <- ts(forecasted_thai_2016_Ts, frequency = 12, start = c(2017, 1) )
+plot(forecasted_thai_2016_Ts)
 
-forecast_thai_2018_Df = as.data.frame(forecasted_thai_2018)
-forecast_thai_2018_Df$time = time(forecasted_thai_2018_Ts)
-names(forecast_thai_2018_Df) = c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+forecast_thai_2016_Df <- as.data.frame(forecasted_thai_2016)
+forecast_thai_2016_Df$time <- time(forecasted_thai_2016_Ts)
+names(forecast_thai_2016_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
 
 library(ggplot2)
 ggplot() +
-  geom_ribbon(data = forecast_thai_2018_Df, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
-  geom_line(data = forecast_thai_2018_Df, aes(x = time, y = point), color = "blue") +
+  geom_ribbon(data = forecast_thai_2016_Df, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
+  geom_line(data = forecast_thai_2016_Df, aes(x = time, y = point), color = "blue") +
   geom_line(data = Ts_thai, aes(x = time(Ts_thai), y = Ts_thai), color = "black") +
   labs(title = "Time Series Forecast") +
   xlab("Year") +
