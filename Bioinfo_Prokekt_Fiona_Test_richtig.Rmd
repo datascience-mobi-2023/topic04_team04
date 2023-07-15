@@ -329,11 +329,11 @@ residuals_thai <- residuals(Ts_thai_auto)
 plot(residuals_thai)
 
 acf(residuals_thai)
-hist(residuals_thai)
+hist(residuals_thai, breaks = 50)
 
 portmanteau_thai <- Box.test(residuals_thai, lag = 12, type = "Ljung-Box")
 portmanteau_thai 
-# --> p value (0.52) > 0.05 --> no evidence for autocorrelation --> ARIMA model works well
+# --> p value (0.41) > 0.05 --> no evidence for autocorrelation --> ARIMA model works well
 ```
 
 ```{r}
@@ -393,30 +393,30 @@ ggplot() +
   theme_minimal()
 ```
 
-#ARIMA forecast 2018
+#ARIMA forecast 2016
 
 ```{r}
 library(forecast)
-Ts_thai_2018 = window(Ts_thai, end = c(2018, 12))
+Ts_thai_2016 = window(Ts_thai, end = c(2016, 12))
 
-Ts_thai_auto_2018  <- auto.arima(Ts_thai_2018)
-Ts_thai_auto_2018
+Ts_thai_auto_2016  <- auto.arima(Ts_thai_2016)
+Ts_thai_auto_2016
 
 
-forecasted_thai_2018 <- forecast(Ts_thai_auto_2018, h = horizon_thai)
+forecasted_thai_2016 <- forecast(Ts_thai_auto_2016, h = horizon_thai)
 
-forecasted_thai_2018_Ts <- forecasted_thai_2018$mean
-forecasted_thai_2018_Ts  <- ts(forecasted_thai_2018_Ts, frequency = 12, start = c(2018, 1) )
-plot(forecasted_thai_2018_Ts)
+forecasted_thai_2016_Ts <- forecasted_thai_2016$mean
+forecasted_thai_2016_Ts  <- ts(forecasted_thai_2016_Ts, frequency = 12, start = c(2017, 1) )
+plot(forecasted_thai_2016_Ts)
 
-forecast_thai_2018_Df <- as.data.frame(forecasted_thai_2018)
-forecast_thai_2018_Df$time <- time(forecasted_thai_2018_Ts)
-names(forecast_thai_2018_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
+forecast_thai_2016_Df <- as.data.frame(forecasted_thai_2016)
+forecast_thai_2016_Df$time <- time(forecasted_thai_2016_Ts)
+names(forecast_thai_2016_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
 
 library(ggplot2)
 ggplot() +
-  geom_ribbon(data = forecast_thai_2018_Df, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
-  geom_line(data = forecast_thai_2018_Df, aes(x = time, y = point), color = "blue") +
+  geom_ribbon(data = forecast_thai_2016_Df, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
+  geom_line(data = forecast_thai_2016_Df, aes(x = time, y = point), color = "blue") +
   geom_line(data = Ts_thai, aes(x = time(Ts_thai), y = Ts_thai), color = "black") +
   labs(title = "Time Series Forecast") +
   xlab("Year") +
