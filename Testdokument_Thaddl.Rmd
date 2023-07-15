@@ -242,6 +242,7 @@ for (k in 1:dim(data_total)[1]){
   
 
 data_total = data_total[data_total$Reporting_areas != "Bungkan", ]
+row.names(data_total) = NULL
 ```
 
 #create data frame for monsoon season
@@ -798,9 +799,7 @@ mean_inc.p <- data.frame(time_column = as.Date(character()), Reporting_areas = c
       provinz = data_total[data_total$Reporting_areas == p,]
       m_p = data.frame(time_column = provinz$time_column[1], Reporting_areas = provinz$Reporting_areas[1],incidence = mean(provinz$incidence, na.rm = TRUE))
       mean_inc.p = rbind(mean_inc.p, m_p)
-  }
-mean_inc.p
-mean(map_data_total[721:900,"incidence"], na.rm = T)
+}
 
 map_mean_inc.p = f_map_mean_inc.p(areas = unique(map_data_total$Reporting_areas))
 district_sf = st_read("gadm36_THA_shp/gadm36_THA_1.shp")
