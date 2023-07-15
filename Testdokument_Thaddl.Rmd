@@ -17,6 +17,7 @@ library(readxl)
 ```
 
 ##Einlesen der Tabellen und umwandeln der Tabellen in data frames
+
 ```{r}
 library(readxl)
 library(dplyr)
@@ -48,6 +49,7 @@ for (i in 2006:2020){
 ```
 
 #Rows als Zeitachse mit Monaten
+
 ```{r}
 m = 1
 data_total = data.frame(col1 = character(0), col2 = character(0), col3 = numeric(0), month = character(0))
@@ -68,6 +70,7 @@ for (k in 1:1155){
 ```
 
 #adding temperature, longitude and latitude column
+
 ```{r}
 m = 1
 temp_data = read_excel("era5_data_2006_2020_thailand_monmean.xlsx")
@@ -86,6 +89,7 @@ colnames(data_total)[5] = "temperature"
 ```
 
 #Einlesen Population data
+
 ```{r}
 library(readxl)
 
@@ -136,8 +140,8 @@ data_total = cbind(data_total,sorted_total_population[,c(2,3)])
 row.names(data_total) = NULL
 ```
 
+# adding time column
 
-# adding time column 
 ```{r}
 first_date = as.Date("2006-01-01")
 last_date = as.Date("2020-12-31")
@@ -150,8 +154,8 @@ data_total = cbind(data_total, time_column)
 #data_total = subset(data_total, select = -time_column)
 ```
 
-
 #Detect missing values
+
 ```{r}
 detect_na <- function(x) {
   is_na <- x %in% c("N/A", "na", "NA", "n/a")
@@ -163,6 +167,7 @@ i.missing = which(rmv.rows >0)
 ```
 
 #Inzindenz
+
 ```{r}
 data_total = as.data.frame(data_total)
 data_total$dengue_cases = as.integer(data_total$dengue_cases)
@@ -179,6 +184,7 @@ for(Zeile in 1:R){
 ```
 
 #create clean data frame
+
 ```{r}
 clean_data_total = as.data.frame(data_total[-i.missing,])
 num_col = c("temperature", "Longitude", "Latitude", "incidence")
@@ -190,7 +196,7 @@ clean_data_total[date_col] = lapply(clean_data_total[date_col], as.Date)
 summary(clean_data_total)
 ```
 
-#create data frame for monsoon season 
+#create data frame for monsoon season
 
 ```{r}
 vec_month_monsoon = c("Jun", "Jul", "Aug", "Sep")
@@ -203,6 +209,7 @@ clean_data_monsoon = as.data.frame(data_monsoon[-i.missing.m,])
 ```
 
 #struture data frame and convert into right datatypes
+
 ```{r}
 data_total = as.data.frame(data_total)
 num_col = c("temperature", "Longitude", "Latitude", "incidence")
@@ -218,8 +225,8 @@ save(data_total, file = "data_total.RData")
 summary(data_total)
 ```
 
-
 #max, min, sd
+
 ```{r}
 apply(data_total[,c(num_col, int_col)], 2, function(x){max(x,na.rm=TRUE)})
 apply(data_total[,c(num_col, int_col)], 2, function(x){min(x,na.rm=TRUE)})
@@ -229,6 +236,7 @@ apply(data_total[,c(num_col, int_col)], 2, function(x){sd(x,na.rm=TRUE)})
 ```
 
 #mean of dengue_cases and temperature of whole thailand per month
+
 ```{r}
 library(ggplot2)
 library(scales)
@@ -272,6 +280,7 @@ gridExtra::grid.arrange(plot1, plot2, nrow = 2)
 ```
 
 #mean and median comparison
+
 ```{r}
 library(ggplot2)
 
@@ -330,8 +339,8 @@ plot_dif_temp = ggplot2::ggplot() +
 gridExtra::grid.arrange(plot_mean_dengue, plot_mean_temp, plot_median_dengue, plot_median_temp,plot_dif_dengue,plot_dif_temp, nrow = 3)
 ```
 
-
 #mean of dengue_cases and temperature of whole thailand per year
+
 ```{r}
 f_mean_dengue.y.t = function(){
   mean_dengue.y.t <- data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
@@ -356,6 +365,7 @@ f_mean_temp.y.t = function(){
 mean_temp.y.t = as.data.frame(f_mean_temp.y.t())
 
 ```
+
 #mean of incidence and temperature of each provinze per year
 
 ```{r}
@@ -386,8 +396,8 @@ f_mean_temp.y.p = function(period, areas){
 }
 ```
 
-
 #Plot für Bangkok
+
 ```{r}
 dengue_plot_cases = c()
 dengue_plot_time = c()
@@ -399,6 +409,7 @@ plot(dengue_plot_time,dengue_plot_cases, type = "o")
 ```
 
 #distribution of incidence
+
 ```{r}
 q.dengue = quantile(data_total$incidence, probs = c(0.01,0.1,0.25,0.5,0.75,0.9,0.99), na.rm = TRUE)
 hist(data_total$incidence,  breaks = 200, main = "Distribution of incidence", xlab = "incidence", freq = TRUE);abline(v=q.dengue,lty=3,lwd=2,col='red')
@@ -408,23 +419,19 @@ hist(data_total$temperature,  breaks = 200, main = "Distribution of temperature"
 ```
 
 #correlation between temperature and incidence
+
 ```{r}
 library(npreg)
 library(ggplot2)
 
-smoothed_curve <- ss(clean_data_monsoon_5.95$temperature, clean_data_monsoon_5.95$incidence, nknots = 10)
+smoothed_curve <- ss(clean_data_total$temperature, clean_data_total$incidence, nknots = 10)
 
-plot(clean_data_monsoon$temperature, clean_data_monsoon$incidence, pch = 20,
-     ylab = "incidence",
-     xlab = "temperature",
-  abline(v = mean(clean_data_monsoon$temperature), col = "red"))
 plot(clean_data_total$temperature, clean_data_total$incidence, pch = 20,
      ylab = "incidence",
      xlab = "temperature",
   abline(v = mean(clean_data_total$temperature), col = "red"))
 
 plot(smoothed_curve, col = "blue")
-
 
 plot(rank(data_total$temperature), rank(data_total$incidence), pch = 20,
      ylab = "incidence",
@@ -447,7 +454,9 @@ cor(clean_data_total$dengue_cases, clean_data_total$temperature, method = "spear
 pheatmap::pheatmap(cor(clean_data_total[c("dengue_cases", "population_count", "temperature", "incidence")]))
 
 ```
+
 #monsoon season smoothed curve incidence temperature
+
 ```{r}
 library(npreg)
 library(ggplot2)
@@ -474,9 +483,8 @@ plot(smoothed_curve_m_5.95, col = "blue")
 
 ```
 
-
-
 #correlation between different areas
+
 ```{r}
 #mean of temp and incidence over all years per area
 t_data_total = t(data_total)
@@ -492,6 +500,7 @@ for (i in r_areas){
 ```
 
 #k-means clustering
+
 ```{r}
 #elbow method
 km = kmeans(m_inc_temp.y.r["incidence"], centers = 2, nstart = 10)
@@ -556,6 +565,7 @@ gridExtra::grid.arrange(plot1, plot2, plot3, ncol = 1)
 ```
 
 #probieren mit time series Objekten
+
 ```{r}
 my_ts <- ts(data_total$dengue_cases, start = c(data_total$time_column[1]), frequency = 12)
 head(my_ts)
@@ -563,6 +573,7 @@ TSstudio::ts_plot(my_ts)
 ```
 
 #GAM
+
 ```{r}
 library(readxl)
 library(nlme)
@@ -604,8 +615,10 @@ AIC(smooth_model, linear_model)
 
 detach(data_total)
 ```
-# GAM forcast
-```{r}
+
+# GAM forecast
+
+```{r, fig.cap="GAM prediction", fig.ext="png", knitr::include_graphics(plot_gam_pred)}
 library(raster)
 library(gam)
 library(sdm)
@@ -613,17 +626,16 @@ library(readxl)
 library(mgcv)
 library(ncdf4)
 
-lower_limit = quantile(data_monsoon$temperature, probs = 0.05, na.rm = T)
-upper_limit = quantile(data_monsoon$temperature, probs = 0.95, na.rm = T)
+## lower_limit = quantile(data_monsoon$temperature, probs = 0.05, na.rm = T)
+#upper_limit = quantile(data_monsoon$temperature, probs = 0.95, na.rm = T)
 
-data_monsoon_5.95 = subset(data_monsoon, temperature >= lower_limit & temperature <= upper_limit)
+#data_monsoon_5.95 = subset(data_monsoon, temperature >= lower_limit & temperature <= upper_limit)
 
 attach(data_total)
 
 model2 <- gam(incidence~s(temperature, k = 16), family = "quasipoisson")
-plot.gam(model2)
 tas <- stack("tas_SEA22_MPI_rcp85_2021-2040_grid_subc_daymean_monmean_timmean.nc")
-tas_test = crop(tas, my.area)
+#tas_test = crop(tas, my.area)
 names(tas) <- "temperature"
 p1 <- raster::predict(tas, model2, type = "response")
 
@@ -631,13 +643,10 @@ thailand <- raster::getData('GADM', country='THA', level=1)
 my.area <- extent(thailand)
 my.p1 <- crop(p1, my.area)
 my.p1.mask <- mask(my.p1, thailand)
-plot(my.p1.mask, legend.width=1, legend.shrink=0.75, axes= FALSE, box=FALSE) + title("Predicted values: Influence of Temp on dengue cases for 2021-2040", line = +1) + plot(thailand, add=TRUE)
+plot(my.p1.mask, legend.width=1, legend.shrink=0.75, axes= FALSE, box=FALSE) + title("Predicted values: Influence of temperature on dengue cases for 2021-2040", line = +1) + plot(thailand, add=TRUE)
+
 detach(data_total)
 ```
-
-
-
-
 
 #Plotting der Inzidenz eines einzelnen Monats auf die Karte von Thailand
 
@@ -658,6 +667,7 @@ ggplot() +
 ```
 
 #Funktion für Inzidenz plot der Monate
+
 ```{r}
 
 library(sf)
