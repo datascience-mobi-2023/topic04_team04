@@ -12,6 +12,7 @@
 \contentsline {paragraph}{\nonumberline ARIMA}{4}{paragraph*.16}%
 \contentsline {paragraph}{\nonumberline GAM}{5}{paragraph*.18}%
 \contentsline {section}{\numberline {3}Results}{6}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Result for Method A}{6}{subsection.3.1}%
-\contentsline {section}{\numberline {4}Discussion}{6}{section.4}%
+\contentsline {subsection}{\numberline {3.1}Descriptive Analysis}{6}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}ARIMA model}{6}{subsection.3.2}%
+\contentsline {section}{\numberline {4}Discussion}{7}{section.4}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
