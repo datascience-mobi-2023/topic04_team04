@@ -34,6 +34,9 @@
 \newacro{ARIMA}[\AC@hyperlink{ARIMA}{ARIMA}]{Autoregressive moving average}
 \newacro{GAM}[\AC@hyperlink{GAM}{GAM}]{General additive model}
 \newacro{ADF}[\AC@hyperlink{ADF}{ADF}]{Augumented Dickey Fuller test}
+\newacro{ACF}[\AC@hyperlink{ACF}{ACF}]{Autocorrelation function}
+\newacro{pACF}[\AC@hyperlink{pACF}{pACF}]{Partial autocorrelation function}
+\newacro{AIC}[\AC@hyperlink{AIC}{AIC}]{Akaike's information criterion}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{2}{section.1}\protected@file@percent }
 \newlabel{sec:introduction}{{1}{2}{Introduction}{section.1}{}}
 \citation{Descloux2012,Phanitchat.2019}
@@ -60,16 +63,16 @@
 \@writefile{toc}{\contentsline {paragraph}{\nonumberline Spatial data}{4}{paragraph*.12}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Methods}{4}{subsection.2.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{\nonumberline Descriptive analysis}{4}{paragraph*.14}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{\nonumberline ARIMA}{4}{paragraph*.16}\protected@file@percent }
 \citation{Venkat2018}
 \citation{Prabhakaran2017}
 \citation{Hyndman2018}
 \citation{Wood2006}
 \citation{Peri2021}
-\@writefile{toc}{\contentsline {paragraph}{\nonumberline GAM}{5}{paragraph*.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{\nonumberline ARIMA}{5}{paragraph*.16}\protected@file@percent }
 \BKM@entry{id=5,dest={73656374696F6E2E33},srcline={1}}{5C3337365C3337375C303030525C303030655C303030735C303030755C3030306C5C303030745C30303073}
 \BKM@entry{id=6,dest={73756273656374696F6E2E332E31},srcline={2}}{5C3337365C3337375C303030445C303030655C303030735C303030635C303030725C303030695C303030705C303030745C303030695C303030765C303030655C3030305C3034305C303030415C3030306E5C303030615C3030306C5C303030795C303030735C303030695C30303073}
 \BKM@entry{id=7,dest={73756273656374696F6E2E332E32},srcline={4}}{5C3337365C3337375C303030415C303030525C303030495C3030304D5C303030415C3030305C3034305C3030306D5C3030306F5C303030645C303030655C3030306C}
+\@writefile{toc}{\contentsline {paragraph}{\nonumberline GAM}{6}{paragraph*.18}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {3}Results}{6}{section.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Descriptive Analysis}{6}{subsection.3.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}ARIMA model}{6}{subsection.3.2}\protected@file@percent }
@@ -78,17 +81,19 @@
 \newlabel{fig:decomp_ts_dengue}{{1}{7}{Decomposition of the additive time series of the total dengue cases in Thailand}{figure.1}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Trend of the total dengue cases in Thailand compared to the trend of the average temperature in Thailand for the years 2006 till 2020.}}{7}{figure.2}\protected@file@percent }
 \newlabel{fig:Trend_temp_cases}{{2}{7}{Trend of the total dengue cases in Thailand compared to the trend of the average temperature in Thailand for the years 2006 till 2020}{figure.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{\nonumberline ARIMA forecast}{7}{paragraph*.22}\protected@file@percent }
 \BKM@entry{id=8,dest={73656374696F6E2E34},srcline={1}}{5C3337365C3337375C303030445C303030695C303030735C303030635C303030755C303030735C303030735C303030695C3030306F5C3030306E}
 \bibdata{bib/essay.bib}
 \bibcite{Anyamba2019}{{1}{2019}{{Anyamba {\textit  {et~al.\/}}}}{{Anyamba, Chretien, Britch, Soebiyanto, Small, Jepsen, Forshey, Sanchez, Smith, Harris, Tucker, Karesh, and Linthicum}}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces ARIMA forecast of the dengue cases in Thailand for 2021-2024.}}{8}{figure.3}\protected@file@percent }
+\newlabel{fig:Auto_ARIMA_forecast}{{3}{8}{ARIMA forecast of the dengue cases in Thailand for 2021-2024}{figure.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Discussion}{8}{section.4}\protected@file@percent }
 \bibcite{Copernicus2019}{{2}{2019}{{Copernicus Climate Change Service}}{{}}}
 \bibcite{Descloux2012}{{3}{2012}{{Descloux {\textit  {et~al.\/}}}}{{Descloux, Mangeas, Menkes, Lengaigne, Leroy, Tehei, Guillaumot, Teurlai, Gourinat, Benzler, Pfannstiel, Grangeon, Degallier, and de~Lamballerie}}}
 \bibcite{Gubler.1998}{{4}{1998}{{Gubler}}{{}}}
 \bibcite{Hersbach2020}{{5}{2020}{{Hersbach {\textit  {et~al.\/}}}}{{Hersbach, Bell, Berrisford, Hirahara, Horányi, Muñoz-Sabater, Nicolas, Peubey, Radu, Schepers, Simmons, Soci, Abdalla, Abellan, Balsamo, Bechtold, Biavati, Bidlot, Bonavita, Chiara, Dahlgren, Dee, Diamantakis, Dragani, Flemming, Forbes, Fuentes, Geer, Haimberger, Healy, Hogan, Hólm, Janisková, Keeley, Laloyaux, Lopez, Lupu, Radnoti, de~Rosnay, Rozum, Vamborg, Villaume, and Thépaut}}}
 \bibcite{Hyndman2018}{{6}{2018}{{Hyndman and Athanasopoulos}}{{}}}
 \bibcite{Kripalani1995}{{7}{1995}{{Kripalani {\textit  {et~al.\/}}}}{{Kripalani, Singh, Panchawagh, and Brikshavana}}}
-\@writefile{toc}{\contentsline {paragraph}{\nonumberline ARIMA forecast}{8}{paragraph*.22}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4}Discussion}{8}{section.4}\protected@file@percent }
 \bibcite{Masud2016}{{8}{2016}{{Masud {\textit  {et~al.\/}}}}{{Masud, Soni, Shrestha, and Tripathi}}}
 \bibcite{sds}{{9}{2023}{{Pebesma and Bivand}}{{}}}
 \bibcite{Peri2021}{{10}{2021}{{Peri}}{{}}}
@@ -101,4 +106,4 @@
 \global\@namedef{scr@dte@section@lastmaxnumwidth}{9.85492pt}
 \global\@namedef{scr@dte@subsection@lastmaxnumwidth}{18.37155pt}
 \@writefile{toc}{\providecommand\tocbasic@end@toc@file{}\tocbasic@end@toc@file}
-\gdef \@abspage@last{9}
+\gdef \@abspage@last{10}

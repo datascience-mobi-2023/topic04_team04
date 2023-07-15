@@ -9,12 +9,12 @@
 \contentsline {paragraph}{\nonumberline Spatial data}{4}{paragraph*.12}%
 \contentsline {subsection}{\numberline {2.2}Methods}{4}{subsection.2.2}%
 \contentsline {paragraph}{\nonumberline Descriptive analysis}{4}{paragraph*.14}%
-\contentsline {paragraph}{\nonumberline ARIMA}{4}{paragraph*.16}%
-\contentsline {paragraph}{\nonumberline GAM}{5}{paragraph*.18}%
+\contentsline {paragraph}{\nonumberline ARIMA}{5}{paragraph*.16}%
+\contentsline {paragraph}{\nonumberline GAM}{6}{paragraph*.18}%
 \contentsline {section}{\numberline {3}Results}{6}{section.3}%
 \contentsline {subsection}{\numberline {3.1}Descriptive Analysis}{6}{subsection.3.1}%
 \contentsline {subsection}{\numberline {3.2}ARIMA model}{6}{subsection.3.2}%
 \contentsline {paragraph}{\nonumberline Time series decomposition}{6}{paragraph*.20}%
-\contentsline {paragraph}{\nonumberline ARIMA forecast}{8}{paragraph*.22}%
+\contentsline {paragraph}{\nonumberline ARIMA forecast}{7}{paragraph*.22}%
 \contentsline {section}{\numberline {4}Discussion}{8}{section.4}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
