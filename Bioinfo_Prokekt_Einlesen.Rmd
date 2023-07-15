@@ -223,7 +223,24 @@ for (i in 1:dim(data_total)[1]) {
     }
   }
 }
+
+#set values of Bungkan equal to Nong Khai for mapping
+map_data_total = data_total
+for (k in 1:dim(data_total)[1]){
+  Datum = data_total$time_column[k]
+  if (data_total$Reporting_areas[k]=="Bungkan") {
+    for(p in 1:dim(data_total)[1]){
+      if(data_total$Reporting_areas[p] == "Nong Khai" & data_total$time_column[p] == Datum){
+        map_data_total[k,c("temperature", "incidence", "dengue_cases")] = data_total[p,c("temperature", "incidence", "dengue_cases")]
+      }
+    }
+  }
+    
+}
+  
+
 data_total = data_total[data_total$Reporting_areas != "Bungkan", ]
+row.names(data_total) = NULL
 ```
 #create data frame for monsoon season 
 ```{r}

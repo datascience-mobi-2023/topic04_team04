@@ -550,7 +550,6 @@ for (i in r_areas){
   m_inc_temp.y.r = rbind(m_inc_temp.y.r, temp_inc_df)
   rownames(m_inc_temp.y.r) <- 1:nrow(m_inc_temp.y.r)
 }
-
 ```
 
 #k-means clustering
@@ -766,6 +765,9 @@ gridExtra::grid.arrange(map_temp_monthly(f_mean_temp.y.p(period = c(2020), areas
 ```
 #average incidence 2006 to 2020 map
 ```{r}
+library(ggplot2)
+library(sf)
+
 f_map_mean_inc.y.p = function(period, areas){
   map_mean_inc.y.p <- data.frame(incidence = numeric(), time_column = as.Date(character()), Reporting_areas = character())
   for (i in period){
@@ -780,20 +782,31 @@ f_map_mean_inc.y.p = function(period, areas){
 }
 
 f_map_mean_inc.p = function(areas){
-  map_mean_inc.p <- data.frame(incidence = numeric(), time_column = as.Date(character()), Reporting_areas = character())
+  map_mean_inc.p <- data.frame(time_column = as.Date(character()), Reporting_areas = character(), incidence = numeric())
   for (p in areas) {
       provinz = map_data_total[map_data_total$Reporting_areas == p,]
       m_p = data.frame(time_column = provinz$time_column[1], Reporting_areas = provinz$Reporting_areas[1],incidence = mean(provinz$incidence, na.rm = TRUE))
       map_mean_inc.p = rbind(map_mean_inc.p, m_p)
   }
   return(map_mean_inc.p)
-}  
+}
 
-map_mean_inc.p = f_map_mean_inc.p(areas = r_areas)
-district_sf <- st_read("gadm36_THA_shp/gadm36_THA_1.shp")
+r_areas = unique(map_mean_inc.p$Reporting_areas)
+r_areas2 = unique(data_total$Reporting_areas)
+mean_inc.p <- data.frame(time_column = as.Date(character()), Reporting_areas = character(), incidence = numeric())
+  for (p in r_areas2) {
+      provinz = data_total[data_total$Reporting_areas == p,]
+      m_p = data.frame(time_column = provinz$time_column[1], Reporting_areas = provinz$Reporting_areas[1],incidence = mean(provinz$incidence, na.rm = TRUE))
+      mean_inc.p = rbind(mean_inc.p, m_p)
+  }
+mean_inc.p
+mean(map_data_total[721:900,"incidence"], na.rm = T)
+
+map_mean_inc.p = f_map_mean_inc.p(areas = unique(map_data_total$Reporting_areas))
+district_sf = st_read("gadm36_THA_shp/gadm36_THA_1.shp")
 district_sf$incidence <- map_mean_inc.p$incidence
 
-ggplot() +
+ggplot2::ggplot() +
   geom_sf(data = district_sf, aes(fill = incidence)) +
   scale_fill_gradient(low = "white", high = "green") + labs(fill = "Incidence")
 
