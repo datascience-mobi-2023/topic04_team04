@@ -14,5 +14,7 @@
 \contentsline {section}{\numberline {3}Results}{6}{section.3}%
 \contentsline {subsection}{\numberline {3.1}Descriptive Analysis}{6}{subsection.3.1}%
 \contentsline {subsection}{\numberline {3.2}ARIMA model}{6}{subsection.3.2}%
-\contentsline {section}{\numberline {4}Discussion}{7}{section.4}%
+\contentsline {paragraph}{\nonumberline Time series decomposition}{6}{paragraph*.20}%
+\contentsline {paragraph}{\nonumberline ARIMA forecast}{8}{paragraph*.22}%
+\contentsline {section}{\numberline {4}Discussion}{8}{section.4}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 
