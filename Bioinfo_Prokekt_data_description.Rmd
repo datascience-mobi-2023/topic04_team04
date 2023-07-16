@@ -733,6 +733,7 @@ detach(data_total)
 library(ggplot2)
 library(sf)
 
+#function to plot the incidence of a specific period and over a specific area
 f_map_mean_inc.y.p = function(period, areas){
   map_mean_inc.y.p <- data.frame(incidence = numeric(), time_column = as.Date(character()), Reporting_areas = character())
   for (i in period){
@@ -746,6 +747,7 @@ f_map_mean_inc.y.p = function(period, areas){
   return(map_mean_inc.y.p)
 }
 
+#function to plot the incidence the period from 2006 to 2020 for specific areas
 f_map_mean_inc.p = function(areas){
   map_mean_inc.p <- data.frame(time_column = as.Date(character()), Reporting_areas = character(), incidence = numeric())
   for (p in areas) {
