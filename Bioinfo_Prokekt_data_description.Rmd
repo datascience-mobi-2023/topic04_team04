@@ -576,6 +576,13 @@ cor(clean_data_total$dengue_cases, clean_data_total$temperature, method = "spear
 pheatmap::pheatmap(cor(clean_data_total[c("dengue_cases", "population_count", "temperature", "incidence")]))
 
 ```
+#percentage of dengue cases between 27 and 29,5 celsius
+```{r}
+data_27_29.5 = data_total[data_total$temperature >= 27 & data_total$temperature <= 29.5,]
+sum(data_27_29.5$dengue_cases, na.rm = T)/sum(data_total$dengue_cases, na.rm = T)
+
+
+```
 
 ## correlation between different areas
 
