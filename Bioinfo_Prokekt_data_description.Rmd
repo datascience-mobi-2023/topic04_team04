@@ -127,7 +127,7 @@ pacf_thailand <- pacf(Ts_thai)
 
 ```
 
-##ARIMA differencing (not necessary as the time series is stationary) 
+##ARIMA differencing (not necessary as the time series is stationary)
 
 ```{r}
 
@@ -303,7 +303,6 @@ ggplot() +
   theme_minimal()
 ```
 
-
 #comparing the decomposition of temperature and cases
 
 ```{r}
@@ -370,7 +369,6 @@ plot_case_temp_seasonal = grid.arrange(plot_case_seasonal, plot_temp_seasonal, n
 print(plot_case_temp_trend)
 
 ```
-
 
 # mean of dengue_cases and temperature of whole thailand per month
 
@@ -572,6 +570,7 @@ pheatmap::pheatmap(cor(clean_data_total[c("dengue_cases", "population_count", "t
 ```
 
 #percentage of dengue cases between 27 and 29,5 celsius
+
 ```{r}
 data_27_29.5 = data_total[data_total$temperature >= 27 & data_total$temperature <= 29.5,]
 sum(data_27_29.5$dengue_cases, na.rm = T)/sum(data_total$dengue_cases, na.rm = T)
@@ -667,6 +666,7 @@ TSstudio::ts_plot(my_ts)
 ```
 
 #GAM
+
 ```{r}
 library(readxl)
 library(nlme)
@@ -732,6 +732,7 @@ detach(data_total)
 ```
 
 #average incidence 2006 to 2020 map
+
 ```{r}
 library(ggplot2)
 library(sf)
@@ -815,8 +816,8 @@ map_incidence_monthly(rows_2016Apr)
 
 ```
 
-
 #average temperature 2006 to 2020 map
+
 ```{r}
 
 f_map_mean_inc.p.t = function(areas){
@@ -836,4 +837,7 @@ district_sf.t$temperature <- map_mean_inc.p.t$temperature
 
 ggplot() +
   geom_sf(data = district_sf.t, aes(fill = temperature)) +
- scale_fill_gradientn(colors = rev(terrain.colors(100)), limits = c( 22, 31)) + labs(fill = "temperature") # limits = c( 0, 22.75)
+ scale_fill_gradientn(colors = rev(terrain.colors(100)), limits = c( 22, 31)) + labs(fill = "temperature") +
+  labs(title = "Average Temperatures for 2006-2020 ")# limits = c( 0, 22.75)
+```
+
