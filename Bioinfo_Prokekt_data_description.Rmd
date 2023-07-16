@@ -447,20 +447,9 @@ f_median_temp = function(){
 dif_mm_dengue = f_mean_dengue()["dengue_cases"]-f_median_dengue()["dengue_cases"]
 dif_mm_dengue = cbind(dif_mm_dengue,f_mean_dengue()["time_column"])
 
-dif_mm_temp = f_mean_temp()["temperature"]-f_median_temp()["temperature"]
-dif_mm_temp = cbind(dif_mm_temp,f_mean_temp()["time_column"])
-
-plot_mean_temp = ggplot2::ggplot() +
-  geom_line(data = f_mean_temp(), aes(x = time_column, y = temperature)) +
-  labs(x = "time", y = "temperature", title = "Mean temperature")
-
 plot_mean_dengue = ggplot2::ggplot() +
   geom_line(data = f_mean_dengue(), aes(x = time_column, y = dengue_cases)) +
   labs(x = "time", y = "dengue-cases", title = "Mean dengue cases")
-
-plot_median_temp = ggplot2::ggplot() +
-  geom_line(data = f_median_temp(), aes(x = time_column, y = temperature)) +
-  labs(x = "time", y = "temperature", title = "Median temperature")
 
 plot_median_dengue = ggplot2::ggplot() +
   geom_line(data = f_median_dengue(), aes(x = time_column, y = dengue_cases)) +
@@ -469,6 +458,19 @@ plot_median_dengue = ggplot2::ggplot() +
 plot_dif_dengue = ggplot2::ggplot() +
   geom_line(data = dif_mm_dengue, aes(x = time_column, y = dengue_cases)) +
   labs(x = "time", y = "dengue-cases", title = "Difference between mean and median")
+
+
+dif_mm_temp = f_mean_temp()["temperature"]-f_median_temp()["temperature"]
+dif_mm_temp = cbind(dif_mm_temp,f_mean_temp()["time_column"])
+
+plot_mean_temp = ggplot2::ggplot() +
+  geom_line(data = f_mean_temp(), aes(x = time_column, y = temperature)) +
+  labs(x = "time", y = "temperature", title = "Mean temperature")
+
+
+plot_median_temp = ggplot2::ggplot() +
+  geom_line(data = f_median_temp(), aes(x = time_column, y = temperature)) +
+  labs(x = "time", y = "temperature", title = "Median temperature")
 
 plot_dif_temp = ggplot2::ggplot() +
   geom_line(data = dif_mm_temp, aes(x = time_column, y = temperature)) +
