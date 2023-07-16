@@ -147,7 +147,7 @@ pacf_thailand <- pacf(Ts_thai)
 
 ```
 
-#ARIMA differencing (not necessary as the time series is stationary) 
+##ARIMA differencing (not necessary as the time series is stationary) 
 
 ```{r}
 
@@ -161,7 +161,7 @@ acfRes_stationary <- acf(Ts_thai_stat)
 pacfRes_stationary <- pacf(Ts_thai_stat)
 ```
 
-#ARIMA "by hand"
+##ARIMA "by hand"
 
 ```{r}
 p_range <- 0:4  # AR order
@@ -208,7 +208,7 @@ best_model
 
 ```
 
-#Auto ARIMA
+##Auto ARIMA
 
 ```{r}
 library(forecast)
@@ -263,7 +263,7 @@ ggplot() +
   theme_minimal()
 ```
 
-#ARIMA forecast best model
+##ARIMA forecast best model
 
 ```{r}
 library(forecast)
@@ -292,7 +292,7 @@ ggplot() +
   theme_minimal()
 ```
 
-#ARIMA forecast 2016
+##ARIMA forecast 2016
 
 ```{r}
 library(forecast)
@@ -324,7 +324,7 @@ ggplot() +
 ```
 
 
-#comparing the decomposition of temperature and cases
+##comparing the decomposition of temperature and cases
 
 ```{r}
 library(ggplot2)
@@ -373,7 +373,7 @@ print(plot_case_temp_trend)
 ```
 
 
-## mean of dengue_cases and temperature of whole thailand per month
+# mean of dengue_cases and temperature of whole thailand per month
 
 ```{r}
 library(ggplot2)
@@ -685,7 +685,7 @@ AIC_best
 detach(data_monsoon)
 ```
 
-# GAM forecast
+## GAM forecast
 
 ```{r, fig.width = 10, fig.height = 15}
 library(raster)
