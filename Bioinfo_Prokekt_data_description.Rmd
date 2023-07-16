@@ -98,12 +98,6 @@ subset_mean_temp("2013-06-01", "2014-06-30", mean_tempvec, month_dates)
 subset_mean_temp("2016-01-01", "2016-12-31", mean_tempvec, month_dates)
 ```
 
-# Correlation
-
-```{r}
-cor = cor(data_total$incidence, data_total$temperature, use = "pairwise.complete.obs")
-plot(data_total$temperature, data_total$incidence, main = "incidence over temperature", xlab = "inzidenz", ylab = "temperature")
-```
 
 #ARIMA Dengue cases
 
