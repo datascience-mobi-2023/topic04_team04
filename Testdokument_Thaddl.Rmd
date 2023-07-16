@@ -479,23 +479,16 @@ plot(dengue_plot_time,dengue_plot_cases, type = "o")
 #distribution of incidence and temperature
 
 ```{r}
-mu <- round(mean(data_total$incidence, na.rm = TRUE), digits = 0)
-size <- round(var(data_total$incidence, na.rm = TRUE) / (mu - 1), digits = 0)
 
 q.dengue = quantile(data_total$incidence, probs = c(0.01,0.1,0.25,0.5,0.75,0.9,0.99), na.rm = TRUE)
 hist(data_total$incidence,  breaks = 200, main = "Distribution of incidence", xlab = "incidence", freq = F);abline(v=q.dengue,lty=3,lwd=2,col='red')
 lines(density(data_total$incidence, na.rm = T), col = "blue", lwd = 2)
-curve(dnbinom(round(x, digits = 0), size = size, mu = mu), 
-      from = round(min(data_total$incidence, na.rm = TRUE), digits = 0),
-      to = round(max(data_total$incidence, na.rm = TRUE), digits = 0),
-      add = TRUE, col = "green", lwd = 2)
 
 q.temp = quantile(data_total$temperature, probs = c(0.01,0.1,0.25,0.5,0.75,0.9,0.99), na.rm = TRUE)
 hist(data_total$temperature,  breaks = 200, main = "Distribution of temperature", xlab = "temperature", freq = F);abline(v=q.temp,lty=3,lwd=2,col='red')
 curve(dnorm(x, mean = mean(data_total$temperature, na.rm = TRUE), sd = sd(data_total$temperature, na.rm = TRUE)), 
       add = TRUE, col = "green", lwd = 2)
 lines(density(data_total$temperature, na.rm = T), col = "blue", lwd = 2)
-
 
 ```
 
@@ -505,14 +498,13 @@ lines(density(data_total$temperature, na.rm = T), col = "blue", lwd = 2)
 library(npreg)
 library(ggplot2)
 
-smoothed_curve <- ss(clean_data_total$temperature, clean_data_total$incidence, nknots = 10)
+smoothed_curve <- ss(clean_data_total$temperature, clean_data_total$incidence, nknots = 16)
+plot(smoothed_curve, col = "blue")
 
 plot(clean_data_total$temperature, clean_data_total$incidence, pch = 20,
      ylab = "incidence",
      xlab = "temperature",
   abline(v = mean(clean_data_total$temperature), col = "red"))
-
-plot(smoothed_curve, col = "blue")
 
 plot(rank(data_total$temperature), rank(data_total$incidence), pch = 20,
      ylab = "incidence",
@@ -535,6 +527,15 @@ cor(clean_data_total$dengue_cases, clean_data_total$temperature, method = "spear
 pheatmap::pheatmap(cor(clean_data_total[c("dengue_cases", "population_count", "temperature", "incidence")]))
 
 ```
+#percentage of dengue cases between 27 and 29,5 celsius
+```{r}
+data_27_29.5 = data_total[data_total$temperature >= 27 & data_total$temperature <= 29.5,]
+sum(data_27_29.5$dengue_cases, na.rm = T)/sum(data_total$dengue_cases, na.rm = T)
+
+
+```
+
+
 
 #monsoon season smoothed curve incidence temperature
 
