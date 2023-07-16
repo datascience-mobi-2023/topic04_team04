@@ -726,6 +726,7 @@ my.p1.mask <- mask(my.p1, thailand)
 
 plot(my.p1.mask, legend.width=2, legend.shrink=0.5, axes= F, box=F, zlim = c(0,22.8)) + plot(thailand, add=TRUE)
 
+plot(crop(tas,my.area)) + plot(thailand, add= T)
 
 detach(data_total)
 ```
