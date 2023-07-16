@@ -291,6 +291,19 @@ apply(data_total[,c(num_col, int_col)], 2, function(x){median(x,na.rm=TRUE)})
 apply(data_total[,c(num_col, int_col)], 2, function(x){sd(x,na.rm=TRUE)})
 ```
 
+#percentage in the monsoon season
+```{r}
+#percentage monsoon cases verses over all cases
+monsoon_perc = sum(data_monsoon$incidence, na.rm = T)/sum(data_total$incidence, na.rm = T)
+monsoon_perc
+#average temperature in monsoon vs over all
+mean(data_monsoon$temperature, na.rm = T)
+mean(data_total$temperature, na.rm = T)
+data_not_monsoon = data_total[!(data_total$month %in% c("Jun", "Jul", "Aug", "Sep")),]
+mean(data_not_monsoon$temperature, na.rm = T)
+```
+
+
 #mean of dengue_cases and temperature of whole thailand per month
 
 ```{r}
@@ -463,14 +476,27 @@ dengue_plot_time <- data_total$time_column[data_total$Reporting_areas == "Bangko
 plot(dengue_plot_time,dengue_plot_cases, type = "o")
 ```
 
-#distribution of incidence
+#distribution of incidence and temperature
 
 ```{r}
+mu <- round(mean(data_total$incidence, na.rm = TRUE), digits = 0)
+size <- round(var(data_total$incidence, na.rm = TRUE) / (mu - 1), digits = 0)
+
 q.dengue = quantile(data_total$incidence, probs = c(0.01,0.1,0.25,0.5,0.75,0.9,0.99), na.rm = TRUE)
-hist(data_total$incidence,  breaks = 200, main = "Distribution of incidence", xlab = "incidence", freq = TRUE);abline(v=q.dengue,lty=3,lwd=2,col='red')
+hist(data_total$incidence,  breaks = 200, main = "Distribution of incidence", xlab = "incidence", freq = F);abline(v=q.dengue,lty=3,lwd=2,col='red')
+lines(density(data_total$incidence, na.rm = T), col = "blue", lwd = 2)
+curve(dnbinom(round(x, digits = 0), size = size, mu = mu), 
+      from = round(min(data_total$incidence, na.rm = TRUE), digits = 0),
+      to = round(max(data_total$incidence, na.rm = TRUE), digits = 0),
+      add = TRUE, col = "green", lwd = 2)
 
 q.temp = quantile(data_total$temperature, probs = c(0.01,0.1,0.25,0.5,0.75,0.9,0.99), na.rm = TRUE)
-hist(data_total$temperature,  breaks = 200, main = "Distribution of temperature", xlab = "temperature", freq = TRUE);abline(v=q.temp,lty=3,lwd=2,col='red')
+hist(data_total$temperature,  breaks = 200, main = "Distribution of temperature", xlab = "temperature", freq = F);abline(v=q.temp,lty=3,lwd=2,col='red')
+curve(dnorm(x, mean = mean(data_total$temperature, na.rm = TRUE), sd = sd(data_total$temperature, na.rm = TRUE)), 
+      add = TRUE, col = "green", lwd = 2)
+lines(density(data_total$temperature, na.rm = T), col = "blue", lwd = 2)
+
+
 ```
 
 #correlation between temperature and incidence
@@ -672,7 +698,7 @@ detach(data_total)
 
 # GAM forecast
 
-```{r}
+```{r, fig.width = 10, fig.height = 15}
 library(raster)
 library(gam)
 library(sdm)
@@ -695,9 +721,13 @@ p1 <- raster::predict(tas, model2, type = "response")
 
 thailand <- raster::getData('GADM', country='THA', level=1)
 my.area <- extent(thailand)
+my.area = extent(95,107,5.5,20.5)
 my.p1 <- crop(p1, my.area)
 my.p1.mask <- mask(my.p1, thailand)
-plot(my.p1.mask, legend.width=1, legend.shrink=0.75, axes= FALSE, box=FALSE) + title("Predicted values: Influence of temperature on dengue cases for 2021-2040", line = +1) + plot(thailand, add=TRUE)
+
+
+plot(my.p1.mask, legend.width=2, legend.shrink=0.5, axes= F, box=F, zlim = c(0,22.8)) + plot(thailand, add=TRUE)
+
 
 detach(data_total)
 ```
@@ -713,15 +743,15 @@ district_sf <- st_read("gadm36_THA_shp/gadm36_THA_1.shp")
 
 #Inzidenz vom April 2006 auf die karte geplottet
 
-district_sf$incidence2006Aug <- rows_2006Aug$incidence
+#district_sf$incidence2006Aug <- rows_2006Aug$incidence
 
-ggplot() +
-  geom_sf(data = district_sf, aes(fill = incidence2006Aug)) +
-  scale_fill_gradient(low = "yellow", high = "red") + labs(fill = "Incidence in Aug 2006")
+#ggplot() +
+ # geom_sf(data = district_sf, aes(fill = incidence2006Aug)) +
+ # scale_fill_gradient(low = "yellow", high = "red") + labs(fill = "Incidence in Aug 2006")
 ```
 
 #Funktion für Inzidenz plot der Monate
-```{r}
+```{r, eval=FALSE}
 
 library(sf)
 library(ggplot2)
@@ -759,9 +789,9 @@ ggplot() +
   
   
 }
-map_incidence_monthly(f_mean_inc.y.p(period = c(2006:2020), areas = r_areas))
+##map_incidence_monthly(f_mean_inc.y.p(period = c(2006:2020), areas = r_areas))
 
-gridExtra::grid.arrange(map_temp_monthly(f_mean_temp.y.p(period = c(2020), areas = r_areas)),map_incidence_monthly(f_mean_inc.y.p(period = c(2020), areas = r_areas)))
+##gridExtra::grid.arrange(map_temp_monthly(f_mean_temp.y.p(period = c(2020), areas = r_areas)),map_incidence_monthly(f_mean_inc.y.p(period = c(2020), areas = r_areas)))
 
 ```
 #average incidence 2006 to 2020 map
@@ -792,7 +822,7 @@ f_map_mean_inc.p = function(areas){
   return(map_mean_inc.p)
 }
 
-r_areas = unique(map_mean_inc.p$Reporting_areas)
+
 r_areas2 = unique(data_total$Reporting_areas)
 mean_inc.p <- data.frame(time_column = as.Date(character()), Reporting_areas = character(), incidence = numeric())
   for (p in r_areas2) {
@@ -805,9 +835,10 @@ map_mean_inc.p = f_map_mean_inc.p(areas = unique(map_data_total$Reporting_areas)
 district_sf = st_read("gadm36_THA_shp/gadm36_THA_1.shp")
 district_sf$incidence <- map_mean_inc.p$incidence
 
+
 ggplot2::ggplot() +
   geom_sf(data = district_sf, aes(fill = incidence)) +
-  scale_fill_gradient(low = "white", high = "green") + labs(fill = "Incidence")
+  scale_fill_gradientn(colors = rev(terrain.colors(100)), limits = c(0,22.8)) + labs(fill = "Incidence") + labs(title = "Average incidences for 2006-2020 ")
 
 ```
 

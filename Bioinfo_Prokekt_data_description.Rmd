@@ -685,8 +685,9 @@ AIC_best
 detach(data_monsoon)
 ```
 
-# GAM forcast
-```{r}
+# GAM forecast
+
+```{r, fig.width = 10, fig.height = 15}
 library(raster)
 library(gam)
 library(sdm)
@@ -694,25 +695,30 @@ library(readxl)
 library(mgcv)
 library(ncdf4)
 
-lower_limit = quantile(data_monsoon$temperature, probs = 0.05, na.rm = T)
-upper_limit = quantile(data_monsoon$temperature, probs = 0.95, na.rm = T)
+## lower_limit = quantile(data_monsoon$temperature, probs = 0.05, na.rm = T)
+#upper_limit = quantile(data_monsoon$temperature, probs = 0.95, na.rm = T)
 
-data_monsoon_5.95 = subset(data_monsoon, temperature >= lower_limit & temperature <= upper_limit)
+#data_monsoon_5.95 = subset(data_monsoon, temperature >= lower_limit & temperature <= upper_limit)
 
-attach(data_monsoon_5.95)
+attach(data_total)
 
-model2 <- gam(incidence~s(temperature, k = 5), family = "quasipoisson")
-plot.gam(model2)
-tas <- stack("tas_SEA22_MPI_rcp85_2021-2040_grid_subc_daymean_monmean_swm_timmean_thai_new.nc")
+model2 <- gam(incidence~s(temperature, k = 16), family = "quasipoisson")
+tas <- stack("tas_SEA22_MPI_rcp85_2021-2040_grid_subc_daymean_monmean_timmean.nc")
+#tas_test = crop(tas, my.area)
 names(tas) <- "temperature"
 p1 <- raster::predict(tas, model2, type = "response")
 
 thailand <- raster::getData('GADM', country='THA', level=1)
 my.area <- extent(thailand)
+my.area = extent(95,107,5.5,20.5)
 my.p1 <- crop(p1, my.area)
 my.p1.mask <- mask(my.p1, thailand)
-plot(my.p1.mask, legend.width=1, legend.shrink=0.75, axes= FALSE, box=FALSE) + title("Predicted values: Influence of Temp on dengue cases", line = +1) + plot(thailand, add=TRUE)
-detach(data_monsoon_5.95)
+
+
+plot(my.p1.mask, legend.width=2, legend.shrink=0.5, axes= F, box=F, zlim = c(0,22.8)) + plot(thailand, add=TRUE)
+
+
+detach(data_total)
 ```
 
 Funktion für Inzidenz plot der Monate
