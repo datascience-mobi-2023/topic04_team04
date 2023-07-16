@@ -18,4 +18,5 @@
 \contentsline {paragraph}{\nonumberline ARIMA forecast}{7}{paragraph*.22}%
 \contentsline {subsection}{\numberline {3.3}GAM model}{8}{subsection.3.3}%
 \contentsline {section}{\numberline {4}Discussion}{10}{section.4}%
+\contentsline {section}{\numberline {5}Appendix}{12}{section.5}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

@@ -29,7 +29,6 @@ To predict the development of the dengue cases with an ARIMA model, a time serie
 A requirement for fitting an ARIMA model is a stationary time-series. This is obtained, when the mean value doesn’t change over time, the variance doesn’t increase and the seasonality effect is minimal \citep{Prabhakaran2017}. Two tests were used to test for stationarity of the data. The Augmented Dickey-Fuller (ADF) test examines whether the time series has a unit root, indicating non-stationarity. In the ADF test, the null hypothesis assumes the presence of a unit root, implying non-stationarity, while the alternative hypothesis suggests stationarity. The Kwiatkowski-Phillips-Schmidt-Shin (KPSS) test is also a unit root test but focuses on the presence of a deterministic trend in the series. In contrast to ADF-test, for the KPSS-test the null hypothesis assumes stationarity. If the time series is initially found to be non-stationary, the differences between consecutive observations can be calculated, and the stationarity tests can be applied again \citep{Hyndman2018}.
 ARIMA models combine an autoregressive model AR(p) and a moving average model MA(q). 
 The autoregressive model computes the current value from previous values and the error term:
-
 	\[y_t = c + \phi_1 y_{t-1} + \phi_2 y_{t-2}+...+ \phi_p y_{t-p}+ \epsilon _t\]
 	$\epsilon _t$ = white noise\\
 	$1,…,\phi _p$ = parameters\\

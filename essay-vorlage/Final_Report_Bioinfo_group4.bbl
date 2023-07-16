@@ -1,4 +1,4 @@
-\begin{thebibliography}{17}
+\begin{thebibliography}{18}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 \expandafter\ifx\csname url\endcsname\relax
   \def\url#1{{\tt #1}}\fi
@@ -115,6 +115,14 @@ Prabhakaran, S. (2017). Time Series Analysis With R. r-statistics.co .
 Schneider, A., Hommel, G., and Blettner, M. (2010). Linear Regression Analysis:
   Part 14 of a Series on Evaluation of Scientific Publications. Deutsches
   Ärzteblatt International  {\textit{107\/}}, 776.
+
+
+\bibitem[{Tipayamongkholgul {\textit{et~al.\/}}(2009)Tipayamongkholgul, Fang,
+  Klinchan, Liu, and King}]{Tipayamongkholgul2009}
+Tipayamongkholgul, M., Fang, C.~T., Klinchan, S., Liu, C.~M., and King, C.~C.
+  (2009). Effects of the El Nĩo-Southern Oscillation on dengue epidemics in
+  Thailand, 1996-2005. BMC Public Health {\textit{9\/}}, 1--15,
+  \doi{10.1186/1471-2458-9-422/FIGURES/5}.
 
 
 \bibitem[{Venkat(2018)}]{Venkat2018}
