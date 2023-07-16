@@ -9,11 +9,15 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-##Einlesen der Tabellen und umwandeln der Tabellen in data frames
+all libraries which are used in this document
 ```{r}
 library(readxl)
 library(dplyr)
+```
 
+
+##Einlesen der Tabellen und umwandeln der Tabellen in data frames
+```{r}
 Endung = "_dengue_extracted.xlsx"
 Anfang = "Dengue"
 
@@ -81,8 +85,6 @@ colnames(data_total)[5] = "temperature"
 
 #Einlesen Population data
 ```{r}
-library(readxl)
-
 Endung = "_population.xlsx"
 #empty dataframe for the data
 total_population = data.frame(Reporting_areas = character(), population_count = numeric())
