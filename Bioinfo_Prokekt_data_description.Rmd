@@ -114,26 +114,6 @@ library(forecast)
 Ts_thai <- ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
 TSstudio::ts_plot(Ts_thai)
 
-# moving average 
-autoplot(Ts_thai) +
-  autolayer(ma(Ts_thai, order = 12)) +
-  xlab("Year") + ylab("dengue_cases") +
-  ggtitle("Dengue_cases_thailand_with_MA") 
-
-#additive decomposing
-decomposed_thai_add <- decompose(Ts_thai, type="additive") # use type = "additive" for additive components
-plot(decomposed_thai_add)
-grid(lty = 2, col = "gray")
-                      
-hist(decomposed_thai_add$random, breaks = 20) 
-
-
-#seasonal decomposing
-decomposed_thai_seas <- stl(Ts_thai, s.window = "periodic")
-plot(decomposed_thai_seas, main = "Decomposition of a periodic time series", xaxt = "n")
-grid(lty = 2, col = "gray")
-
-
 library(tseries)
 adf.test(Ts_thai) # p-value (0.01) < 0.05 indicates the TS is stationary --> suggests it is stationary
 # alternative hypothesis: stationary
@@ -330,6 +310,26 @@ ggplot() +
 library(ggplot2)
 library(forecast)
 library(gridExtra)
+
+# moving average 
+autoplot(Ts_thai) +
+  autolayer(ma(Ts_thai, order = 12)) +
+  xlab("Year") + ylab("dengue_cases") +
+  ggtitle("Dengue_cases_thailand_with_MA") 
+
+#additive decomposing
+decomposed_thai_add <- decompose(Ts_thai, type="additive") # use type = "additive" for additive components
+plot(decomposed_thai_add)
+grid(lty = 2, col = "gray")
+                      
+hist(decomposed_thai_add$random, breaks = 20) 
+
+
+#seasonal decomposing
+decomposed_thai_seas <- stl(Ts_thai, s.window = "periodic")
+plot(decomposed_thai_seas, main = "Decomposition of a periodic time series", xaxt = "n")
+grid(lty = 2, col = "gray")
+
 
 total_thailand_temp = cbind(total_thailand, mean_tempvec)
 colnames(total_thailand_temp)[4] = "temperature"
