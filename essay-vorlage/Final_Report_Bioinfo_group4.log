@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.6.13)  16 JUL 2023 12:13
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.6.13)  16 JUL 2023 12:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1366,50 +1366,67 @@ Underfull \hbox (badness 10000) in paragraph at lines 33--37
 
 LaTeX Warning: Command \textellipsis invalid in math mode on input line 40.
 
+[5]
 
 LaTeX Warning: Command \textellipsis invalid in math mode on input line 51.
 
-[5]) (./chapter/results.tex
-<fig/Decomposition_of_add_ts.png, id=145, 1529.715pt x 945.5325pt>
+) (./chapter/results.tex [6]
+<fig/Decomposition_of_add_ts.png, id=156, 1529.715pt x 945.5325pt>
 File: fig/Decomposition_of_add_ts.png Graphic file (type png)
 <use fig/Decomposition_of_add_ts.png>
 Package pdftex.def Info: fig/Decomposition_of_add_ts.png  used on input line 9.
 
 (pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
-<fig/Trend_temp_cases.png, id=148, 1529.715pt x 945.5325pt>
+<fig/Trend_temp_cases.png, id=159, 1529.715pt x 945.5325pt>
 File: fig/Trend_temp_cases.png Graphic file (type png)
 <use fig/Trend_temp_cases.png>
 Package pdftex.def Info: fig/Trend_temp_cases.png  used on input line 17.
 (pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
- [6] [7 <./fig/Decomposition_of_add_ts.png> <./fig/Trend_temp_cases.png>]
-<fig/Auto_ARIMA_forecast.png, id=172, 1529.715pt x 945.5325pt>
+ [7 <./fig/Decomposition_of_add_ts.png>]
+<fig/Auto_ARIMA_forecast.png, id=173, 1529.715pt x 945.5325pt>
 File: fig/Auto_ARIMA_forecast.png Graphic file (type png)
 <use fig/Auto_ARIMA_forecast.png>
 Package pdftex.def Info: fig/Auto_ARIMA_forecast.png  used on input line 31.
 (pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
-<fig/Auto_ARIMA_2016.png, id=174, 1529.715pt x 945.5325pt>
+<fig/Auto_ARIMA_2016.png, id=175, 1529.715pt x 945.5325pt>
 File: fig/Auto_ARIMA_2016.png Graphic file (type png)
 <use fig/Auto_ARIMA_2016.png>
 Package pdftex.def Info: fig/Auto_ARIMA_2016.png  used on input line 39.
 (pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
-) (./chapter/discussion.tex)
-(./Final_Report_Bioinfo_group4.bbl [8 <./fig/Auto_ARIMA_forecast.png>] [9 <./fi
-g/Auto_ARIMA_2016.png>]) [10] (./Final_Report_Bioinfo_group4.aux)
+
+! Undefined control sequence.
+\percent ->\ERROR 
+                  
+l.48 ...e model explains approximately 4,7\percent
+                                                   of the variance in the da...
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
+) (./chapter/discussion.tex [8 <./fig/Trend_temp_cases.png>] [9 <./fig/Auto_ARI
+MA_forecast.png> <./fig/Auto_ARIMA_2016.png>])
+(./Final_Report_Bioinfo_group4.bbl [10] [11]) [12]
+(./Final_Report_Bioinfo_group4.aux)
 
 LaTeX Warning: There were undefined references.
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
 
 Package rerunfilecheck Info: File `Final_Report_Bioinfo_group4.out' has not cha
 nged.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 23479 strings out of 478268
- 470701 string characters out of 5846347
- 957072 words of memory out of 5000000
- 41251 multiletter control sequences out of 15000+600000
+ 23483 strings out of 478268
+ 470734 string characters out of 5846347
+ 955072 words of memory out of 5000000
+ 41252 multiletter control sequences out of 15000+600000
  506088 words of font info for 49 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 108i,7n,106p,10643b,957s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 108i,7n,106p,10643b,975s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/lo
 cal/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/20
 22/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2022/texmf-d
@@ -1425,10 +1442,10 @@ lm/lmss10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmss12.
 pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmss17.pfb></usr/
 local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texl
 ive/2022/texmf-dist/fonts/type1/public/lm/lmsy8.pfb>
-Output written on Final_Report_Bioinfo_group4.pdf (10 pages, 705418 bytes).
+Output written on Final_Report_Bioinfo_group4.pdf (12 pages, 708318 bytes).
 PDF statistics:
- 294 PDF objects out of 1000 (max. 8388607)
- 245 compressed objects within 3 object streams
- 70 named destinations out of 1000 (max. 500000)
- 85 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 309 PDF objects out of 1000 (max. 8388607)
+ 258 compressed objects within 3 object streams
+ 73 named destinations out of 1000 (max. 500000)
+ 93 words of extra memory for PDF output out of 10000 (max. 10000000)
 
