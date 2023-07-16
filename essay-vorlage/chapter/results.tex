@@ -2,7 +2,7 @@
 	\subsection{Descriptive Analysis}
 
 	\subsection{ARIMA model}
-	\paragraph{Time series decomposition}The time series of total dengue cases in Thailand was additively decomposed in the components trend, seasonal and random, as shown in Figure \ref{fig:decomp_ts_dengue}. The time series shows a seasonal pattern with a frequency of 12 months. The trend shows fluctuation over the time period with two periods of comparatively high dengue cases. 
+	\paragraph{Time series decomposition}The time series of total dengue cases in Thailand was additively decomposed in the components trend, seasonal and random, as shown in Figure \ref{fig:decomp_ts_dengue}. The time series shows a seasonal pattern with a frequency of 12 months. The trend shows fluctuation over the time period with two periods of comparatively high dengue cases in 2013/14 and 2015/16.
 	
 	\begin{figure}[htbp] 
 		\centering
@@ -18,10 +18,10 @@
 		\caption{Trend of the total dengue cases in Thailand compared to the trend of the average temperature in Thailand for the years 2006 till 2020.}
 		\label{fig:Trend_temp_cases}
 	\end{figure}
-	
+	 In 2010 and 2012/13, there were temperature peaks, followed by peaking dengue cases a few months after. In 2015/16 rising temperatures were accompanied by rising dengue cases. 
 	\paragraph{ARIMA forecast}
 	
-	ARIMA modeling was performed to forecast the development of the total dengue cases in Thailand. For ADF test results, a p-value of 0.01 was used, for the KPSS test results a p-value of 0.1 was used. Therefore both test indicate stationarity of the time series and differencing isn’t necessary. Observation of the ACF of the time series showed oscillations which suggests the presence of seasonality in the data. The pACF exhibits a notable pattern with an initial positive peak followed by a significant negative peak. This pattern indicates the need to consider both autoregressive and moving average components in the model.
+	ARIMA modeling was performed to forecast the dengue case development in Thailand. For ADF test results, a p-value of 0.01 was used, for the KPSS test results a p-value of 0.1 was used. Therefore both test indicate stationarity of the time series and differencing isn’t necessary. Observation of the time series ACF showed oscillations which suggests the presence of seasonality in the data. The pACF exhibits a notable pattern with an initial positive peak followed by a significant negative peak. This pattern indicates the need to consider both autoregressive and moving average components in the model.
 	To test for the optimal ARIMA model, models with different combinations of p, d and q values were generated and the best model was selected by comparing the AICs. The best model was found to be (2,2,2) with an AIC of 3319.732. Because this method could not account for seasonality in the data, the auto.arima function was used. “ARIMA(1,0,2)(1,1,0)[12] with drift” was found to be the best model. This model consists of an autoregressive term and two moving average terms. No differencing was performed. The model also has seasonal compounds with a period of 12. “With drift” means that a constant is included in the model. As the AIC of 3108.35 is lower and thus more accurate than the AIC of the former model, the auto.arima model was used for further analysis. 
 	The evaluation of the histogram of the residuals revealed that the residuals were distributed similar to a normal distribution. The ACF plot indicates some significant autocorrelation at lag 1, while the remaining lags show no significant autocorrelation. The p-value of the Ljung-Box test was 0.41. Thus, the residuals are not distinguishable from white noise and the model has adequately captured the information in the data. 
 	Based on the model, a forecast was made for the next four years, which extends beyond the data (see Figure \ref{fig:Auto_ARIMA_forecast}). 
@@ -41,4 +41,5 @@
 		\label{fig:Auto_ARIMA_2016}
 	\end{figure}
 
+Although the forecast is more uniform than the actual cases in th years 2017 to 2020, the reported cases are in the range of deviation shown in grey. 
 	
