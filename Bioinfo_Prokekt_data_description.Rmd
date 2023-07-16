@@ -467,7 +467,6 @@ plot_mean_temp = ggplot2::ggplot() +
   geom_line(data = f_mean_temp(), aes(x = time_column, y = temperature)) +
   labs(x = "time", y = "temperature", title = "Mean temperature")
 
-
 plot_median_temp = ggplot2::ggplot() +
   geom_line(data = f_median_temp(), aes(x = time_column, y = temperature)) +
   labs(x = "time", y = "temperature", title = "Median temperature")
@@ -477,6 +476,9 @@ plot_dif_temp = ggplot2::ggplot() +
   labs(x = "time", y = "temperature", title = "Difference between mean and median")
 
 gridExtra::grid.arrange(plot_mean_dengue, plot_mean_temp, plot_median_dengue, plot_median_temp,plot_dif_dengue,plot_dif_temp, nrow = 3)
+
+#wenn man nur die Temp-Plots haben möchte
+#gridExtra::grid.arrange(plot_mean_temp, plot_median_temp, plot_dif_temp, nrow=3)
 ```
 
 ## mean of dengue_cases and temperature of whole thailand per year
