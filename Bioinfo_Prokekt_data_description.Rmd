@@ -324,7 +324,7 @@ ggplot() +
 ```
 
 
-##comparing the decomposition of temperature and cases
+#comparing the decomposition of temperature and cases
 
 ```{r}
 library(ggplot2)
@@ -334,31 +334,30 @@ library(gridExtra)
 total_thailand_temp = cbind(total_thailand, mean_tempvec)
 colnames(total_thailand_temp)[4] = "temperature"
 
-Ts_thai_temp = ts(total_thailand_temp$temperature, frequency = 12, start = c(2006, 1))
+Ts_thai_temp <- ts(total_thailand_temp$temperature, frequency = 12, start = c(2006, 1))
 TSstudio::ts_plot(Ts_thai_temp)
 
 #additive decomposing of the temperature
-decomposed_thai_temp_add = decompose(Ts_thai_temp, type="additive") 
-plot(decomposed_thai_temp_add)
+decomposed_thai_temp_add <- decompose(Ts_thai_temp, type="additive") 
+plot(decomposed_thai_temp_add,)
 grid(lty = 2, col = "gray")
 
 #additive decomposing of the dengue cases
-decomposed_thai_add = decompose(Ts_thai, type="additive")
+decomposed_thai_add <- decompose(Ts_thai, type="additive")
 plot(decomposed_thai_add)
 grid(lty = 2, col = "gray")
 
-case_trend = decomposed_thai_add$trend
-temp_trend = decomposed_thai_temp_add$trend
+case_trend <- decomposed_thai_add$trend
+temp_trend <- decomposed_thai_temp_add$trend
 
-plot_case_trend = ggplot(case_trend, aes(x, y)) + geom_line() + labs(title = "Cases_trend")
-plot_temp_trend = ggplot(temp_trend, aes(x, y)) + geom_line() + labs(title = "Temperature_trend")
+plot_case_trend <- ggplot(case_trend, aes(x, y)) + geom_line() + labs(title = "Cases_trend") + xlab("time") + ylab("cases")
+plot_temp_trend <- ggplot(temp_trend, aes(x, y)) + geom_line() + labs(title = "Temperature_trend") +  xlab("time") + ylab("temperature")
 
-plot_case_temp_trend = grid.arrange(plot_case_trend, plot_temp_trend, ncol = 1)
-print(plot_case_temp_trend)
+plot_case_temp_trend <- grid.arrange(plot_case_trend, plot_temp_trend, ncol = 1)
+
 
 
 ```
-
 
 ```{r}
 case_seasonal = decomposed_thailand_add$seasonal
