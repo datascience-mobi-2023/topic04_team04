@@ -13,10 +13,9 @@
 \contentsline {paragraph}{\nonumberline GAM}{6}{paragraph*.18}%
 \contentsline {section}{\numberline {3}Results}{7}{section.3}%
 \contentsline {subsection}{\numberline {3.1}Descriptive Analysis}{7}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}ARIMA model}{7}{subsection.3.2}%
-\contentsline {paragraph}{\nonumberline Time series decomposition}{7}{paragraph*.20}%
-\contentsline {paragraph}{\nonumberline ARIMA forecast}{7}{paragraph*.22}%
-\contentsline {subsection}{\numberline {3.3}GAM model}{8}{subsection.3.3}%
-\contentsline {section}{\numberline {4}Discussion}{10}{section.4}%
-\contentsline {section}{\numberline {5}Appendix}{12}{section.5}%
+\contentsline {subsection}{\numberline {3.2}Time series decomposition}{8}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}ARIMA model and forecast}{9}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}GAM model}{11}{subsection.3.4}%
+\contentsline {section}{\numberline {4}Discussion}{11}{section.4}%
+\contentsline {section}{\numberline {5}Appendix}{16}{section.5}%
 \providecommand \tocbasic@end@toc@file {}\tocbasic@end@toc@file 

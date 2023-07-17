@@ -1,4 +1,4 @@
-\begin{thebibliography}{18}
+\begin{thebibliography}{23}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 \expandafter\ifx\csname url\endcsname\relax
   \def\url#1{{\tt #1}}\fi
@@ -10,6 +10,14 @@
   \def\doi{doi:\discretionary{}{}{}\begingroup \urlstyle{rm}\Url}\fi \fi
 \expandafter\ifx\csname eprint\endcsname\relax\def\eprint#1{\url{#1}}\fi
 
+\bibitem[{Abdullah {\textit{et~al.\/}}(2022)Abdullah, Dom, Salleh, Salim, and
+  Precha}]{Abdullah2022}
+Abdullah, N. A. M.~H., Dom, N.~C., Salleh, S.~A., Salim, H., and Precha, N.
+  (2022). The association between dengue case and climate: A systematic review
+  and meta-analysis. One Health {\textit{15\/}}, 100452,
+  \doi{10.1016/J.ONEHLT.2022.100452}.
+
+
 \bibitem[{Anyamba {\textit{et~al.\/}}(2019)Anyamba, Chretien, Britch,
   Soebiyanto, Small, Jepsen, Forshey, Sanchez, Smith, Harris, Tucker, Karesh,
   and Linthicum}]{Anyamba2019}
@@ -18,6 +26,12 @@ Anyamba, A., Chretien, J.-P., Britch, S.~C., Soebiyanto, R.~P., Small, J.~L.,
   C.~J., Karesh, W.~B., and Linthicum, K.~J. (2019). Global Disease Outbreaks
   Associated with the 2015–2016 El Niño Event. Scientific Reports
   {\textit{9\/}}, 1930.
+
+
+\bibitem[{Chaithong(2022)}]{Chaithong2022}
+Chaithong, T. (2022). Flash Flood Susceptibility Assessment Based on
+  Morphometric Aspects and Hydrological Approaches in the Pai River Basin, Mae
+  Hong Son, Thailand. Water {\textit{14\/}},  \doi{10.3390/w14193174}.
 
 
 \bibitem[{{Copernicus Climate Change Service}(2019)}]{Copernicus2019}
@@ -58,6 +72,13 @@ Hersbach, H., Bell, B., Berrisford, P., Hirahara, S., Horányi, A.,
   {\textit{146\/}}, 1999--2049,  \doi{10.1002/QJ.3803}.
 
 
+\bibitem[{Hu {\textit{et~al.\/}}(2020)Hu, Chen, Chen, Liu, and Huang}]{Hu2020}
+Hu, P., Chen, W., Chen, S., Liu, Y., and Huang, R. (2020). Extremely Early
+  Summer Monsoon Onset in the South China Sea in 2019 Following an El Niño
+  Event. Monthly Weather Review {\textit{148\/}}, 1877--1890,
+  \doi{10.1175/MWR-D-19-0317.1}.
+
+
 \bibitem[{Hyndman and Athanasopoulos(2018)}]{Hyndman2018}
 Hyndman, R., and Athanasopoulos, G. (2018).  Forecasting:
   Principles and Practice (2nd ed). OTexts: Melbourne, Australia.
@@ -70,6 +91,12 @@ Kripalani, R.~H., Singh, S.~V., Panchawagh, N., and Brikshavana, M. (1995).
   Variability of the summer monsoon rainfall over Thailand—comparison with
   features over India. International Journal of Climatology  {\textit{15\/}},
   657--672.
+
+
+\bibitem[{Li {\textit{et~al.\/}}(1985)Li, Lim, Han, and Fang}]{Li1985}
+Li, C.~F., Lim, T.~W., Han, L.~L., and Fang, R. (1985). Rainfall, abundance of
+  Aedes aegypti and dengue infection in Selangor, Malaysia. Southeast Asian
+  Journal of Tropical Medicine and Public Health  {\textit{16\/}}, 560--568.
 
 
 \bibitem[{Liu-Helmersson {\textit{et~al.\/}}(2014)Liu-Helmersson, Stenlund,
@@ -132,6 +159,14 @@ Venkat, A. (2018).  Time Series Analysis for Epidemiological Data.
 \bibitem[{WHO(2023)}]{WHO.2023}
 WHO, W. H.~O. (2023).  Dengue and severe dengue,
   https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue.
+
+
+\bibitem[{Witthayapipopsakul {\textit{et~al.\/}}(2019)Witthayapipopsakul,
+  Cetthakrikul, Suphanchaimat, Noree, and Sawaengdee}]{Witthayapipopsakul2019}
+Witthayapipopsakul, W., Cetthakrikul, N., Suphanchaimat, R., Noree, T., and
+  Sawaengdee, K. (2019). Equity of health workforce distribution in Thailand:
+  an implication of concentration index. Risk management and healthcare policy
+  {\textit{12\/}}, 13--22,  \doi{10.2147/RMHP.S181174}.
 
 
 \bibitem[{Wood(2006)}]{Wood2006}

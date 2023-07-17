@@ -9,11 +9,23 @@ Warning--entry type for "Copernicus2019" isn't style-file defined
 --line 237 of file bib/essay.bib
 Warning--entry type for "Venkat2018" isn't style-file defined
 --line 343 of file bib/essay.bib
-You can't pop an empty literal stack for entry Anyamba2019
+You can't pop an empty literal stack for entry Abdullah2022
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Abdullah2022
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Abdullah2022
 while executing---line 1538 of file bibstyle/ipmbCell.bst
 You can't pop an empty literal stack for entry Anyamba2019
 while executing---line 1538 of file bibstyle/ipmbCell.bst
 You can't pop an empty literal stack for entry Anyamba2019
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Anyamba2019
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Chaithong2022
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Chaithong2022
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Chaithong2022
 while executing---line 1538 of file bibstyle/ipmbCell.bst
 You can't pop an empty literal stack for entry Copernicus2019
 while executing---line 1538 of file bibstyle/ipmbCell.bst
@@ -38,6 +50,12 @@ while executing---line 1538 of file bibstyle/ipmbCell.bst
 You can't pop an empty literal stack for entry Hersbach2020
 while executing---line 1538 of file bibstyle/ipmbCell.bst
 You can't pop an empty literal stack for entry Hersbach2020
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Hu2020
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Hu2020
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Hu2020
 while executing---line 1538 of file bibstyle/ipmbCell.bst
 Warning--missing publisher in Hyndman2018
 You can't pop an empty literal stack for entry Hyndman2018
@@ -52,6 +70,12 @@ You can't pop an empty literal stack for entry Kripalani1995
 while executing---line 1538 of file bibstyle/ipmbCell.bst
 You can't pop an empty literal stack for entry Kripalani1995
 while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Li1985
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Li1985
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Li1985
+while executing---line 1538 of file bibstyle/ipmbCell.bst
 You can't pop an empty literal stack for entry Liu2014
 while executing---line 1538 of file bibstyle/ipmbCell.bst
 You can't pop an empty literal stack for entry Liu2014
@@ -111,6 +135,12 @@ while executing---line 1538 of file bibstyle/ipmbCell.bst
 You can't pop an empty literal stack for entry WHO.2023
 while executing---line 1538 of file bibstyle/ipmbCell.bst
 You can't pop an empty literal stack for entry WHO.2023
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Witthayapipopsakul2019
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Witthayapipopsakul2019
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry Witthayapipopsakul2019
 while executing---line 1538 of file bibstyle/ipmbCell.bst
 Warning--missing publisher in Wood2006
 You can't pop an empty literal stack for entry Wood2006
@@ -119,45 +149,45 @@ You can't pop an empty literal stack for entry Wood2006
 while executing---line 1538 of file bibstyle/ipmbCell.bst
 You can't pop an empty literal stack for entry Wood2006
 while executing---line 1538 of file bibstyle/ipmbCell.bst
-You've used 18 entries,
+You've used 23 entries,
             2929 wiz_defined-function locations,
-            751 strings with 10400 characters,
-and the built_in function-call counts, 13832 in all, are:
-= -- 1036
-> -- 943
-< -- 10
-+ -- 356
-- -- 337
-* -- 1177
-:= -- 2223
-add.period$ -- 63
-call.type$ -- 18
-change.case$ -- 184
-chr.to.int$ -- 19
-cite$ -- 20
-duplicate$ -- 876
-empty$ -- 813
-format.name$ -- 380
-if$ -- 2658
+            799 strings with 12031 characters,
+and the built_in function-call counts, 17333 in all, are:
+= -- 1336
+> -- 1117
+< -- 11
++ -- 423
+- -- 397
+* -- 1478
+:= -- 2768
+add.period$ -- 83
+call.type$ -- 23
+change.case$ -- 224
+chr.to.int$ -- 24
+cite$ -- 25
+duplicate$ -- 1115
+empty$ -- 1051
+format.name$ -- 453
+if$ -- 3358
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 241
-newline$ -- 85
-num.names$ -- 72
-pop$ -- 460
+missing$ -- 300
+newline$ -- 105
+num.names$ -- 92
+pop$ -- 559
 preamble$ -- 1
-purify$ -- 202
+purify$ -- 247
 quote$ -- 0
-skip$ -- 343
+skip$ -- 424
 stack$ -- 0
-substring$ -- 371
-swap$ -- 468
+substring$ -- 514
+swap$ -- 591
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 153
+type$ -- 198
 warning$ -- 2
-while$ -- 63
+while$ -- 82
 width$ -- 0
-write$ -- 255
-(There were 54 error messages)
+write$ -- 329
+(There were 69 error messages)
