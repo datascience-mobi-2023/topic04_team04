@@ -799,7 +799,7 @@ district_sf$incidence <- map_mean_inc.m.p$incidence
 
 ggplot2::ggplot() +
   geom_sf(data = district_sf, aes(fill = incidence)) +
-  scale_fill_gradientn(colors = rev(terrain.colors(100))) + labs(fill = "Incidence") + labs(title = "Average incidences for monsoon 2012")
+  scale_fill_gradientn(colors = rev(terrain.colors(100))) + labs(fill = "Incidence") + labs(title = "Average incidences 2006 - 2020")
 
 
 f_map_mean_temp.m.p = function(period, areas){
@@ -819,7 +819,7 @@ district_sf$temperature <- map_mean_temp.m.p$temperature
 
 ggplot2::ggplot() +
   geom_sf(data = district_sf, aes(fill = temperature)) +
-  scale_fill_gradientn(colors = rev(terrain.colors(100))) + labs(fill = "Temperature") + labs(title = "Average temperature for monsoon 2012")
+  scale_fill_gradientn(colors = rev(terrain.colors(100))) + labs(fill = "Temperature") + labs(title = "Average temperature 2006 - 2020")
 
 ```
 
