@@ -688,9 +688,15 @@ AIC_best
 detach(data_monsoon)
 ```
 
-## GAM forecast
+# GAM forecast
 
 ```{r, fig.width = 10, fig.height = 15}
+library(raster)
+library(gam)
+library(sdm)
+library(readxl)
+library(mgcv)
+library(ncdf4)
 
 ## lower_limit = quantile(data_monsoon$temperature, probs = 0.05, na.rm = T)
 #upper_limit = quantile(data_monsoon$temperature, probs = 0.95, na.rm = T)
@@ -714,7 +720,6 @@ my.p1.mask <- mask(my.p1, thailand)
 
 plot(my.p1.mask, legend.width=2, legend.shrink=0.5, axes= F, box=F, zlim = c(0,22.8)) + plot(thailand, add=TRUE)
 
-plot(crop(tas,my.area)) + plot(thailand, add= T)
 
 detach(data_total)
 ```
