@@ -9,7 +9,7 @@
 	\paragraph{Climate forecasting data}
 	For GAM modeling, temperature  data from the CORDEX climate model is used. It includes the temperature 2 m above ground of the years 2021 - 2040 at a 22 km grid \citep{Copernicus2019}. 
 	\paragraph{Population data}
-	We used ... population data of every Thailand province from 2006 - 2020 (Quelle?). The incidences were calculated for DHF cases per 100,000 inhabitants for every province. 
+	We used population data from the Statistical Yearbooks of the National Statistical Office of Thailand from 2006 - 2011. The years 2012 - 2020 were obtained from the official website \citep{natstat2021}. The incidences were calculated for DHF cases per 100,000 inhabitants for every province.
 	\paragraph{Spatial data}
 	To associate our data with the different provinces and visualize it, we use spatial data of Thailand’s provinces. The two main data types in spatial data are vector-data and raster-data. Vector-data consists of a list of points with their exact location, which can then form lines or polygons. Raster-data assigns a value to every square of a raster. In this case, maps consisting of polygons for each province are used \citep{sds}. With the sf package, objects associating our data for each province with its coordinates and polygons are created, describing its shape. The function geom\_sf of ggplot2 are used for mapping. 
 	

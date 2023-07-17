@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.6.13)  17 JUL 2023 18:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.6.13)  17 JUL 2023 18:53
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1379,81 +1379,94 @@ Underfull \hbox (badness 10000) in paragraph at lines 28--32
 
  []
 
+[5]
 
 LaTeX Warning: Command \textellipsis invalid in math mode on input line 35.
 
-[5]
 
 LaTeX Warning: Command \textellipsis invalid in math mode on input line 46.
 
 [6]) (./chapter/results.tex
-<fig/Smoothing_spline.png, id=160, 1529.715pt x 945.5325pt>
+<fig/Smoothing_spline.png, id=162, 1529.715pt x 945.5325pt>
 File: fig/Smoothing_spline.png Graphic file (type png)
 <use fig/Smoothing_spline.png>
 Package pdftex.def Info: fig/Smoothing_spline.png  used on input line 18.
 (pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
  [7]
-<fig/Trend_temp_cases.png, id=173, 1529.715pt x 945.5325pt>
+<fig/Trend_temp_cases.png, id=176, 1529.715pt x 945.5325pt>
 File: fig/Trend_temp_cases.png Graphic file (type png)
 <use fig/Trend_temp_cases.png>
 Package pdftex.def Info: fig/Trend_temp_cases.png  used on input line 35.
 (pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
- [8 <./fig/Smoothing_spline.png> <./fig/Trend_temp_cases.png>]
-<fig/Auto_ARIMA_forecast.png, id=183, 1529.715pt x 945.5325pt>
+ [8 <./fig/Smoothing_spline.png>]
+<fig/Auto_ARIMA_forecast.png, id=185, 1529.715pt x 945.5325pt>
 File: fig/Auto_ARIMA_forecast.png Graphic file (type png)
 <use fig/Auto_ARIMA_forecast.png>
 Package pdftex.def Info: fig/Auto_ARIMA_forecast.png  used on input line 50.
 (pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
-<fig/Auto_ARIMA_2016.png, id=185, 1529.715pt x 945.5325pt>
-File: fig/Auto_ARIMA_2016.png Graphic file (type png)
-<use fig/Auto_ARIMA_2016.png>
-Package pdftex.def Info: fig/Auto_ARIMA_2016.png  used on input line 58.
-(pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
- [9 <./fig/Auto_ARIMA_forecast.png>] [10 <./fig/Auto_ARIMA_2016.png>]
-<fig/gam_vs_i.jpg, id=199, 3757.03625pt x 2815.51875pt>
+ [9 <./fig/Trend_temp_cases.png>]
+<fig/gam_vs_i.jpg, id=195, 3757.03625pt x 2815.51875pt>
 File: fig/gam_vs_i.jpg Graphic file (type jpg)
 <use fig/gam_vs_i.jpg>
-Package pdftex.def Info: fig/gam_vs_i.jpg  used on input line 76.
+Package pdftex.def Info: fig/gam_vs_i.jpg  used on input line 71.
 (pdftex.def)             Requested size: 409.71696pt x 307.00146pt.
-) (./chapter/discussion.tex [11 <./fig/gam_vs_i.jpg>]
+) (./chapter/discussion.tex [10 <./fig/Auto_ARIMA_forecast.png>] [11 <./fig/gam
+_vs_i.jpg>]
 
-LaTeX Warning: Reference `fig: ' on page 12 undefined on input line 14.
+LaTeX Warning: Reference `fig: ' on page 12 undefined on input line 16.
 
-[12]) (./Final_Report_Bioinfo_group4.bbl [13] [14]) [15]
-<fig/Decomposition_of_add_ts.png, id=257, 1529.715pt x 945.5325pt>
+[12]) (./Final_Report_Bioinfo_group4.bbl [13] [14]
+Underfull \hbox (badness 10000) in paragraph at lines 118--121
+[]\T1/lmr/m/n/10.95 National Statis-tic Of-fice of Thai-land (2021). Num-ber of
+ Mid-year Pop-u-la-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 118--121
+\T1/lmr/m/n/10.95 by Sex, Re-gion and Province (Min-istry of Pub-lic Health): Y
+ear 2012-2021.
+ []
+
+) [15]
+<fig/Decomposition_of_add_ts.png, id=258, 1529.715pt x 945.5325pt>
 File: fig/Decomposition_of_add_ts.png Graphic file (type png)
 <use fig/Decomposition_of_add_ts.png>
 Package pdftex.def Info: fig/Decomposition_of_add_ts.png  used on input line 87
 .
 (pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
-<fig/dist_incidence.png, id=258, 1529.715pt x 945.5325pt>
+<fig/Auto_ARIMA_2016.png, id=259, 1529.715pt x 945.5325pt>
+File: fig/Auto_ARIMA_2016.png Graphic file (type png)
+<use fig/Auto_ARIMA_2016.png>
+Package pdftex.def Info: fig/Auto_ARIMA_2016.png  used on input line 95.
+(pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
+<fig/dist_incidence.png, id=260, 1529.715pt x 945.5325pt>
 File: fig/dist_incidence.png Graphic file (type png)
 <use fig/dist_incidence.png>
-Package pdftex.def Info: fig/dist_incidence.png  used on input line 94.
+Package pdftex.def Info: fig/dist_incidence.png  used on input line 102.
 (pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
-<fig/dist_temp.png, id=259, 1529.715pt x 945.5325pt>
+<fig/dist_temp.png, id=261, 1529.715pt x 945.5325pt>
 File: fig/dist_temp.png Graphic file (type png)
 <use fig/dist_temp.png>
-Package pdftex.def Info: fig/dist_temp.png  used on input line 95.
+Package pdftex.def Info: fig/dist_temp.png  used on input line 103.
 (pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
-<fig/temp_over_years.png, id=260, 1529.715pt x 945.5325pt>
+<fig/temp_over_years.png, id=262, 1529.715pt x 945.5325pt>
 File: fig/temp_over_years.png Graphic file (type png)
 <use fig/temp_over_years.png>
-Package pdftex.def Info: fig/temp_over_years.png  used on input line 104.
+Package pdftex.def Info: fig/temp_over_years.png  used on input line 112.
 (pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
-<fig/mean_median_temp.png, id=261, 1529.715pt x 945.5325pt>
+<fig/mean_median_temp.png, id=263, 1529.715pt x 945.5325pt>
 File: fig/mean_median_temp.png Graphic file (type png)
 <use fig/mean_median_temp.png>
-Package pdftex.def Info: fig/mean_median_temp.png  used on input line 111.
+Package pdftex.def Info: fig/mean_median_temp.png  used on input line 119.
 (pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
-<fig/t_vs_ilog.jpg, id=262, 3757.03625pt x 2815.51875pt>
+<fig/t_vs_ilog.jpg, id=264, 3757.03625pt x 2815.51875pt>
 File: fig/t_vs_ilog.jpg Graphic file (type jpg)
 <use fig/t_vs_ilog.jpg>
-Package pdftex.def Info: fig/t_vs_ilog.jpg  used on input line 119.
+Package pdftex.def Info: fig/t_vs_ilog.jpg  used on input line 127.
 (pdftex.def)             Requested size: 409.71696pt x 307.00146pt.
- [16 <./fig/Decomposition_of_add_ts.png>] [17 <./fig/dist_incidence.png> <./fig
-/dist_temp.png> <./fig/temp_over_years.png>] [18 <./fig/mean_median_temp.png> <
-./fig/t_vs_ilog.jpg>]
+ [16 <./fig/Decomposition_of_add_ts.png> <./fig/Auto_ARIMA_2016.png>]
+[17 <./fig/dist_incidence.png> <./fig/dist_temp.png> <./fig/temp_over_years.png
+>] [18 <./fig/mean_median_temp.png> <./fig/t_vs_ilog.jpg>]
 (./Final_Report_Bioinfo_group4.aux)
 
 LaTeX Warning: There were undefined references.
@@ -1463,13 +1476,13 @@ nged.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 24859 strings out of 478268
- 499141 string characters out of 5846347
- 975187 words of memory out of 5000000
- 42596 multiletter control sequences out of 15000+600000
+ 24864 strings out of 478268
+ 499230 string characters out of 5846347
+ 975467 words of memory out of 5000000
+ 42600 multiletter control sequences out of 15000+600000
  506088 words of font info for 49 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 108i,8n,106p,10643b,971s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 108i,8n,106p,10643b,965s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/lo
 cal/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/20
 22/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2022/texmf-d
@@ -1485,10 +1498,10 @@ lm/lmss10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmss12.
 pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmss17.pfb></usr/
 local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texl
 ive/2022/texmf-dist/fonts/type1/public/lm/lmsy8.pfb>
-Output written on Final_Report_Bioinfo_group4.pdf (18 pages, 2590553 bytes).
+Output written on Final_Report_Bioinfo_group4.pdf (18 pages, 2591876 bytes).
 PDF statistics:
- 390 PDF objects out of 1000 (max. 8388607)
- 320 compressed objects within 4 object streams
- 87 named destinations out of 1000 (max. 500000)
+ 393 PDF objects out of 1000 (max. 8388607)
+ 323 compressed objects within 4 object streams
+ 88 named destinations out of 1000 (max. 500000)
  128 words of extra memory for PDF output out of 10000 (max. 10000000)
 

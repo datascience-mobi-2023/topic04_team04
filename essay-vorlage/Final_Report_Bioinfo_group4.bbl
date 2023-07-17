@@ -1,4 +1,4 @@
-\begin{thebibliography}{23}
+\begin{thebibliography}{24}
 \expandafter\ifx\csname natexlab\endcsname\relax\def\natexlab#1{#1}\fi
 \expandafter\ifx\csname url\endcsname\relax
   \def\url#1{{\tt #1}}\fi
@@ -112,6 +112,12 @@ Liu-Helmersson, J., Stenlund, H., Wilder-Smith, A., and Rocklöv, J. (2014).
 Masud, M.~B., Soni, P., Shrestha, S., and Tripathi, N.~K. (2016). Changes in
   climate extremes over North Thailand, 1960–2099. downloads.hindawi.com ,
   1960--2099.
+
+
+\bibitem[{{National Statistic Office of Thailand}(2021)}]{natstat2021}
+{National Statistic Office of Thailand} (2021). Number of Mid-year Population
+  by Sex, Region and Province (Ministry of Public Health): Year 2012-2021.
+  {http://statbbi.nso.go.th/staticreport/page/sector/en/01.aspx} .
 
 
 \bibitem[{Pebesma and Bivand(2023)}]{sds}

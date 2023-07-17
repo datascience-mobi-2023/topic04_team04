@@ -88,6 +88,12 @@ You can't pop an empty literal stack for entry Masud2016
 while executing---line 1538 of file bibstyle/ipmbCell.bst
 You can't pop an empty literal stack for entry Masud2016
 while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry natstat2021
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry natstat2021
+while executing---line 1538 of file bibstyle/ipmbCell.bst
+You can't pop an empty literal stack for entry natstat2021
+while executing---line 1538 of file bibstyle/ipmbCell.bst
 You can't pop an empty literal stack for entry sds
 while executing---line 1538 of file bibstyle/ipmbCell.bst
 You can't pop an empty literal stack for entry sds
@@ -149,45 +155,45 @@ You can't pop an empty literal stack for entry Wood2006
 while executing---line 1538 of file bibstyle/ipmbCell.bst
 You can't pop an empty literal stack for entry Wood2006
 while executing---line 1538 of file bibstyle/ipmbCell.bst
-You've used 23 entries,
+You've used 24 entries,
             2929 wiz_defined-function locations,
-            799 strings with 12031 characters,
-and the built_in function-call counts, 17333 in all, are:
-= -- 1336
-> -- 1117
-< -- 11
-+ -- 423
-- -- 397
-* -- 1478
-:= -- 2768
-add.period$ -- 83
-call.type$ -- 23
-change.case$ -- 224
-chr.to.int$ -- 24
-cite$ -- 25
-duplicate$ -- 1115
-empty$ -- 1051
-format.name$ -- 453
-if$ -- 3358
+            803 strings with 12244 characters,
+and the built_in function-call counts, 17756 in all, are:
+= -- 1377
+> -- 1127
+< -- 12
++ -- 427
+- -- 400
+* -- 1499
+:= -- 2840
+add.period$ -- 86
+call.type$ -- 24
+change.case$ -- 229
+chr.to.int$ -- 25
+cite$ -- 26
+duplicate$ -- 1150
+empty$ -- 1086
+format.name$ -- 457
+if$ -- 3446
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 300
-newline$ -- 105
-num.names$ -- 92
-pop$ -- 559
+missing$ -- 307
+newline$ -- 109
+num.names$ -- 96
+pop$ -- 574
 preamble$ -- 1
-purify$ -- 247
+purify$ -- 253
 quote$ -- 0
-skip$ -- 424
+skip$ -- 439
 stack$ -- 0
-substring$ -- 514
-swap$ -- 591
+substring$ -- 526
+swap$ -- 601
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 198
+type$ -- 207
 warning$ -- 2
-while$ -- 82
+while$ -- 85
 width$ -- 0
-write$ -- 329
-(There were 69 error messages)
+write$ -- 342
+(There were 72 error messages)
