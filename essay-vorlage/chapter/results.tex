@@ -1,8 +1,32 @@
 \section{Results}
 	\subsection{Descriptive Analysis}
+In the given time period, the maximum temperature of Thailand was 31.07°C in April 2016, while the minimum temperature was 22.05°C December 2013. Over the years, the yearly average temperature rose slightly, as Figure \ref{fig:temp_over_years} (see Appendix) shows. The average temperature for all years, for the whole country of Thailand is 27.04°C.
+The mean and the median temperatures over Thailand have similar behaviours, as can be seen in Figure \ref{fig:mean_median_temp} (see Appendix). However, the median-temperature is on average 0.09°C higher than the mean-temperature.
 
-	\subsection{ARIMA model}
-	\paragraph{Time series decomposition}The time series of total dengue cases in Thailand was additively decomposed in the components trend, seasonal and random, as shown in Figure \ref{fig:decomp_ts_dengue}. The time series shows a seasonal pattern with a frequency of 12 months. The trend shows fluctuation over the time period with two periods of comparatively high dengue cases in 2013/14 and 2015/16.
+The maximum number of dengue cases with a value of 8324 were reported in Bangkok, November 2015. The standard deviation of dengue cases is 203.6. The mean over all years and regions is 99.1.
+The resulting incidences were in a range of 0 to 370, with the maximum being reported in June 2013 in Nong Bua Lam Phu. The mean is 11.4 and the standard deviation is 15.7.
+
+!!!On average over the years, the temperature in the norther-eastern part of thailand is low in comparison to the rest of the country. The central region shows higher than average temperatures. 
+In contrast, the same areas which have low average temperatures, show high incidences. However there are other provinces which also have high incidences, which don’t show the same low temperatures. !!!
+
+
+The temperature histogram is shaped similarly too a normal distribution with the mean of 27.04°C and a standard deviation of 2.12°C. In Figure \ref{fig:dist_temp_inc} (see Appendix), the distributions of temperature and incidence are shown.
+The incidence shows an exponential decay for higher values, whereas the values are compressed and more distinguishable after log transformation. The distributions are shown in Figure \ref{fig:dist_temp_inc} (see Appendix). 
+
+Correlation between temperature and incidence:
+The fitted curve based on the relationship of temperature and incidence shows us two maximums at around 25°C and 28°C. 60.72\% of the dengue cases happen in between 27°C and 29.5°C. At lower and higher temperatures less dengue fever infections happen (see Figure \ref{fig:smooth_spline}).
+
+
+\begin{figure}[htbp] 
+	\centering
+	\includegraphics[width=0.7\textwidth]{fig/Smoothing_spline.png}
+	\caption{Smoothing spline of incidences over temperature}
+	\label{fig:smooth_spline}
+\end{figure}
+
+Computing the Pearson correlation between average dengue cases per year of whole Thailand and average temperature per year of whole Thailand a result of 0.43 is obtained. This suggests a moderate positive linear relationship. 
+
+	\subsection{Time series decomposition}The time series of total dengue cases in Thailand was additively decomposed in the components trend, seasonal and random, as shown in Figure \ref{fig:decomp_ts_dengue}. The time series shows a seasonal pattern with a frequency of 12 months. The trend shows fluctuation over the time period with two periods of comparatively high dengue cases in 2013/14 and 2015/16.
 	
 	\begin{figure}[htbp] 
 		\centering
@@ -19,7 +43,8 @@
 		\label{fig:Trend_temp_cases}
 	\end{figure}
 	 In 2010 and 2012/13, there were temperature peaks, followed by peaking dengue cases a few months after. In 2015/16 rising temperatures were accompanied by rising dengue cases. 
-	\paragraph{ARIMA forecast}
+
+	\subsection{ARIMA model and forecast}
 	
 	ARIMA modeling was performed to forecast the dengue case development in Thailand. For ADF test results, a p-value of 0.01 was used, for the KPSS test results a p-value of 0.1 was used. Therefore both test indicate stationarity of the time series and differencing isn’t necessary. Observation of the time series ACF showed oscillations which suggests the presence of seasonality in the data. The pACF exhibits a notable pattern with an initial positive peak followed by a significant negative peak. This pattern indicates the need to consider both autoregressive and moving average components in the model.
 	To test for the optimal ARIMA model, models with different combinations of p, d and q values were generated and the best model was selected by comparing the AICs. The best model was found to be (2,2,2) with an AIC of 3319.732. Because this method could not account for seasonality in the data, the auto.arima function was used. “ARIMA(1,0,2)(1,1,0)[12] with drift” was found to be the best model. This model consists of an autoregressive term and two moving average terms. No differencing was performed. The model also has seasonal compounds with a period of 12. “With drift” means that a constant is included in the model. As the AIC of 3108.35 is lower and thus more accurate than the AIC of the former model, the auto.arima model was used for further analysis. 
@@ -45,6 +70,10 @@ Although the forecast is more uniform than the actual cases in th years 2017 to 
 
 \subsection{GAM model}
 A GAM model was generated based on the monthly temperature and incidence of all provinces of Thailand over the years 2006 - 2020. The predictor value (temperature) was passed into a smoothing function to create a smoothed spline curve. For the response variable (incidence) a quasi-Poisson distribution was chosen. The link function is a log transformation.
+
 To figure out the optimal model, the degrees of freedom of the smoothing function were alternated. The effective degrees of freedom, which were found to be 13.82, resemble the complexity of the smooth curve. This value is relatively high, which indicates a “wigglier” spline. F-value and p-value indicate the statistical significance of the smooth function. In this case, the smooth function of temperature is highly significant (p-value $<$ 2e-16). The computed R-squared value of 0.0465 indicates how well the model explains the variance in the dependent variable. Here, the model explains approximately 4,7\% of the variance in the data. A low GCV (Generalized Cross Validation) value suggests a good fit of the model. The generated model has a GCV of 11.77. Additionally, the AIC value of the smooth model (112947.1) was compared with that of a linear model (113361.2). The smooth model had a lower value, which indicates a better fit.
+
 Taking all these parameters into account, the GAM was computed with a k of 16. The model and its relationship of temperature and incidence is shown in the appendix Figure ..., as well as the evaluating graphs.
+
 Subsequently the model was used to predict the average dengue case incidences over the period of 2021 - 2040, based on forecasted average temperature. You can see the average incidences of the past and future in Figure \ref{fig:}.
+

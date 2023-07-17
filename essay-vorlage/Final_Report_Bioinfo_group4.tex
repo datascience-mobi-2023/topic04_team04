@@ -75,9 +75,36 @@
 \input{chapter/mandm}
 \input{chapter/results}
 \input{chapter/discussion}
-\input{chapter/appendix}
+
 
 \bibliography{bib/essay.bib}
 
-\end{document}
+\newpage
+\section{Appendix}
 
+
+\begin{figure}[htbp] 
+	\centering
+	\includegraphics[width=0.7\textwidth]{fig/dist_incidence.png}
+	\includegraphics[width=0.7\textwidth]{fig/dist_temp.png}
+	\caption{Distribution of incidence (top)
+		and distribution of temperature: blue = density, green = normal distribution (bottom)}
+	\label{fig:dist_temp_inc}
+\end{figure}
+
+
+\begin{figure}[htbp] 
+	\centering
+	\includegraphics[width=0.7\textwidth]{fig/temp_over_years.png}
+	\caption{Monthly mean temperature of Thailand over the analyzed timeframe (black), linear regression of temperature (red).}
+	\label{fig:temp_over_years}
+\end{figure}
+
+\begin{figure}[htbp] 
+	\centering
+	\includegraphics[width=0.7\textwidth]{fig/mean_median_temp.png}
+	\caption{Temperature mean, median and difference between mean and median (Thailand average)}
+	\label{fig:mean_median_temp}
+\end{figure}
+
+\end{document}
