@@ -268,7 +268,6 @@ data_nwmonsoon = data_total[data_total$month %in% vec_month_nwmonsoon,]
 vec_month_premonsoon = c("Feb", "Mar", "Apr", "May")
 data_premonsoon = data_total[data_total$month %in% vec_month_premonsoon,]
 
-
 compare_season_temp = c(nwmonsoon = sd(data_nwmonsoon$temperature, na.rm = T), swmonsoon =  sd(data_swmonsoon$temperature, na.rm = T), premonsoon = sd(data_premonsoon$temperature, na.rm = T))
 compare_season_temp
 compare_season_inc = c(nwmonsoon = sd(data_nwmonsoon$incidence, na.rm = T), swmonsoon =  sd(data_swmonsoon$incidence, na.rm = T), premonsoon = sd(data_premonsoon$incidence, na.rm = T))
@@ -284,9 +283,15 @@ for (i in r_areas2) {
   sd_areas = c(sd_areas, sd(data_total$incidence[data_total$Reporting_areas == i], na.rm = T))
 }
 sd_areas
-mean(sd_areas)
+
+
+mean_areas = c()
+for (i in r_areas2) {
+  mean_areas = c(mean_areas, mean(data_total$temperature[data_total$Reporting_areas == i], na.rm = T))
+}
+sd(mean_areas)
   
-sd(data_total$incidence, na.rm = T)/mean(data_total$incidence, na.rm = T)
+sd(data_total$incidence, na.rm = T)
 sd(data_total$temperature, na.rm = T)/mean(data_total$temperature, na.rm = T)
 
 ```
