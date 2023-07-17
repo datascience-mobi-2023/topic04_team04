@@ -1281,4 +1281,190 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <10.95> on input line 13.
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <8> on input line 13.
-LaTeX Font Info:  
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <6> on input line 13.
+)
+\tf@toc=\write4
+\openout4 = `Final_Report_Bioinfo_group4.toc'.
+
+
+
+LaTeX Warning: Hyper reference `acro:DHF' on page 2 undefined on input line 58.
+
+
+
+LaTeX Warning: Hyper reference `acro:DHF' on page 2 undefined on input line 58.
+
+
+
+LaTeX Warning: Hyper reference `acro:ARIMA' on page 2 undefined on input line 5
+9.
+
+
+LaTeX Warning: Hyper reference `acro:ARIMA' on page 2 undefined on input line 5
+9.
+
+
+LaTeX Warning: Hyper reference `acro:GAM' on page 2 undefined on input line 60.
+
+
+
+LaTeX Warning: Hyper reference `acro:GAM' on page 2 undefined on input line 60.
+
+
+
+LaTeX Warning: Hyper reference `acro:ADF' on page 2 undefined on input line 61.
+
+
+
+LaTeX Warning: Hyper reference `acro:ADF' on page 2 undefined on input line 61.
+
+
+
+LaTeX Warning: Hyper reference `acro:ACF' on page 2 undefined on input line 62.
+
+
+
+LaTeX Warning: Hyper reference `acro:ACF' on page 2 undefined on input line 62.
+
+
+
+LaTeX Warning: Hyper reference `acro:pACF' on page 2 undefined on input line 63
+.
+
+
+LaTeX Warning: Hyper reference `acro:pACF' on page 2 undefined on input line 63
+.
+
+
+LaTeX Warning: Hyper reference `acro:AIC' on page 2 undefined on input line 64.
+
+
+
+LaTeX Warning: Hyper reference `acro:AIC' on page 2 undefined on input line 64.
+
+
+(./chapter/introduction.tex [2]
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 9
+.
+
+(/usr/local/texlive/2022/texmf-dist/tex/latex/lm/ts1lmr.fd
+File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+))
+(./chapter/mandm.tex [3] [4]
+
+LaTeX Warning: Command \textellipsis invalid in math mode on input line 30.
+
+
+LaTeX Warning: Command \textellipsis invalid in math mode on input line 31.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 28--32
+
+ []
+
+
+LaTeX Warning: Command \textellipsis invalid in math mode on input line 35.
+
+[5]
+
+LaTeX Warning: Command \textellipsis invalid in math mode on input line 46.
+
+[6]) (./chapter/results.tex
+<fig/Smoothing_spline.png, id=160, 1529.715pt x 945.5325pt>
+File: fig/Smoothing_spline.png Graphic file (type png)
+<use fig/Smoothing_spline.png>
+Package pdftex.def Info: fig/Smoothing_spline.png  used on input line 18.
+(pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
+ [7]
+<fig/Decomposition_of_add_ts.png, id=172, 1529.715pt x 945.5325pt>
+File: fig/Decomposition_of_add_ts.png Graphic file (type png)
+<use fig/Decomposition_of_add_ts.png>
+Package pdftex.def Info: fig/Decomposition_of_add_ts.png  used on input line 34
+.
+(pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
+<fig/Trend_temp_cases.png, id=174, 1529.715pt x 945.5325pt>
+File: fig/Trend_temp_cases.png Graphic file (type png)
+<use fig/Trend_temp_cases.png>
+Package pdftex.def Info: fig/Trend_temp_cases.png  used on input line 42.
+(pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
+ [8 <./fig/Smoothing_spline.png> <./fig/Decomposition_of_add_ts.png>]
+<fig/Auto_ARIMA_forecast.png, id=184, 1529.715pt x 945.5325pt>
+File: fig/Auto_ARIMA_forecast.png Graphic file (type png)
+<use fig/Auto_ARIMA_forecast.png>
+Package pdftex.def Info: fig/Auto_ARIMA_forecast.png  used on input line 57.
+(pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
+<fig/Auto_ARIMA_2016.png, id=186, 1529.715pt x 945.5325pt>
+File: fig/Auto_ARIMA_2016.png Graphic file (type png)
+<use fig/Auto_ARIMA_2016.png>
+Package pdftex.def Info: fig/Auto_ARIMA_2016.png  used on input line 65.
+(pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
+ [9 <./fig/Trend_temp_cases.png>] [10 <./fig/Auto_ARIMA_forecast.png> <./fig/Au
+to_ARIMA_2016.png>]
+
+LaTeX Warning: Reference `fig:' on page 11 undefined on input line 79.
+
+) (./chapter/discussion.tex [11]
+
+LaTeX Warning: Reference `fig: ' on page 12 undefined on input line 14.
+
+[12]) (./Final_Report_Bioinfo_group4.bbl [13] [14]) [15]
+<fig/dist_incidence.png, id=256, 1529.715pt x 945.5325pt>
+File: fig/dist_incidence.png Graphic file (type png)
+<use fig/dist_incidence.png>
+Package pdftex.def Info: fig/dist_incidence.png  used on input line 88.
+(pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
+<fig/dist_temp.png, id=257, 1529.715pt x 945.5325pt>
+File: fig/dist_temp.png Graphic file (type png)
+<use fig/dist_temp.png>
+Package pdftex.def Info: fig/dist_temp.png  used on input line 89.
+(pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
+<fig/temp_over_years.png, id=258, 1529.715pt x 945.5325pt>
+File: fig/temp_over_years.png Graphic file (type png)
+<use fig/temp_over_years.png>
+Package pdftex.def Info: fig/temp_over_years.png  used on input line 98.
+(pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
+<fig/mean_median_temp.png, id=259, 1529.715pt x 945.5325pt>
+File: fig/mean_median_temp.png Graphic file (type png)
+<use fig/mean_median_temp.png>
+Package pdftex.def Info: fig/mean_median_temp.png  used on input line 105.
+(pdftex.def)             Requested size: 318.66953pt x 196.96622pt.
+ [16 <./fig/dist_incidence.png> <./fig/dist_temp.png>] [17 <./fig/temp_over_yea
+rs.png> <./fig/mean_median_temp.png>] (./Final_Report_Bioinfo_group4.aux)
+
+LaTeX Warning: There were undefined references.
+
+Package rerunfilecheck Info: File `Final_Report_Bioinfo_group4.out' has not cha
+nged.
+(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
+ ) 
+Here is how much of TeX's memory you used:
+ 23560 strings out of 478268
+ 472359 string characters out of 5846347
+ 957416 words of memory out of 5000000
+ 41313 multiletter control sequences out of 15000+600000
+ 506088 words of font info for 49 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 108i,8n,106p,10643b,971s stack positions out of 10000i,1000n,20000p,200000b,200000s
+{/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/lo
+cal/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/20
+22/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2022/texmf-d
+ist/fonts/enc/dvips/lm/lm-ts1.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc
+/dvips/lm/lm-ec.enc}</usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/l
+mbx10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi10.pfb>
+</usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></usr/local
+/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/20
+22/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2022/texmf-di
+st/fonts/type1/public/lm/lmr8.pfb></usr/local/texlive/2022/texmf-dist/fonts/typ
+e1/public/lm/lmri10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/
+lm/lmss10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmss12.
+pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmss17.pfb></usr/
+local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texl
+ive/2022/texmf-dist/fonts/type1/public/lm/lmsy8.pfb>
+Output written on Final_Report_Bioinfo_group4.pdf (17 pages, 1220833 bytes).
+PDF statistics:
+ 380 PDF objects out of 1000 (max. 8388607)
+ 313 compressed objects within 4 object streams
+ 84 named destinations out of 1000 (max. 500000)
+ 118 words of extra memory for PDF output out of 10000 (max. 10000000)
+
