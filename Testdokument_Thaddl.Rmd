@@ -245,15 +245,52 @@ data_total = data_total[data_total$Reporting_areas != "Bungkan", ]
 row.names(data_total) = NULL
 ```
 
-#create data frame for monsoon season
+#create data frame for south west monsoon season
 ```{r}
-vec_month_monsoon = c("Jun", "Jul", "Aug", "Sep")
-data_monsoon = data_total[data_total$month %in% vec_month_monsoon,]
+vec_month_swmonsoon = c("Jun", "Jul", "Aug", "Sep")
+data_swmonsoon = data_total[data_total$month %in% vec_month_swmonsoon,]
 
 rmv.rows.m = apply(data_monsoon,1,function(x){sum(is.na(x))})
 i.missing.m = which(rmv.rows.m >0)
 clean_data_monsoon = as.data.frame(data_monsoon[-i.missing.m,])
 ```
+
+#create data frame for north west monsoon season
+```{r}
+vec_month_nwmonsoon = c("Oct", "Nov", "Dec", "Jan")
+data_nwmonsoon = data_total[data_total$month %in% vec_month_nwmonsoon,]
+
+
+```
+
+#create data frame for pre monsoon season
+```{r}
+vec_month_premonsoon = c("Feb", "Mar", "Apr", "May")
+data_premonsoon = data_total[data_total$month %in% vec_month_premonsoon,]
+
+
+compare_season_temp = c(nwmonsoon = sd(data_nwmonsoon$temperature, na.rm = T), swmonsoon =  sd(data_swmonsoon$temperature, na.rm = T), premonsoon = sd(data_premonsoon$temperature, na.rm = T))
+compare_season_temp
+compare_season_inc = c(nwmonsoon = sd(data_nwmonsoon$incidence, na.rm = T), swmonsoon =  sd(data_swmonsoon$incidence, na.rm = T), premonsoon = sd(data_premonsoon$incidence, na.rm = T))
+compare_season_inc
+compare_season_temp = c(nwmonsoon = mean(data_nwmonsoon$temperature, na.rm = T), swmonsoon =  mean(data_swmonsoon$temperature, na.rm = T), premonsoon = mean(data_premonsoon$temperature, na.rm = T))
+compare_season_temp
+compare_season_inc = c(nwmonsoon = mean(data_nwmonsoon$incidence, na.rm = T), swmonsoon =  mean(data_swmonsoon$incidence, na.rm = T), premonsoon = mean(data_premonsoon$incidence, na.rm = T))
+compare_season_inc
+
+
+sd_areas = c()
+for (i in r_areas2) {
+  sd_areas = c(sd_areas, sd(data_total$incidence[data_total$Reporting_areas == i], na.rm = T))
+}
+sd_areas
+mean(sd_areas)
+  
+sd(data_total$incidence, na.rm = T)/mean(data_total$incidence, na.rm = T)
+sd(data_total$temperature, na.rm = T)/mean(data_total$temperature, na.rm = T)
+
+```
+
 # creating a dataframe for the total dengue cases in thailand over the months
 ```{r}
 month_vec = c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec" ) 
@@ -723,7 +760,6 @@ p1 <- raster::predict(tas, model2, type = "response")
 
 thailand <- raster::getData('GADM', country='THA', level=1)
 my.area <- extent(thailand)
-my.area = extent(95,107,5.5,20.5)
 my.p1 <- crop(p1, my.area)
 my.p1.mask <- mask(my.p1, thailand)
 
