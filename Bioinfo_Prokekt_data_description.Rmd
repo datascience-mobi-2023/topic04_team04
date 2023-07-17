@@ -651,6 +651,23 @@ plot3
 gridExtra::grid.arrange(plot1, plot2, plot3, ncol = 1)
 ```
 
+# polar Plot 
+
+```{r}
+library(ggplot2)
+library(ggseas)
+
+
+plot1 = ggseasonplot(Ts_thai, polar=TRUE) +
+  ggtitle("dengue cases")
+
+plot2 = ggseasonplot(Ts_thai_temp, polar=TRUE) +
+  ggtitle("temperature")
+
+gridExtra::grid.arrange(plot1, plot2, nrow =1)
+```
+
+
 ## probieren mit time series Objekten
 
 ```{r}
