@@ -863,19 +863,19 @@ f_map_mean_inc.m.p = function(period, areas){
   for (p in areas) {
     provinz = map_data_total[map_data_total$Reporting_areas == p,]
     p_month = provinz[provinz$time_column %in% period,]
-    m_m_p = data.frame(incidence = mean(p_month$incidence, na.rm = TRUE), time_column = p_month$time_column[1], Reporting_areas = p_month$Reporting_areas[1])
+    m_m_p = data.frame(incidence = mean(log(p_month$incidence + 1), na.rm = TRUE), time_column = p_month$time_column[1], Reporting_areas = p_month$Reporting_areas[1])
     map_mean_inc.m.p = rbind(map_mean_inc.m.p, m_m_p)
   }
   return(map_mean_inc.m.p)
 }
 
-map_mean_inc.m.p = f_map_mean_inc.m.p(period = seq(from = as.Date("2007-01-01"), to = as.Date("2007-12-01"), by = "month"), areas = unique(map_data_total$Reporting_areas))
+map_mean_inc.m.p = f_map_mean_inc.m.p(period = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month"), areas = unique(map_data_total$Reporting_areas))
 district_sf = st_read("gadm36_THA_shp/gadm36_THA_1.shp")
 district_sf$incidence <- map_mean_inc.m.p$incidence
 
 ggplot2::ggplot() +
   geom_sf(data = district_sf, aes(fill = incidence)) +
-  scale_fill_gradientn(colors = rev(terrain.colors(100))) + labs(fill = "Incidence") + labs(title = "Average incidences for monsoon 2012")
+  scale_fill_gradientn(colors = rev(terrain.colors(100))) + labs(fill = "Incidence") + labs(title = "Average incidences 2006 - 2020")
 
 
 f_map_mean_temp.m.p = function(period, areas){
@@ -889,13 +889,13 @@ f_map_mean_temp.m.p = function(period, areas){
   return(map_mean_temp.m.p)
 }
 
-map_mean_temp.m.p = f_map_mean_temp.m.p(period = seq(from = as.Date("2007-01-01"), to = as.Date("2007-12-01"), by = "month"), areas = unique(map_data_total$Reporting_areas))
+map_mean_temp.m.p = f_map_mean_temp.m.p(period = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month"), areas = unique(map_data_total$Reporting_areas))
 district_sf = st_read("gadm36_THA_shp/gadm36_THA_1.shp")
 district_sf$temperature <- map_mean_temp.m.p$temperature
 
 ggplot2::ggplot() +
   geom_sf(data = district_sf, aes(fill = temperature)) +
-  scale_fill_gradientn(colors = rev(terrain.colors(100))) + labs(fill = "Temperature") + labs(title = "Average temperature for monsoon 2012")
+  scale_fill_gradientn(colors = rev(terrain.colors(100))) + labs(fill = "Temperature") + labs(title = "Average temperature 2006 - 2020")
 
 ```
 
