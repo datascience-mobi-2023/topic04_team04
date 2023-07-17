@@ -815,28 +815,6 @@ ggplot2::ggplot() +
   scale_fill_gradientn(colors = rev(terrain.colors(100))) + labs(fill = "Temperature") + labs(title = "Average temperature 2006 - 2020")
 ```
 
-Funktion für Inzidenz plot der Monate
-
-```{r}
-district_sf = st_read("gadm36_THA_shp/gadm36_THA_1.shp")
-
-#input for incidence month in format: rows_YYYY_Mon
-map_incidence_monthly = function(incidence_month){
-  
- max_incidence = which.max(incidence_month$incidence)
-max_incidence_area = incidence_month$Reporting_areas[max_incidence]
-
-ggplot() +
-  geom_sf(data = district_sf, aes(fill = incidence_month$incidence)) +
-  scale_fill_gradient(low = "yellow", high = "red") +
-  labs(fill = paste("Highest incidence =", max_incidence, "in", max_incidence_area))
-  
-  
-}
-
-map_incidence_monthly(rows_2016Apr)
-```
-
 ## Average temperature 2006 to 2020 map
 
 ```{r}
