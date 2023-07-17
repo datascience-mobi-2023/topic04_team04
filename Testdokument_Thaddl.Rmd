@@ -506,6 +506,7 @@ plot(clean_data_total$temperature, clean_data_total$incidence, pch = 20,
      xlab = "temperature",
   abline(v = mean(clean_data_total$temperature), col = "red"))
 
+
 plot(rank(data_total$temperature), rank(data_total$incidence), pch = 20,
      ylab = "incidence",
      xlab = "temperature",
@@ -813,6 +814,14 @@ f_map_mean_inc.y.p = function(period, areas){
   return(map_mean_inc.y.p)
 }
 
+map_mean_inc.y.p = f_map_mean_inc.y.p(period = 2012,areas = unique(map_data_total$Reporting_areas))
+district_sf = st_read("gadm36_THA_shp/gadm36_THA_1.shp")
+district_sf$incidence <- map_mean_inc.y.p$incidence
+
+ggplot2::ggplot() +
+  geom_sf(data = district_sf, aes(fill = incidence)) +
+  scale_fill_gradientn(colors = rev(terrain.colors(100)), limits = c(0,22.8)) + labs(fill = "Incidence") + labs(title = "Average incidences for 2012")
+
 f_map_mean_inc.p = function(areas){
   map_mean_inc.p <- data.frame(time_column = as.Date(character()), Reporting_areas = character(), incidence = numeric())
   for (p in areas) {
@@ -841,5 +850,78 @@ ggplot2::ggplot() +
   geom_sf(data = district_sf, aes(fill = incidence)) +
   scale_fill_gradientn(colors = rev(terrain.colors(100)), limits = c(0,22.8)) + labs(fill = "Incidence") + labs(title = "Average incidences for 2006-2020 ")
 
+```
+
+#average incidence for each month map
+
+```{r}
+library(ggplot2)
+library(sf)
+
+f_map_mean_inc.m.p = function(period, areas){
+  map_mean_inc.m.p <- data.frame(incidence = numeric(), time_column = as.Date(character()), Reporting_areas = character())
+  for (p in areas) {
+    provinz = map_data_total[map_data_total$Reporting_areas == p,]
+    p_month = provinz[provinz$time_column %in% period,]
+    m_m_p = data.frame(incidence = mean(log(p_month$incidence + 1), na.rm = TRUE), time_column = p_month$time_column[1], Reporting_areas = p_month$Reporting_areas[1])
+    map_mean_inc.m.p = rbind(map_mean_inc.m.p, m_m_p)
+  }
+  return(map_mean_inc.m.p)
+}
+
+map_mean_inc.m.p = f_map_mean_inc.m.p(period = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month"), areas = unique(map_data_total$Reporting_areas))
+district_sf = st_read("gadm36_THA_shp/gadm36_THA_1.shp")
+district_sf$incidence <- map_mean_inc.m.p$incidence
+
+ggplot2::ggplot() +
+  geom_sf(data = district_sf, aes(fill = incidence)) +
+  scale_fill_gradientn(colors = rev(terrain.colors(100))) + labs(fill = "Incidence") + labs(title = "Average incidences 2006 - 2020")
+
+
+f_map_mean_temp.m.p = function(period, areas){
+  map_mean_temp.m.p <- data.frame(temperature = numeric(), time_column = as.Date(character()), Reporting_areas = character())
+  for (p in areas) {
+    provinz = map_data_total[map_data_total$Reporting_areas == p,]
+    p_month = provinz[provinz$time_column %in% period,]
+    m_m_p = data.frame(temperature = mean(p_month$temperature, na.rm = TRUE), time_column = p_month$time_column[1], Reporting_areas = p_month$Reporting_areas[1])
+    map_mean_temp.m.p = rbind(map_mean_temp.m.p, m_m_p)
+  }
+  return(map_mean_temp.m.p)
+}
+
+map_mean_temp.m.p = f_map_mean_temp.m.p(period = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month"), areas = unique(map_data_total$Reporting_areas))
+district_sf = st_read("gadm36_THA_shp/gadm36_THA_1.shp")
+district_sf$temperature <- map_mean_temp.m.p$temperature
+
+ggplot2::ggplot() +
+  geom_sf(data = district_sf, aes(fill = temperature)) +
+  scale_fill_gradientn(colors = rev(terrain.colors(100))) + labs(fill = "Temperature") + labs(title = "Average temperature 2006 - 2020")
+
+```
+
+
+#average temperature 2006 to 2020 map
+
+```{r}
+
+f_map_mean_inc.p.t = function(areas){
+  map_mean_inc.p.t <- data.frame(incidence = numeric(), time_column = as.Date(character()), Reporting_areas = character(), temperature = numeric())
+  for (p in areas) {
+      provinz = map_data_total[map_data_total$Reporting_areas == p,]
+      m_p.t = data.frame(time_column = provinz$time_column[1], Reporting_areas = provinz$Reporting_areas[1],incidence = mean(provinz$incidence, na.rm = TRUE), temperature = mean(provinz$temperature, na.rm = TRUE))
+      map_mean_inc.p.t = rbind(map_mean_inc.p.t, m_p.t)
+  }
+  return(map_mean_inc.p.t)
+} 
+
+map_mean_inc.p.t = f_map_mean_inc.p.t(areas = unique(map_data_total$Reporting_areas))
+district_sf.t <- st_read("gadm36_THA_shp/gadm36_THA_1.shp")
+district_sf.t$temperature <- map_mean_inc.p.t$temperature
+
+
+ggplot() +
+  geom_sf(data = district_sf.t, aes(fill = temperature)) +
+ scale_fill_gradientn(colors = rev(terrain.colors(100)), limits = c( 22, 31)) + labs(fill = "temperature") +
+  labs(title = "Average Temperatures for 2006-2020 ")# limits = c( 0, 22.75)
 ```
 

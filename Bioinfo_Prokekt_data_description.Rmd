@@ -98,12 +98,6 @@ subset_mean_temp("2013-06-01", "2014-06-30", mean_tempvec, month_dates)
 subset_mean_temp("2016-01-01", "2016-12-31", mean_tempvec, month_dates)
 ```
 
-# Correlation
-
-```{r}
-cor = cor(data_total$incidence, data_total$temperature, use = "pairwise.complete.obs")
-plot(data_total$temperature, data_total$incidence, main = "incidence over temperature", xlab = "inzidenz", ylab = "temperature")
-```
 
 #ARIMA Dengue cases
 
@@ -127,7 +121,7 @@ pacf_thailand <- pacf(Ts_thai)
 
 ```
 
-##ARIMA differencing (not necessary as the time series is stationary) 
+##ARIMA differencing (not necessary as the time series is stationary)
 
 ```{r}
 
@@ -303,7 +297,6 @@ ggplot() +
   theme_minimal()
 ```
 
-
 #comparing the decomposition of temperature and cases
 
 ```{r}
@@ -370,7 +363,6 @@ plot_case_temp_seasonal = grid.arrange(plot_case_seasonal, plot_temp_seasonal, n
 print(plot_case_temp_trend)
 
 ```
-
 
 # mean of dengue_cases and temperature of whole thailand per month
 
@@ -572,6 +564,7 @@ pheatmap::pheatmap(cor(clean_data_total[c("dengue_cases", "population_count", "t
 ```
 
 #percentage of dengue cases between 27 and 29,5 celsius
+
 ```{r}
 data_27_29.5 = data_total[data_total$temperature >= 27 & data_total$temperature <= 29.5,]
 sum(data_27_29.5$dengue_cases, na.rm = T)/sum(data_total$dengue_cases, na.rm = T)
@@ -658,6 +651,23 @@ plot3
 gridExtra::grid.arrange(plot1, plot2, plot3, ncol = 1)
 ```
 
+# polar Plot 
+
+```{r}
+library(ggplot2)
+library(ggseas)
+
+
+plot1 = ggseasonplot(Ts_thai, polar=TRUE) +
+  ggtitle("dengue cases")
+
+plot2 = ggseasonplot(Ts_thai_temp, polar=TRUE) +
+  ggtitle("temperature")
+
+gridExtra::grid.arrange(plot1, plot2, nrow =1)
+```
+
+
 ## probieren mit time series Objekten
 
 ```{r}
@@ -667,6 +677,7 @@ TSstudio::ts_plot(my_ts)
 ```
 
 #GAM
+
 ```{r}
 library(readxl)
 library(nlme)
@@ -732,6 +743,7 @@ detach(data_total)
 ```
 
 #average incidence 2006 to 2020 map
+
 ```{r}
 library(ggplot2)
 library(sf)
@@ -781,6 +793,53 @@ ggplot2::ggplot() +
 
 ```
 
+#average incidence for each month map
+
+```{r}
+library(ggplot2)
+library(sf)
+
+f_map_mean_inc.m.p = function(period, areas){
+  map_mean_inc.m.p <- data.frame(incidence = numeric(), time_column = as.Date(character()), Reporting_areas = character())
+  for (p in areas) {
+    provinz = map_data_total[map_data_total$Reporting_areas == p,]
+    p_month = provinz[provinz$time_column %in% period,]
+    m_m_p = data.frame(incidence = mean(log(p_month$incidence + 1), na.rm = TRUE), time_column = p_month$time_column[1], Reporting_areas = p_month$Reporting_areas[1])
+    map_mean_inc.m.p = rbind(map_mean_inc.m.p, m_m_p)
+  }
+  return(map_mean_inc.m.p)
+}
+
+map_mean_inc.m.p = f_map_mean_inc.m.p(period = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month"), areas = unique(map_data_total$Reporting_areas))
+district_sf = st_read("gadm36_THA_shp/gadm36_THA_1.shp")
+district_sf$incidence <- map_mean_inc.m.p$incidence
+
+ggplot2::ggplot() +
+  geom_sf(data = district_sf, aes(fill = incidence)) +
+  scale_fill_gradientn(colors = rev(terrain.colors(100))) + labs(fill = "Incidence") + labs(title = "Average incidences 2006 - 2020")
+
+
+f_map_mean_temp.m.p = function(period, areas){
+  map_mean_temp.m.p <- data.frame(temperature = numeric(), time_column = as.Date(character()), Reporting_areas = character())
+  for (p in areas) {
+    provinz = map_data_total[map_data_total$Reporting_areas == p,]
+    p_month = provinz[provinz$time_column %in% period,]
+    m_m_p = data.frame(temperature = mean(p_month$temperature, na.rm = TRUE), time_column = p_month$time_column[1], Reporting_areas = p_month$Reporting_areas[1])
+    map_mean_temp.m.p = rbind(map_mean_temp.m.p, m_m_p)
+  }
+  return(map_mean_temp.m.p)
+}
+
+map_mean_temp.m.p = f_map_mean_temp.m.p(period = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month"), areas = unique(map_data_total$Reporting_areas))
+district_sf = st_read("gadm36_THA_shp/gadm36_THA_1.shp")
+district_sf$temperature <- map_mean_temp.m.p$temperature
+
+ggplot2::ggplot() +
+  geom_sf(data = district_sf, aes(fill = temperature)) +
+  scale_fill_gradientn(colors = rev(terrain.colors(100))) + labs(fill = "Temperature") + labs(title = "Average temperature 2006 - 2020")
+
+```
+
 Funktion für Inzidenz plot der Monate
 
 ```{r}
@@ -814,3 +873,29 @@ map_incidence_monthly(rows_2016Apr)
 
 
 ```
+
+#average temperature 2006 to 2020 map
+
+```{r}
+
+f_map_mean_inc.p.t = function(areas){
+  map_mean_inc.p.t <- data.frame(incidence = numeric(), time_column = as.Date(character()), Reporting_areas = character(), temperature = numeric())
+  for (p in areas) {
+      provinz = map_data_total[map_data_total$Reporting_areas == p,]
+      m_p.t = data.frame(time_column = provinz$time_column[1], Reporting_areas = provinz$Reporting_areas[1],incidence = mean(provinz$incidence, na.rm = TRUE), temperature = mean(provinz$temperature, na.rm = TRUE))
+      map_mean_inc.p.t = rbind(map_mean_inc.p.t, m_p.t)
+  }
+  return(map_mean_inc.p.t)
+} 
+
+map_mean_inc.p.t = f_map_mean_inc.p.t(areas = unique(map_data_total$Reporting_areas))
+district_sf.t <- st_read("gadm36_THA_shp/gadm36_THA_1.shp")
+district_sf.t$temperature <- map_mean_inc.p.t$temperature
+
+
+ggplot() +
+  geom_sf(data = district_sf.t, aes(fill = temperature)) +
+ scale_fill_gradientn(colors = rev(terrain.colors(100)), limits = c( 22, 31)) + labs(fill = "temperature") +
+  labs(title = "Average Temperatures for 2006-2020 ")# limits = c( 0, 22.75)
+```
+

@@ -180,10 +180,10 @@ dat <- sf::st_as_sf(
 )
 # CRS code 4326 corresponds to the World Geodetic System 1984 (WGS84)
 # coordinates are expressed as decimal degrees (long & lat from -180 to 180)
-​
+
 # look for the column you want to plot 
 names(dat)
-​
+
 ggplot() +
   geom_sf(data = shp) +  # gets the mapping data for the background
   geom_sf(data = dat, aes(size = pf_pr, color = pf_pr)) + # gets the data information with according coordinate point on the map
@@ -195,8 +195,69 @@ ggplot() +
   ylab("Latitude") + # changes axsis lables
   ggspatial::annotation_north_arrow(location = "br") + # adds arrow indicating north for maps
   ggspatial::annotation_scale(location = "bl") # adds scale to maps
-​
-​
+
+
+jan_thailand_temp =c()
+feb_thailand_temp =c()
+mar_thailand_temp = c()
+apr_thailand_temp = c()
+may_thailand_temp =c()
+jun_thailand_temp = c()
+jul_thailand_temp = c()
+aug_thailand_temp =c()
+sep_thailand_temp = c()
+oct_thailand_temp =c()
+nov_thailand_temp =c()
+dec_thailand_temp =c()
+
+mean_temp_dat = data.frame()
+
+for (monat in 0:12){
+  for(jahr in 0:15){
+    vek = append(vek, mean_tempvec[jahr*12])
+    
+  }
+ 
+}
+
+feb_thailand_temp
+
+year_mean_temp =c()
+year_mean_temp = append
+year_mean_temp = append(year_mean_temp, mean(februar_thailand_temp, na.rm = TRUE))
+
+
+
+
+durchschnitt=mean(mean_tempvec[169:180])
+durchschnitt_temp=c()
+durchschnitt_temp= append(durchschnitt_temp, durchschnitt)
+
+plot(seq(2006:2020), rank(durchschnitt_temp))
+plot(seq(2006:2020), durchschnitt_temp)
+
+
+
+
+district_sf = st_read("gadm36_THA_shp/gadm36_THA_1.shp")
+
+
+map_temp_monthly = function(temp_month){
+  
+  max_temp = which.max(incidence_month$temp)
+  max_temp_area = temp_month$Reporting_areas[max_temp]
+  
+  
+  
+  ggplot() +
+    geom_sf(data = district_sf, aes(fill = temp_month$temp)) +
+    scale_fill_gradient(low = "yellow", high = "red") +
+    labs(fill = paste("Highest temperature =", max_temp, "in", max_temp_area))
+  
+  
+}
+#input for incidence month in format: rows_YYYY_Mon
+map_temp_monthly(rows_2016Apr)
 
 
 
@@ -204,10 +265,28 @@ ggplot() +
 
 
 
+f_map_mean_inc.y.p = function(period, areas){
+  map_mean_inc.y.p <- data.frame(incidence = numeric(), time_column = as.Date(character()), Reporting_areas = character(), temperature = numeric())
+  for (i in period){
+    year = map_data_total[map_data_total$year == i,]
+    for (p in areas) {
+      provinz = year[year$Reporting_areas == p,]
+      m_y_p = data.frame(incidence = mean(provinz$incidence, na.rm = TRUE), time_column = provinz$time_column[1], Reporting_areas = provinz$Reporting_areas[1], temperature = mean(provinz$temperature))
+      map_mean_inc.y.p = rbind(map_mean_inc.y.p, m_y_p)
+    }
+  }
+  return(map_mean_inc.y.p)
+}
+periode = c(2006:2015)
+
+map_mean_inc.y.p = f_map_mean_inc.y.p(period = periode, areas = unique(map_data_total$Reporting_areas))
+district_sf.t <- st_read("/Users/frederik/Documents/GitHub/Projekt/gadm36_THA_shp/gadm36_THA_1.shp")
+district_sf.t$temperature <- map_mean_inc.y.p$temperature
 
 
-
-
+ggplot() +
+  geom_sf(data = district_sf.t, aes(fill = temperature)) +
+  scale_fill_gradientn(colors = rev(terrain.colors(100)), limits = c( 22, 31)) + labs(fill = "temperature") # limits = c( 0, 22.75)
 
 
 
