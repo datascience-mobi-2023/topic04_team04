@@ -439,7 +439,7 @@ TSstudio::ts_plot(Ts_thai_temp)
 
 #additive decomposing of the temperature
 decomposed_thai_temp_add <- decompose(Ts_thai_temp, type="additive") 
-plot(decomposed_thai_temp_add)
+plot(decomposed_thai_temp_add,)
 grid(lty = 2, col = "gray")
 
 #additive decomposing of the dengue cases
@@ -450,11 +450,11 @@ grid(lty = 2, col = "gray")
 case_trend <- decomposed_thai_add$trend
 temp_trend <- decomposed_thai_temp_add$trend
 
-plot_case_trend <- ggplot(case_trend, aes(x, y)) + geom_line() + labs(title = "Cases_trend")
-plot_temp_trend <- ggplot(temp_trend, aes(x, y)) + geom_line() + labs(title = "Temperature_trend")
+plot_case_trend <- ggplot(case_trend, aes(x, y)) + geom_line() + labs(title = "Cases_trend") + xlab("time") + ylab("cases")
+plot_temp_trend <- ggplot(temp_trend, aes(x, y)) + geom_line() + labs(title = "Temperature_trend") +  xlab("time") + ylab("temperature")
 
 plot_case_temp_trend <- grid.arrange(plot_case_trend, plot_temp_trend, ncol = 1)
-print(plot_case_temp_trend)
+
 
 
 ```
@@ -572,6 +572,67 @@ plot2 = ggplot2::ggplot() +
 gridExtra::grid.arrange(plot1, plot2, nrow = 2)
 ```
 
+
+# mean of dengue_cases and temperature of whole thailand per month
+
+```{r}
+library(ggplot2)
+library(scales)
+
+#dengue cases of whole thailand per month
+f_mean_dengue = function(){
+  mean_dengue = data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
+  months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
+  for (i in months) {
+    month = data_total[data_total$time_column == i,]
+    m_month = data.frame(dengue_cases = mean(month$dengue_cases, na.rm = TRUE), time_column = month$time_column[1])
+    mean_dengue = rbind(mean_dengue, m_month)
+  }
+  return(mean_dengue)
+}
+
+
+f_mean_temp = function(){
+  mean_temp = data.frame(temperature = numeric(), time_column = as.Date(character()))
+  months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
+  for (i in months) {
+    month = data_total[data_total$time_column == i,]
+    m_month = data.frame(temperature = mean(month$temperature, na.rm = TRUE), time_column = month$time_column[1])
+    mean_temp = rbind(mean_temp, m_month)
+  }
+  return(mean_temp)
+}
+
+plot1 = ggplot2::ggplot() +
+  geom_line(data = f_mean_dengue(), aes(x = time_column, y = dengue_cases)) +
+  labs(x = "time", y = "dengue-cases") +
+  scale_x_continuous(breaks = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "2 year"))
+
+plot2 = ggplot2::ggplot() +
+  geom_line(data = f_mean_temp(), aes(x = time_column, y = temperature), color = "red") +
+  labs(x = "time", y = "temperature") +
+  scale_x_continuous(breaks = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "2 year"))
+
+
+gridExtra::grid.arrange(plot1, plot2, nrow = 2)
+```
+
+#mean jahr - quatsch 
+```{r}
+select = data.frame(dengue_cases = numeric(), time_column = as.Date(character()), month_vec_total = character())
+mean_year = data.frame(dengue_cases = numeric(), time_column = as.Date(character()), month_vec_total = character())
+month_vec_total = rep(month_vec, times = 15)
+mean_dengue.y.t_months = cbind(mean_dengue.y.t, month_vec_total)
+
+for (i in month_vec) {
+  select = mean_dengue.y.t_months[mean_dengue.y.t_months$month_vec_total == i, ]
+  mean = mean(select$dengue_cases)
+  brrb = c( mean, i, select$time_column[1])
+  mean_year = rbind(brrb)
+} 
+mean_year
+```
+
 #mean and median comparison
 
 ```{r}
@@ -643,7 +704,7 @@ plot(data_total$temperature, data_total$incidence, pch = 20,
 
 ```
 
-# polar
+# polar Plot 
 
 ```{r}
 library(ggplot2)
@@ -752,3 +813,37 @@ gam.check(model2)
 
 cor = cor(data_total$incidence, data_total$population_count, use = "pairwise.complete.obs")
 ```
+# lampang, nayan
+```{r}
+  #mae hong son
+ts_mhs = ts((map_data_total[3961:4140,]$incidence), frequency = 12, start = c(2006, 1))
+plot(ts_mhs)
+```
+
+```{r}
+#Phayao
+ts_mhs = ts((map_data_total[7381:7560,]$incidence), frequency = 12, start = c(2006, 1))
+plot(ts_mhs)
+```
+
+```{r}
+#Phayao
+ts_mhs = ts((map_data_total[3241:3420,]$incidence), frequency = 12, start = c(2006, 1))
+plot(ts_mhs)
+```
+
+
+```{r}
+#Phayao
+ts_mhs = ts((map_data_total[5581:5760,]$incidence), frequency = 12, start = c(2006, 1))
+plot(ts_mhs)
+```
+
+
+
+```{r}
+q.dengue = quantile(log(data_total$incidence +1), probs = c(0.01,0.1,0.25,0.5,0.75,0.9,0.99), na.rm = TRUE)
+hist(log(data_total$incidence +1),  breaks = 200, main = "Distribution of log(incidence)", xlab = "incidence", freq = F);abline(v=q.dengue,lty=3,lwd=2,col='red')
+lines(density(log(data_total$incidence +1), na.rm = T), col = "blue", lwd = 2)
+```
+
