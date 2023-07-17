@@ -9,18 +9,39 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+all libraries used in this document
+
+```{r}
+library(ggplot2)
+library(forecast)
+library(gridExtra)
+library(scales)
+library(npreg)
+library(cluster)
+library(factoextra)
+library(readxl)
+library(nlme)
+library(gam)
+library(sdm)
+library(raster)
+library(ncdf4)
+library(mgcv)
+library(sf)
+```
+
 ```{r}
 summary(data_total)
 ```
 
-# Temperature development in Thailand 2006 - 2022
+## Temperature development in Thailand 2006 - 2022
 
 Creating vector of mean temperature in Thailand over the years
 
 ```{r}
- mean_tempvec = c()
+mean_tempvec = c()
 for (month in c(1:180)) {
    tempvec = c()
+   
   for (district in c(1:76)) {
    temp = data_total$temperature[month + 180*(district-1)]
    tempvec = c(tempvec,temp)
@@ -30,14 +51,11 @@ for (month in c(1:180)) {
 mean_tempvec
 ```
 
-**Plot of yearly mean temperature in Thailand over the years + linear regression of temperature**
+### Plot of yearly mean temperature in Thailand over the years + linear regression of temperature
 
 ```{r}
 
-# Libraries
-library(ggplot2)
-
-# create data
+# create data-structures
 month_dates = seq(as.Date("2006-01-01"), as.Date("2020-12-01"), by = "month", format = "%m")
 
 xValue = month_dates
@@ -53,7 +71,7 @@ ggplot() +
   ylab("Temperature [°C]")
 ```
 
-**Computing minimum and maximum average temperature**
+### Computing minimum and maximum average temperature
 
 ```{r}
 max_mean_tempvec = max(mean_tempvec)
@@ -66,12 +84,12 @@ min_mean_tempvec
 
 ```
 
-Function for plotting temperature in individual timeframe
+### Function for plotting temperature in individual timeframe
 
 ```{r}
 
 subset_mean_temp = function(start, end, mean_tempvec, month_dates){
-  # input as string
+  # input start and end as "YYYY-MM-DD"
   start_date = as.Date(start)
   end_date = as.Date(end)
   
@@ -91,20 +109,16 @@ subset_mean_temp = function(start, end, mean_tempvec, month_dates){
 
 ```
 
-Plot timeframe of min and max temperature
+Plotting the timeframe of min and max temperature
 
 ```{r}
 subset_mean_temp("2013-06-01", "2014-06-30", mean_tempvec, month_dates)
 subset_mean_temp("2016-01-01", "2016-12-31", mean_tempvec, month_dates)
 ```
 
-
-#ARIMA Dengue cases
+## ARIMA-modeling Dengue cases
 
 ```{r}
-library(ggplot2)
-library(forecast)
-
 Ts_thai <- ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
 TSstudio::ts_plot(Ts_thai)
 
@@ -121,7 +135,7 @@ pacf_thailand <- pacf(Ts_thai)
 
 ```
 
-##ARIMA differencing (not necessary as the time series is stationary)
+### ARIMA differencing (not necessary as the time series is stationary)
 
 ```{r}
 
@@ -135,7 +149,7 @@ acfRes_stationary <- acf(Ts_thai_stat)
 pacfRes_stationary <- pacf(Ts_thai_stat)
 ```
 
-##ARIMA "by hand"
+### ARIMA "by hand"
 
 ```{r}
 p_range <- 0:4  # AR order
@@ -182,10 +196,9 @@ best_model
 
 ```
 
-##Auto ARIMA
+### Auto ARIMA
 
 ```{r}
-library(forecast)
 Ts_thai_auto  <- auto.arima(Ts_thai)
 Ts_thai_auto
 
@@ -196,6 +209,8 @@ Ts_thai_auto
 #auto_thailand_2
 #this auto-ARIMA was removed because it took to long and had a higher AIC
 ```
+
+### Evaltuating the fit of the model
 
 ```{r}
 residuals_thai <- residuals(Ts_thai_auto)
@@ -209,24 +224,22 @@ portmanteau_thai
 # --> p value (0.41) > 0.05 --> no evidence for autocorrelation --> ARIMA model works well
 ```
 
+### Forecasting Auto-ARIMA
+
 ```{r}
-library(forecast)
 horizon_thai <- 48 
 forecasted_thai_auto <- forecast(Ts_thai_auto, h = horizon_thai)
 
 forecasted_thai_Ts <- forecasted_thai_auto$mean
 forecasted_thai_Ts  <- ts(forecasted_thai_Ts, frequency = 12, start = c(2021, 1) )
 plot(forecasted_thai_Ts)
-```
 
-```{r}
+
 forecast_thai_Df <- as.data.frame(forecasted_thai_auto)
 forecast_thai_Df$time <- time(forecasted_thai_Ts)
 names(forecast_thai_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
-```
 
-```{r}
-library(ggplot2)
+
 ggplot() +
   geom_line(data = Ts_thai, aes(x = time(Ts_thai), y = Ts_thai), color = "black") +
   geom_ribbon(data = forecast_thai_Df, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
@@ -237,25 +250,20 @@ ggplot() +
   theme_minimal()
 ```
 
-##ARIMA forecast best model
+## ARIMA forecast best model
 
 ```{r}
-library(forecast)
 forecasted_thai_best <- forecast(best_model, h = horizon_thai)
 
 forecasted_Ts_thai_best <- forecasted_thai_best$mean
 forecasted_Ts_thai_best  <- ts(forecasted_Ts_thai_best, frequency = 12, start = c(2021, 1) )
 plot(forecasted_Ts_thai_best)
-```
 
-```{r}
 forecast_thai_best_Df <- as.data.frame(forecasted_thai_best)
 forecast_thai_best_Df$time <- time(forecasted_Ts_thai_best)
 names(forecast_thai_best_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
-```
 
-```{r}
-library(ggplot2)
+
 ggplot() +
   geom_line(data = Ts_thai, aes(x = time(Ts_thai), y = Ts_thai), color = "black") +
   geom_ribbon(data = forecast_thai_best_Df, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
@@ -266,10 +274,9 @@ ggplot() +
   theme_minimal()
 ```
 
-##ARIMA forecast 2016
+## ARIMA forecast 2016
 
 ```{r}
-library(forecast)
 Ts_thai_2016 = window(Ts_thai, end = c(2016, 12))
 
 Ts_thai_auto_2016  <- auto.arima(Ts_thai_2016)
@@ -286,7 +293,6 @@ forecast_thai_2016_Df <- as.data.frame(forecasted_thai_2016)
 forecast_thai_2016_Df$time <- time(forecasted_thai_2016_Ts)
 names(forecast_thai_2016_Df) <- c("point", "lo_80", "hi_80" , "lo_95", "hi_95", "time")
 
-library(ggplot2)
 ggplot() +
   geom_ribbon(data = forecast_thai_2016_Df, aes(x = time, ymin = lo_95, ymax = hi_95), fill = "gray80") +
   geom_line(data = forecast_thai_2016_Df, aes(x = time, y = point), color = "blue") +
@@ -297,20 +303,16 @@ ggplot() +
   theme_minimal()
 ```
 
-#comparing the decomposition of temperature and cases
+## Comparing the decomposition of temperature and cases
 
 ```{r}
-library(ggplot2)
-library(forecast)
-library(gridExtra)
-
 # moving average 
 autoplot(Ts_thai) +
   autolayer(ma(Ts_thai, order = 12)) +
   xlab("Year") + ylab("dengue_cases") +
   ggtitle("Dengue_cases_thailand_with_MA") 
 
-#additive decomposing
+# additive decomposing
 decomposed_thai_add <- decompose(Ts_thai, type="additive") # use type = "additive" for additive components
 plot(decomposed_thai_add)
 grid(lty = 2, col = "gray")
@@ -318,7 +320,7 @@ grid(lty = 2, col = "gray")
 hist(decomposed_thai_add$random, breaks = 20) 
 
 
-#seasonal decomposing
+# seasonal decomposing
 decomposed_thai_seas <- stl(Ts_thai, s.window = "periodic")
 plot(decomposed_thai_seas, main = "Decomposition of a periodic time series", xaxt = "n")
 grid(lty = 2, col = "gray")
@@ -330,12 +332,12 @@ colnames(total_thailand_temp)[4] = "temperature"
 Ts_thai_temp <- ts(total_thailand_temp$temperature, frequency = 12, start = c(2006, 1))
 TSstudio::ts_plot(Ts_thai_temp)
 
-#additive decomposing of the temperature
+# additive decomposing of the temperature
 decomposed_thai_temp_add <- decompose(Ts_thai_temp, type="additive") 
 plot(decomposed_thai_temp_add,)
 grid(lty = 2, col = "gray")
 
-#additive decomposing of the dengue cases
+# additive decomposing of the dengue cases
 decomposed_thai_add <- decompose(Ts_thai, type="additive")
 plot(decomposed_thai_add)
 grid(lty = 2, col = "gray")
@@ -347,9 +349,6 @@ plot_case_trend <- ggplot(case_trend, aes(x, y)) + geom_line() + labs(title = "C
 plot_temp_trend <- ggplot(temp_trend, aes(x, y)) + geom_line() + labs(title = "Temperature_trend") +  xlab("time") + ylab("temperature")
 
 plot_case_temp_trend <- grid.arrange(plot_case_trend, plot_temp_trend, ncol = 1)
-
-
-
 ```
 
 ```{r}
@@ -364,13 +363,10 @@ print(plot_case_temp_trend)
 
 ```
 
-# mean of dengue_cases and temperature of whole thailand per month
+## Mean of dengue cases and temperature of whole thailand per month
 
 ```{r}
-library(ggplot2)
-library(scales)
-
-#dengue cases of whole thailand per month
+# mean dengue cases for the whole country per month
 f_mean_dengue = function(){
   mean_dengue = data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
   months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
@@ -382,7 +378,7 @@ f_mean_dengue = function(){
   return(mean_dengue)
 }
 
-
+# mean temperature for the whole country per month
 f_mean_temp = function(){
   mean_temp = data.frame(temperature = numeric(), time_column = as.Date(character()))
   months = seq(from = as.Date("2006-01-01"), to = as.Date("2020-12-01"), by = "month")
@@ -393,6 +389,8 @@ f_mean_temp = function(){
   }
   return(mean_temp)
 }
+
+# plotting mean temperature and dengue cases
 
 plot1 = ggplot2::ggplot() +
   geom_line(data = f_mean_dengue(), aes(x = time_column, y = dengue_cases)) +
@@ -411,7 +409,6 @@ gridExtra::grid.arrange(plot1, plot2, nrow = 2)
 ## mean and median comparison
 
 ```{r}
-library(ggplot2)
 
 f_median_dengue = function(){
   median_dengue = data.frame(dengue_cases = numeric(), time_column = as.Date(character()))
@@ -434,7 +431,9 @@ f_median_temp = function(){
   }
   return(median_temp)
 }
-#compute difference between mean and median
+
+# computing and plotting the difference between mean and median of dengue cases
+
 dif_mm_dengue = f_mean_dengue()["dengue_cases"]-f_median_dengue()["dengue_cases"]
 dif_mm_dengue = cbind(dif_mm_dengue,f_mean_dengue()["time_column"])
 
@@ -450,6 +449,10 @@ plot_dif_dengue = ggplot2::ggplot() +
   geom_line(data = dif_mm_dengue, aes(x = time_column, y = dengue_cases)) +
   labs(x = "time", y = "dengue-cases", title = "Difference between mean and median")
 
+# for only plotting the dengue case plots:
+# gridExtra::grid.arrange(plot_mean_dengue, plot_median_dengue, plot_dif_dengue, nrow=3)
+
+# computing and plotting the difference between mean and median of temperature
 
 dif_mm_temp = f_mean_temp()["temperature"]-f_median_temp()["temperature"]
 dif_mm_temp = cbind(dif_mm_temp,f_mean_temp()["time_column"])
@@ -468,8 +471,8 @@ plot_dif_temp = ggplot2::ggplot() +
 
 gridExtra::grid.arrange(plot_mean_dengue, plot_mean_temp, plot_median_dengue, plot_median_temp,plot_dif_dengue,plot_dif_temp, nrow = 3)
 
-#wenn man nur die Temp-Plots haben möchte
-#gridExtra::grid.arrange(plot_mean_temp, plot_median_temp, plot_dif_temp, nrow=3)
+# for only plotting the temperature plots:
+# gridExtra::grid.arrange(plot_mean_temp, plot_median_temp, plot_dif_temp, nrow=3)
 ```
 
 ## mean of dengue_cases and temperature of whole thailand per year
@@ -499,7 +502,7 @@ mean_temp.y.t = as.data.frame(f_mean_temp.y.t())
 
 ```
 
-#Plot für Bangkok
+#### Plotting dengue cases for Bangkok
 
 ```{r}
 dengue_plot_cases = c()
@@ -530,8 +533,6 @@ lines(density(data_total$temperature, na.rm = T), col = "blue", lwd = 2)
 #correlation between temperature and incidence
 
 ```{r}
-library(npreg)
-library(ggplot2)
 
 smoothed_curve <- ss(clean_data_total$temperature, clean_data_total$incidence, nknots = 16)
 plot(smoothed_curve, col = "blue")
@@ -603,12 +604,7 @@ plot(2:7,wss,type='b',pch=19,xlab="Number of clusters K",
 
 
 #silhoutte method
-library(cluster)
-#library (NbClust)
-#library (clustertend)
-library (factoextra)
-#library (fpc)
-#library (clValid)
+
 
 #find optimal number of clusters by incidence
 D_inc = dist(m_inc_temp.y.r["incidence"])
@@ -651,23 +647,6 @@ plot3
 gridExtra::grid.arrange(plot1, plot2, plot3, ncol = 1)
 ```
 
-# polar Plot 
-
-```{r}
-library(ggplot2)
-library(ggseas)
-
-
-plot1 = ggseasonplot(Ts_thai, polar=TRUE) +
-  ggtitle("dengue cases")
-
-plot2 = ggseasonplot(Ts_thai_temp, polar=TRUE) +
-  ggtitle("temperature")
-
-gridExtra::grid.arrange(plot1, plot2, nrow =1)
-```
-
-
 ## probieren mit time series Objekten
 
 ```{r}
@@ -679,13 +658,7 @@ TSstudio::ts_plot(my_ts)
 #GAM
 
 ```{r}
-library(readxl)
-library(nlme)
-library(gam)
-library(sdm)
-library(raster)
-library(ncdf4)
-library(mgcv)
+
 
 attach(data_monsoon)
 model1 = gam(incidence~s(temperature, k = 5), family = "quasipoisson", na.rm = T)
@@ -708,12 +681,6 @@ detach(data_monsoon)
 ## GAM forecast
 
 ```{r, fig.width = 10, fig.height = 15}
-library(raster)
-library(gam)
-library(sdm)
-library(readxl)
-library(mgcv)
-library(ncdf4)
 
 ## lower_limit = quantile(data_monsoon$temperature, probs = 0.05, na.rm = T)
 #upper_limit = quantile(data_monsoon$temperature, probs = 0.95, na.rm = T)
@@ -745,8 +712,6 @@ detach(data_total)
 #average incidence 2006 to 2020 map
 
 ```{r}
-library(ggplot2)
-library(sf)
 
 #function to plot the incidence of a specific period and over a specific area
 f_map_mean_inc.y.p = function(period, areas){
@@ -796,8 +761,6 @@ ggplot2::ggplot() +
 #average incidence for each month map
 
 ```{r}
-library(ggplot2)
-library(sf)
 
 f_map_mean_inc.m.p = function(period, areas){
   map_mean_inc.m.p <- data.frame(incidence = numeric(), time_column = as.Date(character()), Reporting_areas = character())
@@ -843,9 +806,6 @@ ggplot2::ggplot() +
 Funktion für Inzidenz plot der Monate
 
 ```{r}
-
-library(sf)
-library(ggplot2)
 
 
 district_sf = st_read("gadm36_THA_shp/gadm36_THA_1.shp")
@@ -898,4 +858,3 @@ ggplot() +
  scale_fill_gradientn(colors = rev(terrain.colors(100)), limits = c( 22, 31)) + labs(fill = "temperature") +
   labs(title = "Average Temperatures for 2006-2020 ")# limits = c( 0, 22.75)
 ```
-
