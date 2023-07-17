@@ -303,7 +303,7 @@ ggplot() +
   theme_minimal()
 ```
 
-## Comparing the decomposition of temperature and cases
+##Decomposition of temperature and cases
 
 ```{r}
 # moving average 
@@ -325,7 +325,7 @@ decomposed_thai_seas <- stl(Ts_thai, s.window = "periodic")
 plot(decomposed_thai_seas, main = "Decomposition of a periodic time series", xaxt = "n")
 grid(lty = 2, col = "gray")
 
-
+# creating a timeseries of temperature 
 total_thailand_temp = cbind(total_thailand, mean_tempvec)
 colnames(total_thailand_temp)[4] = "temperature"
 
@@ -341,7 +341,10 @@ grid(lty = 2, col = "gray")
 decomposed_thai_add <- decompose(Ts_thai, type="additive")
 plot(decomposed_thai_add)
 grid(lty = 2, col = "gray")
+```
 
+### Comparing the trend of temperature and cases (additive decomposition)
+```{r}
 case_trend <- decomposed_thai_add$trend
 temp_trend <- decomposed_thai_temp_add$trend
 
@@ -351,6 +354,7 @@ plot_temp_trend <- ggplot(temp_trend, aes(x, y)) + geom_line() + labs(title = "T
 plot_case_temp_trend <- grid.arrange(plot_case_trend, plot_temp_trend, ncol = 1)
 ```
 
+### Comparing the trend of temperature and cases (seasonal decomposition)
 ```{r}
 case_seasonal = decomposed_thailand_add$seasonal
 temp_seasonal = decomposed_thailand_add_temp$seasonal
@@ -521,6 +525,12 @@ plot(dengue_plot_time,dengue_plot_cases, type = "o")
 q.dengue = quantile(data_total$incidence, probs = c(0.01,0.1,0.25,0.5,0.75,0.9,0.99), na.rm = TRUE)
 hist(data_total$incidence,  breaks = 200, main = "Distribution of incidence", xlab = "incidence", freq = F);abline(v=q.dengue,lty=3,lwd=2,col='red')
 lines(density(data_total$incidence, na.rm = T), col = "blue", lwd = 2)
+
+#log transformed incidennce
+q.dengue = quantile(log(data_total$incidence +1), probs = c(0.01,0.1,0.25,0.5,0.75,0.9,0.99), na.rm = TRUE)
+hist(log(data_total$incidence +1),  breaks = 200, main = "Distribution of log(incidence)", xlab = "incidence", freq = F);abline(v=q.dengue,lty=3,lwd=2,col='red')
+lines(density(log(data_total$incidence +1), na.rm = T), col = "blue", lwd = 2)
+
 
 q.temp = quantile(data_total$temperature, probs = c(0.01,0.1,0.25,0.5,0.75,0.9,0.99), na.rm = TRUE)
 hist(data_total$temperature,  breaks = 200, main = "Distribution of temperature", xlab = "temperature", freq = F);abline(v=q.temp,lty=3,lwd=2,col='red')
