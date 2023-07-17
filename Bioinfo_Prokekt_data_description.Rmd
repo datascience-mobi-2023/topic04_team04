@@ -119,15 +119,13 @@ subset_mean_temp("2016-01-01", "2016-12-31", mean_tempvec, month_dates)
 ## ARIMA-modeling Dengue cases
 
 ```{r}
+#creating a time series of the total dengue cases 
 Ts_thai <- ts(total_thailand$dengue_cases, frequency = 12, start = c(2006, 1))
 TSstudio::ts_plot(Ts_thai)
 
 library(tseries)
-adf.test(Ts_thai) # p-value (0.01) < 0.05 indicates the TS is stationary --> suggests it is stationary
-# alternative hypothesis: stationary
-kpss.test(Ts_thai, null = c("Level", "Trend"))
-
-#both test indicate stationarity
+adf.test(Ts_thai) # p-value (0.01) < 0.05 indicates the TS is stationary 
+kpss.test(Ts_thai, null = c("Level", "Trend")) # p-value (0.1) > 0.05 indicates stationarity
 
 acf_thailand <- acf(Ts_thai)
 
@@ -226,11 +224,13 @@ portmanteau_thai
 
 ### Forecasting Auto-ARIMA
 
+based on the auto ARIMA a forecast is created for 4 years and plotted with the time series of total dengue cases
+
 ```{r}
 horizon_thai <- 48 
 forecasted_thai_auto <- forecast(Ts_thai_auto, h = horizon_thai)
 
-forecasted_thai_Ts <- forecasted_thai_auto$mean
+forecasted_thai_Ts <- forecasted_thai_auto$mean 
 forecasted_thai_Ts  <- ts(forecasted_thai_Ts, frequency = 12, start = c(2021, 1) )
 plot(forecasted_thai_Ts)
 
@@ -250,7 +250,9 @@ ggplot() +
   theme_minimal()
 ```
 
-## ARIMA forecast best model
+## ARIMA forecast best model#
+
+A forecast is created based on the model "by hand"
 
 ```{r}
 forecasted_thai_best <- forecast(best_model, h = horizon_thai)
@@ -275,6 +277,8 @@ ggplot() +
 ```
 
 ## ARIMA forecast 2016
+
+To compare the forecast to the actual data, the timeseries is cropped after 2016. This time series is used to forcast the years 2017 - 2020 and compared to the actual data
 
 ```{r}
 Ts_thai_2016 = window(Ts_thai, end = c(2016, 12))
@@ -303,7 +307,7 @@ ggplot() +
   theme_minimal()
 ```
 
-##Decomposition of temperature and cases
+## Decomposition of temperature and cases
 
 ```{r}
 # moving average 
@@ -344,6 +348,7 @@ grid(lty = 2, col = "gray")
 ```
 
 ### Comparing the trend of temperature and cases (additive decomposition)
+
 ```{r}
 case_trend <- decomposed_thai_add$trend
 temp_trend <- decomposed_thai_temp_add$trend
@@ -355,6 +360,7 @@ plot_case_temp_trend <- grid.arrange(plot_case_trend, plot_temp_trend, ncol = 1)
 ```
 
 ### Comparing the trend of temperature and cases (seasonal decomposition)
+
 ```{r}
 case_seasonal = decomposed_thailand_add$seasonal
 temp_seasonal = decomposed_thailand_add_temp$seasonal
@@ -410,7 +416,7 @@ plot2 = ggplot2::ggplot() +
 gridExtra::grid.arrange(plot1, plot2, nrow = 2)
 ```
 
-## mean and median comparison
+## Mean and median comparison
 
 ```{r}
 
@@ -479,7 +485,7 @@ gridExtra::grid.arrange(plot_mean_dengue, plot_mean_temp, plot_median_dengue, pl
 # gridExtra::grid.arrange(plot_mean_temp, plot_median_temp, plot_dif_temp, nrow=3)
 ```
 
-## mean of dengue_cases and temperature of whole thailand per year
+## Mean of dengue_cases and temperature of whole thailand per year
 
 ```{r}
 f_mean_dengue.y.t = function(){
@@ -518,7 +524,7 @@ dengue_plot_time = data_total$time_column[data_total$Reporting_areas == "Bangkok
 plot(dengue_plot_time,dengue_plot_cases, type = "o")
 ```
 
-#distribution of incidence and temperature
+## distribution of incidence and temperature
 
 ```{r}
 
@@ -540,7 +546,7 @@ lines(density(data_total$temperature, na.rm = T), col = "blue", lwd = 2)
 
 ```
 
-#correlation between temperature and incidence
+## correlation between temperature and incidence
 
 ```{r}
 
@@ -574,7 +580,7 @@ pheatmap::pheatmap(cor(clean_data_total[c("dengue_cases", "population_count", "t
 
 ```
 
-#percentage of dengue cases between 27 and 29,5 celsius
+## percentage of dengue cases between 27 and 29,5 celsius
 
 ```{r}
 data_27_29.5 = data_total[data_total$temperature >= 27 & data_total$temperature <= 29.5,]
@@ -599,7 +605,7 @@ for (i in r_areas){
 
 ```
 
-# k-means clustering
+## k-means clustering
 
 ```{r}
 #elbow method
@@ -665,7 +671,7 @@ head(my_ts)
 TSstudio::ts_plot(my_ts)
 ```
 
-#GAM
+## GAM
 
 ```{r}
 
@@ -688,16 +694,9 @@ AIC_best
 detach(data_monsoon)
 ```
 
-# GAM forecast
+### GAM forecast
 
 ```{r, fig.width = 10, fig.height = 15}
-library(raster)
-library(gam)
-library(sdm)
-library(readxl)
-library(mgcv)
-library(ncdf4)
-
 ## lower_limit = quantile(data_monsoon$temperature, probs = 0.05, na.rm = T)
 #upper_limit = quantile(data_monsoon$temperature, probs = 0.95, na.rm = T)
 
@@ -724,10 +723,9 @@ plot(my.p1.mask, legend.width=2, legend.shrink=0.5, axes= F, box=F, zlim = c(0,2
 detach(data_total)
 ```
 
-#average incidence 2006 to 2020 map
+## average incidence 2006 to 2020 map
 
 ```{r}
-
 #function to plot the incidence of a specific period and over a specific area
 f_map_mean_inc.y.p = function(period, areas){
   map_mean_inc.y.p <- data.frame(incidence = numeric(), time_column = as.Date(character()), Reporting_areas = character())
@@ -773,7 +771,7 @@ ggplot2::ggplot() +
 
 ```
 
-#average incidence for each month map
+## average incidence for each month map
 
 ```{r}
 
@@ -815,23 +813,18 @@ district_sf$temperature <- map_mean_temp.m.p$temperature
 ggplot2::ggplot() +
   geom_sf(data = district_sf, aes(fill = temperature)) +
   scale_fill_gradientn(colors = rev(terrain.colors(100))) + labs(fill = "Temperature") + labs(title = "Average temperature 2006 - 2020")
-
 ```
 
 Funktion für Inzidenz plot der Monate
 
 ```{r}
-
-
 district_sf = st_read("gadm36_THA_shp/gadm36_THA_1.shp")
 
-
+#input for incidence month in format: rows_YYYY_Mon
 map_incidence_monthly = function(incidence_month){
   
  max_incidence = which.max(incidence_month$incidence)
 max_incidence_area = incidence_month$Reporting_areas[max_incidence]
-
-
 
 ggplot() +
   geom_sf(data = district_sf, aes(fill = incidence_month$incidence)) +
@@ -840,16 +833,11 @@ ggplot() +
   
   
 }
-#input for incidence month in format: rows_YYYY_Mon
-
-
 
 map_incidence_monthly(rows_2016Apr)
-
-
 ```
 
-#average temperature 2006 to 2020 map
+## average temperature 2006 to 2020 map
 
 ```{r}
 
