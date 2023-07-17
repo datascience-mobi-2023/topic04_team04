@@ -771,7 +771,7 @@ ggplot2::ggplot() +
 
 ```
 
-## Average incidence for each month map
+## Average incidence for each month map - log(incidence)
 
 ```{r}
 
