@@ -25,8 +25,9 @@ Anfang = "Dengue"
 for (i in 2006:2020) {
   
   Dateiname = paste0(i, Endung) #creating the file name
+  Path = paste0("Excel-Data/", Dateiname)
   Name_df = paste0(Anfang, i) 
-  assign(Name_df, read_excel(Dateiname)) #creating the variable and assigning the excel sheet
+  assign(Name_df, read_excel(Path)) #creating the variable and assigning the excel sheet
   
   df_dengue = get(Name_df)
   vec_data_names = vector("character")
