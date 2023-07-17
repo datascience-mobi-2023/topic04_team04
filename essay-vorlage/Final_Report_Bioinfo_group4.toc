@@ -1,13 +1,11 @@
 \babel@toc {english}{}\relax 
-\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}%
 \contentsline {section}{\numberline {2}Material and Methods}{4}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Material}{4}{subsection.2.1}%
 \contentsline {paragraph}{\nonumberline ERA5 data (climate)}{4}{paragraph*.4}%
 \contentsline {paragraph}{\nonumberline Dengue data}{4}{paragraph*.6}%
-\contentsline {paragraph}{\nonumberline Climate forecast}{4}{paragraph*.8}%
+\contentsline {paragraph}{\nonumberline Climate forecasting data}{4}{paragraph*.8}%
 \contentsline {paragraph}{\nonumberline Population data}{4}{paragraph*.10}%
 \contentsline {paragraph}{\nonumberline Spatial data}{4}{paragraph*.12}%
-\contentsline {subsection}{\numberline {2.2}Methods}{5}{subsection.2.2}%
 \contentsline {paragraph}{\nonumberline Descriptive analysis}{5}{paragraph*.14}%
 \contentsline {paragraph}{\nonumberline ARIMA}{5}{paragraph*.16}%
 \contentsline {paragraph}{\nonumberline GAM}{6}{paragraph*.18}%
