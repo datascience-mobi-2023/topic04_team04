@@ -524,7 +524,7 @@ dengue_plot_time = data_total$time_column[data_total$Reporting_areas == "Bangkok
 plot(dengue_plot_time,dengue_plot_cases, type = "o")
 ```
 
-## distribution of incidence and temperature
+## Distribution of incidence and temperature
 
 ```{r}
 
@@ -546,7 +546,7 @@ lines(density(data_total$temperature, na.rm = T), col = "blue", lwd = 2)
 
 ```
 
-## correlation between temperature and incidence
+## Correlation between temperature and incidence
 
 ```{r}
 
@@ -580,7 +580,7 @@ pheatmap::pheatmap(cor(clean_data_total[c("dengue_cases", "population_count", "t
 
 ```
 
-## percentage of dengue cases between 27 and 29,5 celsius
+## Percentage of dengue cases between 27 and 29,5 celsius
 
 ```{r}
 data_27_29.5 = data_total[data_total$temperature >= 27 & data_total$temperature <= 29.5,]
@@ -589,7 +589,7 @@ sum(data_27_29.5$dengue_cases, na.rm = T)/sum(data_total$dengue_cases, na.rm = T
 
 ```
 
-## correlation between different areas
+## Correlation between different areas
 
 ```{r}
 #mean of temp and incidence over all years per area
@@ -605,7 +605,7 @@ for (i in r_areas){
 
 ```
 
-## k-means clustering
+## K-means clustering
 
 ```{r}
 #elbow method
@@ -663,7 +663,7 @@ plot3
 gridExtra::grid.arrange(plot1, plot2, plot3, ncol = 1)
 ```
 
-## probieren mit time series Objekten
+## Probieren mit time series Objekten
 
 ```{r}
 my_ts = ts(data_total$dengue_cases, start = c(data_total$time_column[1]), frequency = 12)
@@ -723,7 +723,7 @@ plot(my.p1.mask, legend.width=2, legend.shrink=0.5, axes= F, box=F, zlim = c(0,2
 detach(data_total)
 ```
 
-## average incidence 2006 to 2020 map
+## Average incidence 2006 to 2020 map
 
 ```{r}
 #function to plot the incidence of a specific period and over a specific area
@@ -771,7 +771,7 @@ ggplot2::ggplot() +
 
 ```
 
-## average incidence for each month map
+## Average incidence for each month map
 
 ```{r}
 
@@ -837,7 +837,7 @@ ggplot() +
 map_incidence_monthly(rows_2016Apr)
 ```
 
-## average temperature 2006 to 2020 map
+## Average temperature 2006 to 2020 map
 
 ```{r}
 
