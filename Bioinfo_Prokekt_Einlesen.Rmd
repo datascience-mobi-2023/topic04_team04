@@ -16,7 +16,7 @@ library(readxl)
 library(dplyr)
 ```
 
-## Loading the dengue-excel-sheets and transforming them into data frames
+## Loading the dengue-excel-sheets and transforming them into dataframes
 
 ```{r}
 Endung = "_dengue_extracted.xlsx"
@@ -39,7 +39,7 @@ for (i in 2006:2020) {
   assign(Name_df,df_dengue)
 }
 
-#combinign the single years into one data frame
+#combinign the single years into one dataframe
 
 total_years = data.frame()
 for (i in 2006:2020){
@@ -50,14 +50,16 @@ for (i in 2006:2020){
 
 ## Rows as time-scale
 
-sorting the data frame by province names transforming the data frame, to move the time scale from the x-axis to the y-axis
+sorting the dataframe by province names transforming the dataframe, to move the time scale from the x-axis to the y-axis
 
 ```{r}
 m = 1
 data_total = data.frame(col1 = character(0), col2 = character(0), col3 = numeric(0), month = character(0))
 colnames(data_total) = c("data_names", "Reporting_areas", "dengue_cases", "month")
 sorted_total_years = total_years[order(total_years$"Reporting_areas"),]
+
 for (k in 1:1155){
+  
   for (j in 3:14){
     square = sorted_total_years[k, c(1, 2, j)] 
     month = colnames(square[3])
@@ -79,8 +81,10 @@ temp_data = read_excel("era5_data_2006_2020_thailand_monmean.xlsx")
 temp_data = as.data.frame(temp_data)
 temp_data_sorted = data.frame( col1 = numeric(0), Longitude = numeric(0), Latitude = numeric(0))
 for (i in 1:77) {
+  
   for (j in 5:184) {
-    temp_data_sorted[m,1] = temp_data[i,j]
+    # sorting the temperature data to fit the format of data total
+    temp_data_sorted[m,1] = temp_data[i,j]    
     temp_data_sorted[m,2] = temp_data[i,3]
     temp_data_sorted[m,3] = temp_data[i,4]
     m = m + 1
@@ -105,7 +109,7 @@ for (i in 2006:2011) {
   vec_years = rep(i, times = 77)
   population_df = cbind(population_df,vec_years)
   names(population_df) = c("Reporting_areas", "population_count", "year")
-  # multiply every row 12 times for each month
+  # duplicate every row 12 times to get population for each month, because population is counted yearly
   repeat_count = 12
   population_df_replicated = population_df[rep(row.names(population_df), each = repeat_count), ]
   row.names(population_df_replicated) = NULL
@@ -119,6 +123,7 @@ for (i in 2006:2011) {
 population_df = read_excel("2012-2020_population.xlsx")
 colnames(population_df) = c("Reporting_areas", "population_count", "population_count", "population_count", "population_count", "population_count","population_count","population_count","population_count","population_count")
 pop_placeholder = data.frame(Reporting_areas = character(), population_count = numeric(), year = numeric())
+
 col_num = 2
 for (i in 2012:2020) {
   year = rep(i, times = 77)
@@ -127,12 +132,12 @@ for (i in 2012:2020) {
   col_num = col_num + 1
 }
 
-# multiply every row 12 times for each month
+# duplicate every row 12 times to get population for each month, because population is counted yearly
 repeat_count = 12
 population_df_replicated = pop_placeholder[rep(row.names(pop_placeholder), each = repeat_count), ]
 row.names(population_df_replicated) = NULL
 
-# combine all population data in each 
+# combining all population data in one dataframe and adding it to data total
 total_population = rbind(total_population, population_df_replicated)
 sorted_total_population = total_population[order(total_population$"Reporting_areas"),]
 
@@ -156,29 +161,18 @@ data_total = cbind(data_total, time_column)
 #data_total = subset(data_total, select = -time_column) 
 ```
 
-## Detect missing values
-
-```{r}
-detect_na = function(x) {
-  is_na = x %in% c("N/A", "na", "NA", "n/a")
-  replace(x, is_na, NA)
-}
-data_total = apply(data_total, 2, detect_na)
-rmv.rows = apply(data_total,1,function(x){sum(is.na(x))})
-i.missing = which(rmv.rows >0)
-```
-
 ## Creating an incidence-column
 
 makes infections comparable by normalising them according to population size
 
 ```{r}
-data_total = as.data.frame(data_total)
+# checking that all objects have the right data-type
+data_total = as.data.frame(data_total)    
 data_total$dengue_cases = as.integer(data_total$dengue_cases)
 data_total$population_count = as.integer(data_total$population_count)
 dimensions = dim(data_total)
-R= dimensions[1]
 
+R= dimensions[1]
 for(Zeile in 1:R){
   Population = data_total$population_count[Zeile]
   Infection = data_total$dengue_cases[Zeile]
@@ -187,9 +181,32 @@ for(Zeile in 1:R){
 }
 ```
 
-## creating clean data frame
+## Adding the data from Bungkan-district to Nong Khai and deleting all Bungkan-Data
 
-detecting all NA and removing the rows containing them
+Bungkan was only formed in 2011 from a part of Nong Khai, leading to missing values für the first 5 years in Bungkan. By adding the values together, the province of Nong Khai before the seperation remains the reporting area.
+
+```{r}
+for (i in 1:dim(data_total)[1]) { 
+  
+  if(data_total$Reporting_areas[i]=="Bungkan"){     
+    
+    Datum = data_total$time_column[i]
+    for(j in 1:dim(data_total)[1]){
+      if(data_total$Reporting_areas[j] == "Nong Khai" & data_total$time_column[j] == Datum){
+        # overwriting NAs or adding the values together
+        data_total$dengue_cases[j]= ifelse(is.na(data_total$dengue_cases[i]), data_total$dengue_cases[j], data_total$dengue_cases[i]+data_total$dengue_cases[j])
+        data_total$population_count[j]= ifelse(is.na(data_total$population_count[i]), data_total$population_count[j], data_total$population_count[i]+data_total$population_count[j])
+        data_total$incidence[j]= ifelse(is.na(data_total$incidence[i]), data_total$incidence[j], data_total$incidence[i]+data_total$incidence[j])
+        
+      }
+    }
+  }
+}
+```
+
+## Creating clean dataframe
+
+detecting all NA and removing the rows containing them, creating a cleaned dataframe to use when NAs would lead to errors
 
 ```{r}
 detect_na = function(x) {
@@ -204,55 +221,43 @@ clean_data_total = as.data.frame(data_total[-i.missing,])
 num_col = c("temperature", "Longitude", "Latitude", "incidence")
 int_col = c("dengue_cases","population_count","year")
 date_col = c("time_column")
+
 clean_data_total[int_col] = lapply(clean_data_total[int_col], as.integer)
 clean_data_total[num_col] = lapply(clean_data_total[num_col], as.numeric)
 clean_data_total[date_col] = lapply(clean_data_total[date_col], as.Date)
 summary(clean_data_total)
 ```
 
-## structure data frame and convert into right datatypes
+## Structuring the dataframe and converting into the correct datatypes
 
 ```{r}
 data_total = as.data.frame(data_total)
 num_col = c("temperature", "Longitude", "Latitude", "incidence")
 int_col = c("dengue_cases","population_count","year")
 date_col = c("time_column")
+
+# checking for correct data-type
 data_total[int_col] = lapply(data_total[int_col], as.integer)
 data_total[num_col] = lapply(data_total[num_col], as.numeric)
 data_total[date_col] = lapply(data_total[date_col], as.Date)
 
-data_total = subset(data_total, select = c("data_names", "Reporting_areas", "year", "month", "time_column", "dengue_cases", "population_count", "temperature", "Longitude", "Latitude", "incidence"))
+data_total = subset(data_total, select = c("data_names", "Reporting_areas", "year", "month", "time_column", "dengue_cases", "population_count", "temperature", "Longitude", "Latitude", "incidence")) # brings the columns into a better order
 
 save(data_total, file = "data_total.RData")
 summary(data_total)
 ```
 
-# adding the data from Bunkan-district to Nong Khai and deleting all Bunkang-Data
+## Creating a dataframe for mapping by setting values of Bungkan equal to Nong Khai
 
 ```{r}
-for (i in 1:dim(data_total)[1]) { 
-  
-  if(data_total$Reporting_areas[i]=="Bungkan"){     
-    
-    Datum = data_total$time_column[i]
-    for(j in 1:dim(data_total)[1]){
-      if(data_total$Reporting_areas[j] == "Nong Khai" & data_total$time_column[j] == Datum){
-        
-        data_total$dengue_cases[j]= ifelse(is.na(data_total$dengue_cases[i]), data_total$dengue_cases[j], data_total$dengue_cases[i]+data_total$dengue_cases[j])
-        data_total$population_count[j]= ifelse(is.na(data_total$population_count[i]), data_total$population_count[j], data_total$population_count[i]+data_total$population_count[j])
-        data_total$incidence[j]= ifelse(is.na(data_total$incidence[i]), data_total$incidence[j], data_total$incidence[i]+data_total$incidence[j])
-        
-      }
-    }
-  }
-}
-
-#creating a data-frame for mapping by setting values of Bungkan equal to Nong Khai 
 map_data_total = data_total
 for (k in 1:dim(data_total)[1]){
   Datum = data_total$time_column[k]
+  
   if (data_total$Reporting_areas[k]=="Bungkan") {
+    
     for(p in 1:dim(data_total)[1]){
+      
       if(data_total$Reporting_areas[p] == "Nong Khai" & data_total$time_column[p] == Datum){
         map_data_total[k,c("temperature", "incidence", "dengue_cases")] = data_total[p,c("temperature", "incidence", "dengue_cases")]
       }
@@ -260,12 +265,11 @@ for (k in 1:dim(data_total)[1]){
   }
 }
   
-
 data_total = data_total[data_total$Reporting_areas != "Bungkan", ]
 row.names(data_total) = NULL
 ```
 
-#create data frame for monsoon season
+## Creating a dataframe for monsoon season
 
 ```{r}
 vec_month_monsoon = c("Jun", "Jul", "Aug", "Sep")
@@ -276,7 +280,7 @@ i.missing.m = which(rmv.rows.m >0)
 clean_data_monsoon = as.data.frame(data_monsoon[-i.missing.m,])
 ```
 
-# creating a dataframe for the total dengue cases in thailand over the months
+## Creating a dataframes for the total dengue cases in Thailand over each month
 
 ```{r}
 month_vec = c("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec" ) 
@@ -301,5 +305,4 @@ for (i in 2006:2020) {
 }
 
 total_thailand = cbind(total_thailand, time_column_short)
-
 ```
