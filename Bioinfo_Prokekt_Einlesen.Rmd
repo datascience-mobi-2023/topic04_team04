@@ -78,7 +78,8 @@ for (k in 1:1155){
 
 ```{r}
 m = 1
-temp_data = read_excel("era5_data_2006_2020_thailand_monmean.xlsx")
+
+temp_data = read_excel("Excel-data/era5_data_2006_2020_thailand_monmean.xlsx")
 temp_data = as.data.frame(temp_data)
 temp_data_sorted = data.frame( col1 = numeric(0), Longitude = numeric(0), Latitude = numeric(0))
 for (i in 1:77) {
@@ -106,7 +107,8 @@ total_population = data.frame(Reporting_areas = character(), population_count = 
 for (i in 2006:2011) {
   population_df  = data.frame()
   Dateiname = paste0(i, Endung) # creating the file name
-  population_df = read_excel(Dateiname) # creating the variable and assigning the excel-sheet
+  Pathway1 = paste0("Excel-Data/", Dateiname)
+  population_df = read_excel(Pathway1) # creating the variable and assigning the excel-sheet
   vec_years = rep(i, times = 77)
   population_df = cbind(population_df,vec_years)
   names(population_df) = c("Reporting_areas", "population_count", "year")
@@ -121,7 +123,7 @@ for (i in 2006:2011) {
 }
 
 # stack years of 2012-2020 below each other and add to data_total
-population_df = read_excel("2012-2020_population.xlsx")
+population_df = read_excel("Excel-Data/2012-2020_population.xlsx")
 colnames(population_df) = c("Reporting_areas", "population_count", "population_count", "population_count", "population_count", "population_count","population_count","population_count","population_count","population_count")
 pop_placeholder = data.frame(Reporting_areas = character(), population_count = numeric(), year = numeric())
 
