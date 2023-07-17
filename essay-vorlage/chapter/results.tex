@@ -29,13 +29,6 @@ Some regions with high average temperature do have high incidences, but other do
 
 	\subsection{Time series decomposition}The time series of total dengue cases in Thailand was additively decomposed in the components trend, seasonal and random, as shown in Figure \ref{fig:decomp_ts_dengue}. The time series shows a seasonal pattern with a frequency of 12 months. The trend shows fluctuation over the time period with two periods of comparatively high dengue cases in 2013/14 and 2015/16.
 	
-	\begin{figure}[htbp] 
-		\centering
-		\includegraphics[width=0.7\textwidth]{fig/Decomposition_of_add_ts.png}
-		\caption{ Decomposition of the additive time series of the total dengue cases in Thailand}
-		\label{fig:decomp_ts_dengue}
-	\end{figure}
-	
 	The decomposition of the time series of the dengue cases was compared to the decomposition of the time series of temperatures. Both time series have an annual seasonal pattern. The trends show in general similar patterns with differences in the amplitudes and slight shifts on the time axis, as shown in Figure \ref{fig:Trend_temp_cases}.
 	\begin{figure}[hbpt] 
 		\centering
@@ -76,5 +69,12 @@ To figure out the optimal model, the degrees of freedom of the smoothing functio
 
 Taking all these parameters into account, the GAM was computed with a k of 16. The model and its relationship of temperature and incidence is shown in the appendix Figure ..., as well as the evaluating graphs.
 
-Subsequently the model was used to predict the average dengue case incidences over the period of 2021 - 2040, based on forecasted average temperature. You can see the average incidences of the past and future in Figure \ref{fig:}.
+Subsequently the model was used to predict the average dengue case incidences over the period of 2021 - 2040, based on forecasted average temperature. You can see the average incidences of the past and future in Figure \ref{fig:gamvsimap}.
 
+\begin{figure}[hbpt]
+	
+	\includegraphics[width=0.9\textwidth]{fig/gam_vs_i.jpg}
+	\caption{Comparison of average incidence (2006 - 2020)to incidence in GAM forecast (2021 - 2024)}
+	\label{fig:gamvsimap}
+	
+\end{figure}
