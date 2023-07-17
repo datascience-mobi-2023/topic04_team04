@@ -363,7 +363,7 @@ plot_case_temp_trend <- grid.arrange(plot_case_trend, plot_temp_trend, ncol = 1)
 
 ```{r}
 case_seasonal = decomposed_thai_add$seasonal
-temp_seasonal = decomposed_thai_add_temp$seasonal
+temp_seasonal = decomposed_thai_temp_add$seasonal
 
 plot_case_seasonal = ggplot(case_seasonal, aes(x, y)) + geom_line() + labs(title = "Cases_seasonal")
 plot_temp_seasonal = ggplot(temp_seasonal, aes(x, y)) + geom_line() + labs(title = "Temperature_seasonal")
